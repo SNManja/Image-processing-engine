@@ -164,7 +164,7 @@ void boxblurFilter(image& img) {
 void sharpenFilter(image& img) {
     Kernel k = kernel(3, {
         {0, -1, 0},
-        {-1, 5, -1},
+        {-1, 6, -1},
         {0, -1, 0}
     });
     img = applyConvolution(img, k);

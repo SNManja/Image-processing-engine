@@ -1,6 +1,10 @@
 # Image-processing-engine
 C++ image processing engine for PPM files. Main goal is to make scalable and readable code, rather than performance (at least at the moment).
 
+<p align="center">
+  <img src="preview.png" alt="Banner" width="100%">
+</p>
+
 ## Capabilities
 - Processing PPM files 
 - Convolutional filters: Gaussian blur, Sharpen, Emboss, Laplacian of Gausian (LoG)
