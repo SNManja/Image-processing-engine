@@ -25,14 +25,13 @@ void apply_filter(image& img, basicFilter filter, const char* output_name) {
     filter(img);
 
     char output_path[512];
-    printf("Generando %s\n", output_name);
+    printf("Generating %s\n", output_name);
     snprintf(output_path, sizeof(output_path), "./output/%s", output_name);
     printToPPM(img, output_path);
 }
 
 void applyFilterOnEveryPPM(const char* dir, basicFilter filter){
     DIR* directory = opendir(dir);
-    printf("Accedio primer open\n");
     struct dirent* dirEntry;
     int numberOfImages = 0;
     while ((dirEntry = readdir(directory)) != NULL) {
@@ -40,11 +39,11 @@ void applyFilterOnEveryPPM(const char* dir, basicFilter filter){
             numberOfImages++;
             char img_path[512];
             snprintf(img_path, sizeof(img_path), "%s/%s", dir, dirEntry->d_name);
-            printf("Obserbando file %s\n", img_path);
+            printf("Looking at %s\n", img_path);
             image img = read_image(img_path);
             if (!img.data.empty()) {
                 // Apply filter to the image
-                printf("Aplicando filtro a %s\n", dirEntry->d_name);
+                printf("Applying filter to %s\n", dirEntry->d_name);
                 const char* output_name = dirEntry->d_name ;
                 apply_filter(img, filter, output_name);
             }

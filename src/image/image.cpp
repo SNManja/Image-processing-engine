@@ -24,7 +24,7 @@ void printToPPM(const image& img, const char* output_path) {
 
 image read_image(const char* path) {
     FILE* f = fopen(path, "rb");
-    printf("Leyendo imagen de %s\n", path);
+    printf("Reading image from %s\n", path);
     if (!f) {
         perror("Error opening file");
         return {};

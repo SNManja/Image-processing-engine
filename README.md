@@ -14,7 +14,7 @@ C++ image processing engine for PPM files. Main goal is to make scalable and rea
 - Add parameters to filters. Atm filters are non modifiable.
 - Median filter
 - Sobel operator
-- Remove spanglish. Have to decide in which language i will do the project
+
 
 ## Potential goals for the future
 - Applying this engine to computer vision

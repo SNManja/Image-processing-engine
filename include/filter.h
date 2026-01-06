@@ -8,11 +8,14 @@ using basicFilter = void(*)(image&);
 using paramFilter = void(*)(image&, const char*[]);
 using coordinateFunction = std::function<void(image&, int, int)>;
 
+// point filters
 void invertFilter(image&);
 void blackAndWhiteFilter(image& img);
 void sepiaFilter(image& img);
 void thresholdingFilter(image& img);
 void mirrorFilter(image& img);
+
+// convolutional filters
 void boxblurFilter(image& img);
 void sharpenFilter(image& img);
 void laplacianOfGaussianFilter(image& img);

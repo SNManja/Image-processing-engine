@@ -9,6 +9,6 @@
 int main() 
 {
     applyFilterOnEveryPPM("./pics", laplacianOfGaussianFilter);
-    printf("Proceso completado\n");
+    printf("Process completed\n");
     return 0;
 }
