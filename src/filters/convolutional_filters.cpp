@@ -1,5 +1,7 @@
 #include "filter.h"
 #include "image.h"
+#include "args_parser.h"
+
 
 void boxblurFilter(image& img, const char* args[]) {
     Kernel k = kernel(3, {
@@ -11,9 +13,12 @@ void boxblurFilter(image& img, const char* args[]) {
 }
 
 void sharpenFilter(image& img, const char* args[]) {
+    float sharpen = getFlagFloat(args, "--sharpen", 5);
+    printf("Sharpening with factor: %f\n", sharpen);
+
     Kernel k = kernel(3, {
         {0, -1, 0},
-        {-1, 6, -1},
+        {-1, sharpen, -1},
         {0, -1, 0}
     });
     img = applyConvolution(img, k);

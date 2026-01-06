@@ -10,4 +10,6 @@ int getIntArg(const char* args[], int index, int defaultValue);
 float getFloatArg(const char* args[], int index, float defaultValue);
 std::string getStringArg(const char* args[], int index, std::string defaultValue);
 
+int getFlagInt(const char* args[], std::string flagName, int defaultValue);
+float getFlagFloat(const char* args[], std::string flagName, float defaultValue);
 #endif

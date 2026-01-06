@@ -6,9 +6,9 @@
 #include "filter.h"
 
 
-int main() 
+int main(const int argc, const char* argv[]) 
 {
-    applyFilterOnEveryPPM("./pics", laplacianOfGaussianFilter, nullptr);
+    applyFilterOnEveryPPM("./pics", sharpenFilter, argv);
     printf("Process completed\n");
     return 0;
 }
