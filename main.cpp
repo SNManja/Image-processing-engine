@@ -8,7 +8,7 @@
 
 int main() 
 {
-    applyFilterOnEveryPPM("./pics", motionblurFilter);
+    applyFilterOnEveryPPM("./pics", sharpenFilter);
     printf("Proceso completado\n");
     return 0;
 }
