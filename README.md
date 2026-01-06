@@ -7,6 +7,7 @@ C++ image processing engine for PPM files. Main goal is to make scalable and rea
 - Point filters: Black and white, Sepia, Thresholding, Mirror
 
 ## To do
+- Add parameters to filters. Atm filters are non modifiable.
 - Median filter
 - Sobel operator
 - Refactor

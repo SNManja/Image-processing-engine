@@ -21,6 +21,9 @@ struct Kernel {
     std::vector<std::vector<float>> values;
 };
 
+
+Kernel kernel(int n, std::vector<std::vector<float>> values);
+
 void apply_filter(image& img, basicFilter filter, const char* output_name);
 void applyFilterOnEveryPPM(const char* dir, basicFilter filter);
 image applyConvolution(const image& img, const Kernel& kernel);
