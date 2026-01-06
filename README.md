@@ -28,7 +28,7 @@ It's a simpler format. Does not depend on compression or complex encoding. At th
 1. Clone the repo.
 2. Add your ppm images on `./pics`
 3. On main put the filter of your liking into the `applyFilterToPPM` function
-4. Compile: `g++ main.cpp filter.cpp image.cpp -o main`
-5. Run: `./main`
-6. Output will be on ./output
+4. From base folder type command `make`
+5. Run: `./engine`
+6. Output will be on `./output`
 
