@@ -2,8 +2,11 @@
 #define FILTER_H
 
 #include "image.h"
+#include <functional>
 
 using basicFilter = void(*)(image&);
+using paramFilter = void(*)(image&, const char*[]);
+using coordinateFunction = std::function<void(image&, int, int)>;
 
 void invertFilter(image&);
 void blackAndWhiteFilter(image& img);
@@ -23,11 +26,11 @@ struct Kernel {
 
 
 Kernel kernel(int n, std::vector<std::vector<float>> values);
+image applyConvolution(image& img, const Kernel& kernel);
 
 void apply_filter(image& img, basicFilter filter, const char* output_name);
 void applyFilterOnEveryPPM(const char* dir, basicFilter filter);
-image applyConvolution(const image& img, const Kernel& kernel);
-
+void mapOnPixels(image& img, coordinateFunction f);
 
 inline unsigned char clamp(float value) {
     if (value > 255.0f) return 255;
