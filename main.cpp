@@ -8,7 +8,7 @@
 
 int main() 
 {
-    applyFilterOnEveryPPM("/home/snmanja/Documents/ppm-playground/pics", motionblurFilter);
+    applyFilterOnEveryPPM("./pics", motionblurFilter);
     printf("Proceso completado\n");
     return 0;
 }
