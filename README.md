@@ -12,6 +12,8 @@ C++ image processing engine for PPM files. Main goal is to make scalable and rea
 
 ## To do
 - Add parameters to filters. Atm filters are non modifiable.
+- Documentation for each filter and its parameters
+- Basic CLI with --help to guide the user
 - Median filter
 - Sobel operator
 

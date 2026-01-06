@@ -1,7 +1,7 @@
 #include "filter.h"
 #include "image.h"
 
-void invertFilter(image& img) {
+void invertFilter(image& img, const char* args[]) {
     mapOnPixels(img, [](image& img ,int x ,int y){
         pixel*p = getPixel(img,x,y);
             if (p){
@@ -14,7 +14,7 @@ void invertFilter(image& img) {
 }
 
 
-void blackAndWhiteFilter(image& img){
+void blackAndWhiteFilter(image& img, const char* args[]){
     mapOnPixels(img, [](image& img ,int x ,int y){
         pixel*p = getPixel(img,x,y);
             if (p){
@@ -27,7 +27,7 @@ void blackAndWhiteFilter(image& img){
     );
 }
 
-void thresholdingFilter(image& img){
+void thresholdingFilter(image& img, const char* args[]){
     mapOnPixels(img, [](image& img, int x, int y){
         pixel* p = getPixel(img, x, y);
         if (p) {
@@ -45,7 +45,7 @@ void thresholdingFilter(image& img){
     });
 }
 
-void sepiaFilter(image& img){
+void sepiaFilter(image& img, const char* args[]){
     mapOnPixels(img, [](image& img, int x, int y){
         pixel* p = getPixel(img, x, y);
         if  (p) {
@@ -59,7 +59,7 @@ void sepiaFilter(image& img){
     });
 }
 
-void mirrorFilter(image& img){
+void mirrorFilter(image& img, const char* args[]){
     int center = img.width/2;
     mapOnPixels(img, [center](image& img, int x, int y){
         if (x < center){

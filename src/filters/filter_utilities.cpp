@@ -20,9 +20,9 @@ Kernel kernel(int n, std::vector<std::vector<float>> values) {
 }
 
 
-void apply_filter(image& img, basicFilter filter, const char* output_name) {
+void apply_filter(image& img, basicFilter filter, const char* args[], const char* output_name) {
     // Apply the filter to the image
-    filter(img);
+    filter(img, args);
 
     char output_path[512];
     printf("Generating %s\n", output_name);
@@ -30,7 +30,7 @@ void apply_filter(image& img, basicFilter filter, const char* output_name) {
     printToPPM(img, output_path);
 }
 
-void applyFilterOnEveryPPM(const char* dir, basicFilter filter){
+void applyFilterOnEveryPPM(const char* dir, basicFilter filter, const char* args[]){
     DIR* directory = opendir(dir);
     struct dirent* dirEntry;
     int numberOfImages = 0;
@@ -45,7 +45,7 @@ void applyFilterOnEveryPPM(const char* dir, basicFilter filter){
                 // Apply filter to the image
                 printf("Applying filter to %s\n", dirEntry->d_name);
                 const char* output_name = dirEntry->d_name ;
-                apply_filter(img, filter, output_name);
+                apply_filter(img, filter, args,output_name);
             }
         }
     }

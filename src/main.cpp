@@ -8,7 +8,7 @@
 
 int main() 
 {
-    applyFilterOnEveryPPM("./pics", laplacianOfGaussianFilter);
+    applyFilterOnEveryPPM("./pics", laplacianOfGaussianFilter, nullptr);
     printf("Process completed\n");
     return 0;
 }

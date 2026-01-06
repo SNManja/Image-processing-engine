@@ -4,22 +4,21 @@
 #include "image.h"
 #include <functional>
 
-using basicFilter = void(*)(image&);
-using paramFilter = void(*)(image&, const char*[]);
+using basicFilter = void(*)(image&, const char*[]);
 using coordinateFunction = std::function<void(image&, int, int)>;
 
 // point filters
-void invertFilter(image&);
-void blackAndWhiteFilter(image& img);
-void sepiaFilter(image& img);
-void thresholdingFilter(image& img);
-void mirrorFilter(image& img);
+void invertFilter(image& img, const char* args[]);
+void blackAndWhiteFilter(image& img, const char* args[]);
+void sepiaFilter(image& img, const char* args[]);
+void thresholdingFilter(image& img, const char* args[]);
+void mirrorFilter(image& img, const char* args[]);
 
 // convolutional filters
-void boxblurFilter(image& img);
-void sharpenFilter(image& img);
-void laplacianOfGaussianFilter(image& img);
-void motionblurFilter(image& img);
+void boxblurFilter(image& img, const char* args[]);
+void sharpenFilter(image& img, const char* args[]);
+void laplacianOfGaussianFilter(image& img, const char* args[]);
+void motionblurFilter(image& img, const char* args[]);
 
 
 struct Kernel {
@@ -31,8 +30,8 @@ struct Kernel {
 Kernel kernel(int n, std::vector<std::vector<float>> values);
 image applyConvolution(image& img, const Kernel& kernel);
 
-void apply_filter(image& img, basicFilter filter, const char* output_name);
-void applyFilterOnEveryPPM(const char* dir, basicFilter filter);
+void apply_filter(image& img, basicFilter filter, const char* args[], const char* output_name);
+void applyFilterOnEveryPPM(const char* dir, basicFilter filter, const char* args[]);
 void mapOnPixels(image& img, coordinateFunction f);
 
 inline unsigned char clamp(float value) {
