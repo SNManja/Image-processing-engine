@@ -5,6 +5,7 @@
 #include "image.h"
 #include "filter.h"
 #include "args_parser.h"
+#include "cli_helpers.h"
 
 
 int main(const int argc, const char* argv[]) 
@@ -13,6 +14,10 @@ int main(const int argc, const char* argv[])
     if (filterName.empty()) {
         perror("No filter name provided");
         return 1;
+    }
+    if(strcmp(filterName.c_str(), "--help") == 0) {
+        printHelp();
+        return 0;
     }
     FilterDescriptor filterDesc = getFilterDescriptor(filterName);
     if (filterDesc.func != nullptr) {

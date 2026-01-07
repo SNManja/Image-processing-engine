@@ -9,10 +9,11 @@ C++ image processing engine for PPM files. Main goal is to make scalable and rea
 - Processing PPM files 
 - Convolutional filters: Gaussian blur, Sharpen, Emboss, Laplacian of Gausian (LoG)
 - Point filters: Black and white, Sepia, Thresholding, Mirror
+- Basic CLI implementation with `--help` flag to use as a guide
 
 ## To do
 - Documentation for each filter and its parameters
-- Basic CLI with --help to guide the user
+
 - Median filter
 - Sobel operator
 
@@ -27,9 +28,7 @@ It's a simpler format. Does not depend on compression or complex encoding. At th
 
 ## How to run
 1. Clone the repo.
-2. Add your ppm images on `./pics`
-3. On main put the filter of your liking into the `applyFilterToPPM` function
-4. From base folder type command `make`
-5. Run: `./engine`
-6. Output will be on `./output`
-
+2. Compile with `make` command on your terminal
+3. Add your ppm images on `./pics`
+4. Use `./imgengine (name of filter)` to process your ppm images or `./imgengine --help` to ger info about each filter
+5. Obtain the resulting images from `./output`

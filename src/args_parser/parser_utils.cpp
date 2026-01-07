@@ -58,14 +58,3 @@ int countArgs(const char* args[]) {
     return count;
 }
 
-FilterDescriptor getFilterDescriptor(const std::string& filterName) {
-    printf("Looking for %s\n", filterName.c_str());
-    FilterRegistry registry = getRegistry();
-    if (!filterName.empty()) {
-        if (registry.find(filterName) != registry.end()) {
-            return registry[filterName];
-        }
-    }
-    return {};
-}
-

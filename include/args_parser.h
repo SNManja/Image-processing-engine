@@ -14,8 +14,4 @@ std::string getStringArg(const char* args[], int index, const std::string& defau
 int getFlagInt(const char* args[], const std::string& flagName, int defaultValue);
 float getFlagFloat(const char* args[], const std::string& flagName, float defaultValue);
 
-FilterDescriptor getFilterDescriptor(const std::string& filterName);
-
-typedef std::map<std::string, FilterDescriptor> FilterRegistry;
-FilterRegistry getRegistry();
 #endif
