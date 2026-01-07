@@ -12,8 +12,7 @@ C++ image processing engine for PPM files. Main goal is to make scalable and rea
 - Basic CLI implementation with `--help` flag to use as a guide
 
 ## To do
-- Documentation for each filter and its parameters
-
+- Documentation for each filter and its parameters (partially done)
 - Median filter
 - Sobel operator
 
