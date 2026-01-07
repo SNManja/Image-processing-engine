@@ -10,7 +10,7 @@ FilterRegistry getRegistry(){
             "blur", {
                 boxblurFilter, 
                 "Box blur. A simple blur.",
-                "--size (int): Takes an integer for the blur size. Only odd values (kernel has to have a defined center)"
+                "--size (int): Takes an integer for the blur size. Only odd values (kernel has to have a defined center)\n"
             }
         },
         {
