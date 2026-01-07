@@ -1,5 +1,8 @@
 #include <string>
 #include <stdlib.h>
+#include "filter.h"
+#include "args_parser.h"
+
 
 int getIntArg(const char* args[], int index, int defaultValue) {
     // Precond: Index has to be in range
@@ -9,7 +12,7 @@ int getIntArg(const char* args[], int index, int defaultValue) {
     return defaultValue;
 }
 
-int getFloatArg(const char* args[], int index, float defaultValue) {
+float getFloatArg(const char* args[], int index, float defaultValue) {
     // Precond: Index has to be in range
     if (args[index] != nullptr) {
         return std::stof(args[index]);
@@ -17,7 +20,15 @@ int getFloatArg(const char* args[], int index, float defaultValue) {
     return defaultValue;
 }
 
-int getFlagInt(const char* args[], std::string flagName, int defaultValue) {
+std::string getStringArg(const char* args[], int index, const std::string& defaultValue) {
+    // Precond: Index has to be in range
+    if (args[index] != nullptr) {
+        return args[index];
+    }
+    return defaultValue;
+}
+
+int getFlagInt(const char* args[], const std::string& flagName, int defaultValue) {
     for (int i = 0; args[i] != nullptr; ++i) {
         if (std::string(args[i]) == flagName) {
             if (args[i+1] != nullptr) {
@@ -28,7 +39,7 @@ int getFlagInt(const char* args[], std::string flagName, int defaultValue) {
     return defaultValue;
 }
 
-int getFlagFloat(const char* args[], std::string flagName, float defaultValue) {
+float getFlagFloat(const char* args[], const std::string& flagName, float defaultValue) {
     for (int i = 0; args[i] != nullptr; ++i) {
         if (std::string(args[i]) == flagName) {
             if (args[i+1] != nullptr) {
@@ -46,3 +57,15 @@ int countArgs(const char* args[]) {
     }
     return count;
 }
+
+FilterDescriptor getFilterDescriptor(const std::string& filterName) {
+    printf("Looking for %s\n", filterName.c_str());
+    FilterRegistry registry = getRegistry();
+    if (!filterName.empty()) {
+        if (registry.find(filterName) != registry.end()) {
+            return registry[filterName];
+        }
+    }
+    return {};
+}
+

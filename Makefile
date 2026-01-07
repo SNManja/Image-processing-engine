@@ -3,7 +3,7 @@ CXX = g++
 CXXFLAGS = -Wall -Iinclude -std=c++17
 
 # Nombre del ejecutable final
-TARGET = engine
+TARGET = imgengine
 
 # Localización de archivos
 # Buscamos todos los .cpp dentro de src y sus subcarpetas
