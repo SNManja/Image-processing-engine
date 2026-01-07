@@ -3,6 +3,8 @@
 
 #include "image.h"
 #include <functional>
+#include <string>
+
 
 using basicFilter = void(*)(image&, const char*[]);
 using coordinateFunction = std::function<void(image&, int, int)>;
@@ -19,7 +21,7 @@ void boxblurFilter(image& img, const char* args[]);
 void sharpenFilter(image& img, const char* args[]);
 void laplacianOfGaussianFilter(image& img, const char* args[]);
 void motionblurFilter(image& img, const char* args[]);
-
+void enbossFilter(image& img, const char* args[]);
 
 struct Kernel {
     unsigned char size;
@@ -40,6 +42,12 @@ inline unsigned char clamp(float value) {
     return (unsigned char)value;
 }
 
+
+struct FilterDescriptor { // This will be used in the filter registry
+    basicFilter func;
+    std::string description;
+    std::string usage;
+};
 
 
 
