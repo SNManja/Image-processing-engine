@@ -11,7 +11,5 @@ int getIntArg(const char* args[], int index, int defaultValue);
 float getFloatArg(const char* args[], int index, float defaultValue);
 std::string getStringArg(const char* args[], int index, const std::string& defaultValue);
 
-int getFlagInt(const char* args[], const std::string& flagName, int defaultValue);
-float getFlagFloat(const char* args[], const std::string& flagName, float defaultValue);
-
+int getFlagIndex(const char* args[], const std::string& flagName);
 #endif

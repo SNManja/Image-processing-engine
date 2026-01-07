@@ -10,7 +10,7 @@ FilterRegistry getRegistry(){
             "blur", {
                 boxblurFilter, 
                 "Box blur. A simple blur.",
-                ""
+                "--size (int): Takes an integer for the blur size. Only odd values (kernel has to have a defined center)"
             }
         },
         {
@@ -29,10 +29,10 @@ FilterRegistry getRegistry(){
         },
         {
             "bnw", {
-            blackAndWhiteFilter,
-            "Classic black and white filter.",
-            ""
-        }
+                blackAndWhiteFilter,
+                "Classic black and white filter.",
+                ""
+            }
         },
         {
             "sepia", {
@@ -52,7 +52,7 @@ FilterRegistry getRegistry(){
             "sharpen", {
                 sharpenFilter,
                 "Sharpens the image. Makes borders more saturated",
-                "--sharpen (float): Takes a float and uses it for the center kernel value"
+                "--amount (float): Takes a float and uses it for controlling the amount of sharpness"
             }
         },
         {

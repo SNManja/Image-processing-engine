@@ -4,22 +4,34 @@
 
 
 void boxblurFilter(image& img, const char* args[]) {
-    Kernel k = kernel(3, {
-        {1/9.0, 1/9.0, 1/9.0},
-        {1/9.0, 1/9.0, 1/9.0},
-        {1/9.0, 1/9.0, 1/9.0}
-    });
+    // blur size
+    int sizeFlagIndex = getFlagIndex(args, "--size");
+    int blurSize = 3;
+    if(sizeFlagIndex >= 0) {
+        blurSize = getIntArg(args, sizeFlagIndex + 1, 3);
+    }
+    if(blurSize % 2 == 0) {
+        blurSize++;  // Make sure the blur size is odd
+        printf("Blur size has to be odd. Increasing to %d\n", blurSize);
+    }
+    std::vector<std::vector<float>> kernelVector(blurSize, std::vector<float>(blurSize, 1.0f / (blurSize * blurSize)));
+    printf("Kernel size: %d\n", blurSize);
+    Kernel k = kernel(blurSize, kernelVector);
     img = applyConvolution(img, k);
 }
 
 void sharpenFilter(image& img, const char* args[]) {
-    float sharpen = getFlagFloat(args, "--sharpen", 5);
-    printf("Sharpening with factor: %f\n", sharpen);
+    int amountFlagIndex = getFlagIndex(args, "--amount");
+    float amountValue = 1.0;
+    if(amountFlagIndex >= 0) {
+        amountValue = getFloatArg(args, amountFlagIndex + 1, 5.0);
+    }
+    printf("Sharpening with amount: %f\n", amountValue);
 
     Kernel k = kernel(3, {
-        {0, -1, 0},
-        {-1, sharpen, -1},
-        {0, -1, 0}
+        {0, -amountValue, 0},
+        {-amountValue, amountValue * 5, -amountValue},
+        {0, -amountValue, 0}
     });
     img = applyConvolution(img, k);
 }

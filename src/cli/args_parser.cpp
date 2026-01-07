@@ -28,27 +28,16 @@ std::string getStringArg(const char* args[], int index, const std::string& defau
     return defaultValue;
 }
 
-int getFlagInt(const char* args[], const std::string& flagName, int defaultValue) {
+int getFlagIndex(const char* args[], const std::string& flagName) {
     for (int i = 0; args[i] != nullptr; ++i) {
         if (std::string(args[i]) == flagName) {
-            if (args[i+1] != nullptr) {
-                return std::stoi(args[i+1]);
-            }
+            return i;
         }
     }
-    return defaultValue;
+    return -1;
 }
 
-float getFlagFloat(const char* args[], const std::string& flagName, float defaultValue) {
-    for (int i = 0; args[i] != nullptr; ++i) {
-        if (std::string(args[i]) == flagName) {
-            if (args[i+1] != nullptr) {
-                return std::stof(args[i+1]);
-            }
-        }
-    }
-    return defaultValue;
-}
+
 
 int countArgs(const char* args[]) {
     int count = 0;
