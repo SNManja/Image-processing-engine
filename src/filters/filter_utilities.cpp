@@ -53,7 +53,7 @@ void applyFilterOnEveryPPM(const char* dir, basicFilter filter, const char* args
 }
 
 
-image applyConvolution(image& img, const Kernel& kernel){
+image applyConvolution(image& img, const Kernel& kernel, float scale=1.0f, float offset=0.0f){
     image newImg;
     newImg.width = img.width; int w = newImg.width;
     newImg.height = img.height; int h = newImg.height;
@@ -70,7 +70,7 @@ image applyConvolution(image& img, const Kernel& kernel){
                     newValueB += (neigh->b) * kernel.values[i][j];
                 }
             }
-            pixel newPix = {clamp((int)newValueR), clamp((int)newValueG), clamp((int)newValueB)};
+            pixel newPix = {clamp((int)(newValueR*scale+offset)), clamp((int)(newValueG*scale+offset)), clamp((int)(newValueB*scale+offset))};
             setPixel(newImg,x,y,newPix);
         }
     }

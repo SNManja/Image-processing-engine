@@ -12,11 +12,13 @@ C++ image processing engine for PPM files. Main goal is to make scalable and rea
 - Basic CLI implementation with `--help` flag to use as documentation. There's info about each filter and it's parameters
 
 ## To do
-- Add common parameters to applyConvolution (Scale, offset, border strategy, stride, dilation)
+- Add common parameters to applyConvolution (border strategy, stride, dilation)
 - Add parameters to already implemented filters
+- Change return from applyConvolution to src and dst
 - Documentation for each filter and its parameters (partially done)
 - Median filter
 - Sobel operator
+- Check easy performance improvements before going into more complex filters
 
 
 ## Potential goals for the future
