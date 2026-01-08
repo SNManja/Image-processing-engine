@@ -53,18 +53,32 @@ void applyFilterOnEveryPPM(const char* dir, basicFilter filter, const char* args
 }
 
 
-image applyConvolution(image& img, const Kernel& kernel, float scale=1.0f, float offset=0.0f){
+image applyConvolution(image& img, const Kernel& kernel, float scale, float offset, int stride){
     image newImg;
-    newImg.width = img.width; int w = newImg.width;
-    newImg.height = img.height; int h = newImg.height;
-    newImg.data.resize(w * h);
-    const int kernelCenter = kernel.size / 2;
-    for(int x = 0; x < w; x++){
-        for(int y = 0; y < h; y++){
+    int inW = img.width;
+    int inH = img.height;
+    int k = kernel.size;
+    if (k % 2 == 0){
+        perror("Kernel size has to be odd");
+        return img;
+    }
+
+    const int kernelCenter = k / 2;
+    int padding = kernelCenter; 
+    int outW = ((int)((inW-k+2*padding))/stride)+1;
+    int outH = ((int)((inH-k+2*padding))/stride)+1;
+    newImg.width = outW; 
+    newImg.height = outH;
+    newImg.data.resize(outW * outH);
+
+    for(int y = 0; y < outH; y++){
+        for(int x = 0; x < outW; x++){
+            int inX = (x * stride);
+            int inY = (y * stride);
             float newValueR = 0, newValueB = 0, newValueG = 0;
-            for (int i=0; i < kernel.size; i++){
-                for (int j=0; j < kernel.size; j++){
-                    pixel* neigh = getPixelClamped(img,x+i-kernelCenter,y+j-kernelCenter);
+            for (int i=0; i < k; i++){
+                for (int j=0; j < k; j++){
+                    pixel* neigh = getPixelClamped(img,inX+i-kernelCenter,inY+j-kernelCenter);
                     newValueR += (neigh->r) * kernel.values[i][j];
                     newValueG += (neigh->g) * kernel.values[i][j];
                     newValueB += (neigh->b) * kernel.values[i][j];
@@ -73,6 +87,7 @@ image applyConvolution(image& img, const Kernel& kernel, float scale=1.0f, float
             pixel newPix = {clamp((int)(newValueR*scale+offset)), clamp((int)(newValueG*scale+offset)), clamp((int)(newValueB*scale+offset))};
             setPixel(newImg,x,y,newPix);
         }
+        
     }
     return newImg;
 }

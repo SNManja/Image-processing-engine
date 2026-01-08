@@ -30,7 +30,7 @@ struct Kernel {
 
 
 Kernel kernel(int n, std::vector<std::vector<float>> values);
-image applyConvolution(image& img, const Kernel& kernel);
+image applyConvolution(image& img, const Kernel& kernel, float scale=1.0f, float offset=0.0f, int stride = 1.0f);
 
 void apply_filter(image& img, basicFilter filter, const char* args[], const char* output_name);
 void applyFilterOnEveryPPM(const char* dir, basicFilter filter, const char* args[]);

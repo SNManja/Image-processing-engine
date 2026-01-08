@@ -8,17 +8,21 @@ C++ image processing engine for PPM files. Main goal is to make scalable and rea
 ## Capabilities
 - Processing PPM files 
 - Convolutional filters: Gaussian blur, Sharpen, Emboss, Laplacian of Gausian (LoG)
-- Point filters: Black and white, Sepia, Thresholding, Mirror
+- Point filters: Black and white, Sepia, Thresholding
+- Geometric filters: Mirror 
 - Basic CLI implementation with `--help` flag to use as documentation. There's info about each filter and it's parameters
+- Supports "Same" padding strategy to mantain spacial correspondence, with configurable stride and clamped edge handling
 
 ## To do
-- Add common parameters to applyConvolution (border strategy, stride, dilation)
+- Change the way i pass parameters through applyConvolution
+- Add common parameters to applyConvolution (Custom border strategy, Dilation)
 - Add parameters to already implemented filters
 - Change return from applyConvolution to src and dst
 - Documentation for each filter and its parameters (partially done)
 - Median filter
 - Sobel operator
 - Check easy performance improvements before going into more complex filters
+- "Valid" padding strategy
 
 
 ## Potential goals for the future
@@ -27,7 +31,7 @@ C++ image processing engine for PPM files. Main goal is to make scalable and rea
 - Make a simpler and better user interface or cli tool
 
 ## Why ppm?
-It's a simpler format. Does not depend on compression or complex encoding. At the time it's what i will be using. The goal of the project (as any other project of mine) is to implement things and understand then thoroughly. So im interested in implementing the conversion of formats by myself in the future when the project grows in size.
+It's a simpler format. Does not depend on compression or complex encoding (like jpeg or png). At the time it's what i will be using. The goal of the project (as any other project of mine) is to implement things and understand then thoroughly. So im interested in implementing the conversion of formats by myself in the future when the project grows in size.
 
 ## How to run
 1. Clone the repo.

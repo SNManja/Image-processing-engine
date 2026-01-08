@@ -10,7 +10,7 @@ FilterRegistry getRegistry(){
             "blur", {
                 boxblurFilter, 
                 "Box blur. A simple blur.",
-                "--size (int): Takes an integer for the blur size. Only odd values (kernel has to have a defined center)\n"
+                "--size (int): Takes an integer for the blur size. Only odd values (kernel has to have a defined center)\n--stride (int): Takes an integer for the stride, which modifies the step size of the filter. Changes image size when different to 1"
             }
         },
         {
