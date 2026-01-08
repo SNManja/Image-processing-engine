@@ -16,39 +16,15 @@ struct image {
     std::vector<pixel> data;
 };
 
-inline pixel* getPixel(image& img, int x, int y) {
-    if (x < 0 || x >= img.width || y < 0 || y >= img.height) {
-        perror("Coordenadas fuera de los límites");
-        return nullptr;
-    }
-    return &img.data[y * img.width + x];
-}
+pixel getPixel(image& img, int x, int y);
 
-inline pixel* getPixelClamped(image& img, int x, int y){
-    int width = img.width;
-    int height = img.height;
+pixel getPixelClamped(image& img, int x, int y);
+pixel getPixelConstant(image& img, int x, int y);
+pixel getPixelWrapped(image& img, int x, int y);
+pixel getPixelMirrored(image& img, int x, int y);
 
-    // Clamp coordinates
-    if (x < 0) x = 0;
-    if (x >= width) x = width - 1;
-    if (y < 0) y = 0;
-    if (y >= height) y = height - 1;
-
-    return &img.data[y * width + x];
-}
-
-inline pixel copyPixel(image& img, int x, int y) {
-    // Falta chekceo de error, posible implementacion de clamping seria buena idea
-    return img.data[y * img.width + x];
-}
-
-inline void setPixel(image& img, int x, int y, pixel p) {
-    if(x < 0 || x >= img.width || y < 0 || y >= img.height) {
-        perror("Coordenadas fuera de los límites");
-        return;
-    }
-    img.data[y * img.width + x] = p;
-}
+pixel copyPixel(image& img, int x, int y);
+void setPixel(image& img, int x, int y, pixel p);
 
 void printToPPM(const image& img, const char* output_path);
 

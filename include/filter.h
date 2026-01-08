@@ -33,6 +33,7 @@ struct convolutionConfig
     float scale = 1.0f;
     float offset = 0.0f;
     int stride = 1;
+    std::string borderStrategy = "clamp";
 };
 
 Kernel kernel(int n, std::vector<std::vector<float>> values);

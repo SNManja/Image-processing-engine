@@ -52,11 +52,30 @@ void applyFilterOnEveryPPM(const char* dir, basicFilter filter, const char* args
     closedir(directory);
 }
 
+using GetPixelFunc = pixel (*)(image&, int, int);
+GetPixelFunc getPixelFunction(const std::string& borderStrategy) {
+    if (borderStrategy == "clamp") {
+        return getPixelClamped;
+    }
+    if (borderStrategy == "wrap") {
+        return getPixelWrapped;
+    }
+    if (borderStrategy == "mirror") {
+        return getPixelMirrored;
+    }
+    if (borderStrategy == "constant") {
+        return getPixelConstant;
+    }
+    return getPixelClamped; // Default to clamp
+}
+
 image applyConvolution(image& img, const Kernel& kernel, const convolutionConfig& config){
     image newImg;
     float scale = config.scale;
     float offset = config.offset;
     int stride = config.stride;
+    GetPixelFunc getPixStrat = getPixelFunction(config.borderStrategy);
+
     int inW = img.width;
     int inH = img.height;
     int k = kernel.size;
@@ -80,10 +99,11 @@ image applyConvolution(image& img, const Kernel& kernel, const convolutionConfig
             float newValueR = 0, newValueB = 0, newValueG = 0;
             for (int i=0; i < k; i++){
                 for (int j=0; j < k; j++){
-                    pixel* neigh = getPixelClamped(img,inX+i-kernelCenter,inY+j-kernelCenter);
-                    newValueR += (neigh->r) * kernel.values[i][j];
-                    newValueG += (neigh->g) * kernel.values[i][j];
-                    newValueB += (neigh->b) * kernel.values[i][j];
+                    // !For this function call without inlining we will have a lot of performance loss
+                    pixel neigh = getPixStrat(img,inX+i-kernelCenter,inY+j-kernelCenter); 
+                    newValueR += (neigh.r) * kernel.values[i][j];
+                    newValueG += (neigh.g) * kernel.values[i][j];
+                    newValueB += (neigh.b) * kernel.values[i][j];
                 }
             }
             pixel newPix = {clamp((int)(newValueR*scale+offset)), clamp((int)(newValueG*scale+offset)), clamp((int)(newValueB*scale+offset))};
