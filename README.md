@@ -24,7 +24,7 @@ C++ image processing engine for PPM files. Main goal is to make scalable and rea
 - Check easy performance improvements before going into more complex filters
 - Implement "Valid" padding strategy
 - Evaluate if even kernels have any utility, and make them usable check how to handle them well.
-- Make a template driven applyConvolution so it generates different versions of the function in compile time. The main goal of this would be performance optimization (Less function calls with inlining)
+- Make a template driven applyConvolution so it generates different versions of the function in compile time. The main goal of this would be performance optimization (Less function calls with inlining). For getFlagValue too.
 
 ## Potential goals for the future
 - Applying this engine to computer vision

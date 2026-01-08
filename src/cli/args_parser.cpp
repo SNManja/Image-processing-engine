@@ -38,6 +38,30 @@ int getFlagIndex(const char* args[], const std::string& flagName) {
 }
 
 
+// This could be a template
+int getFlagValue(const char* args[], const std::string& flagName, int defaultValue) {
+    int index = getFlagIndex(args, flagName);
+    if (index >= 0) {
+        return getIntArg(args, index + 1, defaultValue);
+    }
+    return defaultValue;
+}
+
+float getFlagValue(const char* args[], const std::string& flagName, float defaultValue) {
+    int index = getFlagIndex(args, flagName);
+    if (index >= 0) {
+        return getFloatArg(args, index + 1, defaultValue);
+    }
+    return defaultValue;
+}
+
+std::string getFlagValue(const char* args[], const std::string& flagName, const std::string& defaultValue) {
+    int index = getFlagIndex(args, flagName);
+    if (index >= 0) {
+        return getStringArg(args, index + 1, defaultValue);
+    }
+    return defaultValue;
+}
 
 int countArgs(const char* args[]) {
     int count = 0;
