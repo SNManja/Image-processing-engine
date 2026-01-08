@@ -50,12 +50,5 @@ inline unsigned char clamp(float value) {
 }
 
 
-struct FilterDescriptor { // This will be used in the filter registry
-    basicFilter func;
-    std::string description;
-    std::string usage;
-};
-
-
 
 #endif

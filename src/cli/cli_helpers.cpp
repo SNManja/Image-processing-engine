@@ -21,8 +21,11 @@ void printHelp() {
 
         printf("- %s\n", entry.first.c_str());
         printf("  Description: %s\n", entry.second.description.c_str());
-        if (!entry.second.usage.empty()) {
-            printf("  Usage: %s\n", entry.second.usage.c_str());
+        if (!entry.second.paramsDesc.empty()) {
+            printf("  Usage:\n");
+            for (const std::string& param : entry.second.paramsDesc) {
+                printf("    %s\n", param.c_str());
+            }
         }
         printf("\n");
     }
