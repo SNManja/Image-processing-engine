@@ -5,13 +5,30 @@
 #include <string.h>
 #include <functional>
 
-void mapOnPixels(image& img, coordinateFunction f){
+void applyPointTransform(image& img, coordinateFunction f, pointConfig pConfig){
+    int brightness = pConfig.brightness;
+    float contrast = pConfig.contrast;
+    float channel[3] = {pConfig.mixingWeight[0], pConfig.mixingWeight[1], pConfig.mixingWeight[2]};
+
     for (int y = 0; y < img.height; y++) {
         for (int x = 0; x < img.width; x++) {
+            pixel pIni = getPixelConstant(img, x, y);
             f(img, x, y);
+            pixel* p = pixel_ptr(img, x, y);
+
+            // Brightness and contrast
+            float p_r = (p->r - 127.5)*contrast + 127.5 + brightness;
+            float p_g = (p->g - 127.5)*contrast + 127.5 + brightness;
+            float p_b = (p->b - 127.5)*contrast + 127.5 + brightness;
+
+            // Channel masking
+            p->r = clamp(pIni.r * (1-channel[0]) + p_r * (channel[0]));
+            p->g = clamp(pIni.g * (1-channel[1]) + p_g * (channel[1]));
+            p->b = clamp(pIni.b * (1-channel[2]) + p_b * (channel[2]));
         }
     }
 }
+
 Kernel kernel(int n, std::vector<std::vector<float>> values) {
     Kernel k;
     k.size = n;

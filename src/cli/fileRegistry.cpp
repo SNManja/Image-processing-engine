@@ -13,6 +13,18 @@ std::vector<std::string> getConvolutionalParamsList() {
     };
 };
 
+std::vector<std::string> getPointParamsList() {
+    return {
+        "--brightness (int): Offset added to the pixel intensity. Default 0.",
+        "--contrast (float): Multiplier for the contrast adjustment. Default 1.0.",
+        "--red-mixing (float): Blend between original and filtered Red channel. 0 = Original, 1 = Filtered.",
+        "--green-mixing (float): Blend between original and filtered Green channel. 0 = Original, 1 = Filtered.",
+        "--blue-mixing (float): Blend between original and filtered Blue channel. 0 = Original, 1 = Filtered."
+    };
+};
+
+
+
 
 typedef std::map<std::string, FilterDescriptor> FilterRegistry;
 FilterRegistry getRegistry(){

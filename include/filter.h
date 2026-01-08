@@ -28,6 +28,12 @@ struct Kernel {
     std::vector<std::vector<float>> values;
 };
 
+struct pointConfig{
+    float brightness = 0.0f;
+    float contrast = 1.0f;
+    float mixingWeight[3] = {1.0f, 1.0f, 1.0f};
+};
+
 struct convolutionConfig 
 {
     float scale = 1.0f;
@@ -41,7 +47,7 @@ image applyConvolution(image& img, const Kernel& kernel, const convolutionConfig
 
 void apply_filter(image& img, basicFilter filter, const char* args[], const char* output_name);
 void applyFilterOnEveryPPM(const char* dir, basicFilter filter, const char* args[]);
-void mapOnPixels(image& img, coordinateFunction f);
+void applyPointTransform(image& img, coordinateFunction f, pointConfig pConfig);
 
 inline unsigned char clamp(float value) {
     if (value > 255.0f) return 255;
