@@ -54,6 +54,7 @@ void applyFilterOnEveryPPM(const char* dir, basicFilter filter, const char* args
 
 using GetPixelFunc = pixel (*)(image&, int, int);
 GetPixelFunc getPixelFunction(const std::string& borderStrategy) {
+    printf("Using strategy: %s (if valid)\n", borderStrategy.c_str());
     if (borderStrategy == "clamp") {
         return getPixelClamped;
     }
@@ -66,6 +67,7 @@ GetPixelFunc getPixelFunction(const std::string& borderStrategy) {
     if (borderStrategy == "constant") {
         return getPixelConstant;
     }
+    printf("Invalid strategy, defaulting to clamp\n");
     return getPixelClamped; // Default to clamp
 }
 

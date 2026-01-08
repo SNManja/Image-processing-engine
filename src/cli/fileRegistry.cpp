@@ -1,18 +1,29 @@
 #include <map>
 #include <string>
+#include <vector>
 #include "filter.h"
 #include "cli_helpers.h"
 
+std::vector<std::string> getConvolutionalParamsList() {
+    return {
+        "--stride (int): Takes an integer for the stride, which modifies the step size of the filter. Changes image size when different to 1",
+        "--scale (float): Takes a float for the scaling factor applied to the filter output.",
+        "--offset (float): Takes a float for the offset added to the filter output.",
+        "--border (string): Takes a string for the border strategy (clamp, wrap, mirror, constant)."
+    };
+};
+
+
 typedef std::map<std::string, FilterDescriptor> FilterRegistry;
 FilterRegistry getRegistry(){
-    return  {
+    FilterRegistry registry = {
         {
             "blur", {
                 boxblurFilter, 
                 "Box blur. A simple blur.",
+                "Convolutional",
                 {
-                    "--size (int): Takes an integer for the blur size. Only odd values (kernel has to have a defined center)",
-                    "--stride (int): Takes an integer for the stride, which modifies the step size of the filter. Changes image size when different to 1"
+                    "--size (int): Takes an integer for the blur size. Only odd values (kernel has to have a defined center)",   
                 }
             }
         },
@@ -20,6 +31,7 @@ FilterRegistry getRegistry(){
             "invert", {
                 invertFilter,
                 "Color inverter, also called negative filter.",
+                "Point",
                 {""}
             }
         },
@@ -27,6 +39,7 @@ FilterRegistry getRegistry(){
             "threshold", {
                 thresholdingFilter,
                 "Binarize the image.",
+                "Point",
                 {""}
             }
         },
@@ -34,6 +47,7 @@ FilterRegistry getRegistry(){
             "bnw", {
                 blackAndWhiteFilter,
                 "Classic black and white filter.",
+                "Point",
                 {""}
             }
         },
@@ -41,6 +55,7 @@ FilterRegistry getRegistry(){
             "sepia", {
                 sepiaFilter,
                 "Sepia filter. Gives a warm, brownish tone.",
+                "Point",
                 {""}
             }
         },
@@ -48,6 +63,7 @@ FilterRegistry getRegistry(){
             "mirror", {
                 mirrorFilter,
                 "Mirrors the image.",
+                "Geometric",
                 {""}
             }
         },
@@ -55,13 +71,17 @@ FilterRegistry getRegistry(){
             "sharpen", {
                 sharpenFilter,
                 "Sharpens the image. Makes borders more saturated",
-                {"--amount (float): Takes a float and uses it for controlling the amount of sharpness"}
+                "Convolutional",
+                {
+                    "--amount (float): Takes a float and uses it for controlling the amount of sharpness"
+                }
             }
         },
         {
             "enboss", {
                 enbossFilter,
                 "Enboss filter. Highlights edges and contours.",
+                "Convolutional",
                 {""}
             }
         },
@@ -69,6 +89,7 @@ FilterRegistry getRegistry(){
             "lof", {
                 laplacianOfGaussianFilter,
                 "Laplacian of Gaussian filter. Edge detection.",
+                "Convolutional",
                 {""}
             }
         },
@@ -76,8 +97,17 @@ FilterRegistry getRegistry(){
             "motionblur", {
                 motionblurFilter,
                 "Motion blur filter. Simulates the effect of motion blur.",
+                "Convolutional",
                 {""}
             }
         }
     };
+    std::vector<std::string> convParamList = getConvolutionalParamsList();
+    for (auto& [name, desc] : registry) {
+        if(desc.category == "Convolutional") {
+            desc.paramsDesc.insert(desc.paramsDesc.end(), convParamList.begin(), convParamList.end());
+        }
+    }
+
+    return registry;
 }

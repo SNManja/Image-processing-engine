@@ -9,6 +9,7 @@
 struct FilterDescriptor { // This will be used in the filter registry
     basicFilter func;
     const std::string description;
+    const std::string category;
     std::vector<std::string> paramsDesc;
 };
 
