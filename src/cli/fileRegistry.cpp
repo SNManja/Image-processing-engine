@@ -24,8 +24,6 @@ std::vector<std::string> getPointParamsList() {
 };
 
 
-
-
 typedef std::map<std::string, FilterDescriptor> FilterRegistry;
 FilterRegistry getRegistry(){
     FilterRegistry registry = {
@@ -74,8 +72,8 @@ FilterRegistry getRegistry(){
         {
             "mirror", {
                 mirrorFilter,
-                "Mirrors the image.",
-                "Geometric",
+                "Mirrors the image. Flips it horizontally. If we are technical about it, it's really a geometric filter. But it has the same postprocessing nuances that a point filter has",
+                "Point",
                 {}
             }
         },
@@ -118,6 +116,10 @@ FilterRegistry getRegistry(){
     for (auto& [name, desc] : registry) {
         if(desc.category == "Convolutional") {
             desc.paramsDesc.insert(desc.paramsDesc.end(), convParamList.begin(), convParamList.end());
+        }
+        if(desc.category == "Point") {
+            std::vector<std::string> pointParamList = getPointParamsList();
+            desc.paramsDesc.insert(desc.paramsDesc.end(), pointParamList.begin(), pointParamList.end());
         }
     }
 
