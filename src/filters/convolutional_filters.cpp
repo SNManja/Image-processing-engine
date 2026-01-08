@@ -8,6 +8,7 @@ convolutionConfig readConvolutionConfig(const char* args[]) {
     config.stride = getFlagValue(args, "--stride", 1);
     config.scale = getFlagValue(args, "--scale", 1.0f);
     config.offset = getFlagValue(args, "--offset", 0.0f);
+    config.borderStrategy = getFlagValue(args, "--border", "clamp");
     return config;
 }
 
