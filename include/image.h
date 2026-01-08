@@ -16,14 +16,13 @@ struct image {
     std::vector<pixel> data;
 };
 
-pixel getPixel(image& img, int x, int y);
+pixel* pixel_ptr(image& img, int x, int y);
 
 pixel getPixelClamped(image& img, int x, int y);
 pixel getPixelConstant(image& img, int x, int y);
 pixel getPixelWrapped(image& img, int x, int y);
 pixel getPixelMirrored(image& img, int x, int y);
 
-pixel copyPixel(image& img, int x, int y);
 void setPixel(image& img, int x, int y, pixel p);
 
 void printToPPM(const image& img, const char* output_path);

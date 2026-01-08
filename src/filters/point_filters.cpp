@@ -3,7 +3,7 @@
 
 void invertFilter(image& img, const char* args[]) {
     mapOnPixels(img, [](image& img ,int x ,int y){
-        pixel*p = getPixel(img,x,y);
+        pixel*p = pixel_ptr(img,x,y);
             if (p){
                 p->r = 255 - p->r;
                 p->g = 255 - p->g;
@@ -16,7 +16,7 @@ void invertFilter(image& img, const char* args[]) {
 
 void blackAndWhiteFilter(image& img, const char* args[]){
     mapOnPixels(img, [](image& img ,int x ,int y){
-        pixel*p = getPixel(img,x,y);
+        pixel*p = pixel_ptr(img,x,y);
             if (p){
                 float formula = 0.299 * (p->r) + 0.577 * (p->g) + 0.114* (p->b);
                 p->r = formula;
@@ -29,7 +29,7 @@ void blackAndWhiteFilter(image& img, const char* args[]){
 
 void thresholdingFilter(image& img, const char* args[]){
     mapOnPixels(img, [](image& img, int x, int y){
-        pixel* p = getPixel(img, x, y);
+        pixel* p = pixel_ptr(img, x, y);
         if (p) {
             float formula = 0.299 * (p->r) + 0.577 * (p->g) + 0.114 * (p->b);
             if (formula > 128) {
@@ -47,7 +47,7 @@ void thresholdingFilter(image& img, const char* args[]){
 
 void sepiaFilter(image& img, const char* args[]){
     mapOnPixels(img, [](image& img, int x, int y){
-        pixel* p = getPixel(img, x, y);
+        pixel* p = pixel_ptr(img, x, y);
         if  (p) {
             int red = (p->r);
             int green = (p->g);
@@ -64,8 +64,8 @@ void mirrorFilter(image& img, const char* args[]){
     mapOnPixels(img, [center](image& img, int x, int y){
         if (x < center){
             int opuestoX = img.width-x-1;
-            pixel mirrPix = copyPixel(img, opuestoX, y);
-            pixel basePix = copyPixel(img, x, y);
+            pixel mirrPix = getPixelClamped(img, opuestoX, y);
+            pixel basePix = getPixelClamped(img, x, y);
             setPixel(img, x, y, mirrPix);
             setPixel(img, opuestoX, y, basePix);
         }

@@ -1,6 +1,17 @@
 #include "image.h"
 
 
+pixel* pixel_ptr(image& img, int x, int y){
+    int width = img.width;
+    int height = img.height;
+
+    if (x < 0 || x >= width || y < 0 || y >= height) {
+        return nullptr;
+    }
+
+    return &img.data[y * width + x];
+}
+
 
 pixel getPixelClamped(image& img, int x, int y){
     int width = img.width;
@@ -47,11 +58,6 @@ pixel getPixelMirrored(image& img, int x, int y){
     if (y >= height) mirroredY = 2 * height - y - 2;
 
     return img.data[mirroredY * width + mirroredX];
-}
-
-pixel copyPixel(const image& img, int x, int y) {
-    // Falta chekceo de error, posible implementacion de clamping seria buena idea
-    return img.data[y * img.width + x];
 }
 
 void setPixel(image& img, int x, int y, pixel p) {
