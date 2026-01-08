@@ -28,9 +28,15 @@ struct Kernel {
     std::vector<std::vector<float>> values;
 };
 
+struct convolutionConfig 
+{
+    float scale = 1.0f;
+    float offset = 0.0f;
+    int stride = 1;
+};
 
 Kernel kernel(int n, std::vector<std::vector<float>> values);
-image applyConvolution(image& img, const Kernel& kernel, float scale=1.0f, float offset=0.0f, int stride = 1.0f);
+image applyConvolution(image& img, const Kernel& kernel, const convolutionConfig& config={});
 
 void apply_filter(image& img, basicFilter filter, const char* args[], const char* output_name);
 void applyFilterOnEveryPPM(const char* dir, basicFilter filter, const char* args[]);

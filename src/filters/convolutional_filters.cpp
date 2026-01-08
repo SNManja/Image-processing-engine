@@ -3,8 +3,12 @@
 #include "args_parser.h"
 
 
+
+
 void boxblurFilter(image& img, const char* args[]) {
     // blur size
+    convolutionConfig config = {};
+    
     int sizeFlagIndex = getFlagIndex(args, "--size");
     int blurSize = 3;
     if(sizeFlagIndex >= 0) {
@@ -16,16 +20,15 @@ void boxblurFilter(image& img, const char* args[]) {
     }
     // stride
     int strideFlagIndex = getFlagIndex(args, "--stride");
-    int stride = 1;
     if(strideFlagIndex >= 0) {
-        stride = getIntArg(args, strideFlagIndex + 1, 1);
+        config.stride = getIntArg(args, strideFlagIndex + 1, 1);
     }
 
 
     std::vector<std::vector<float>> kernelVector(blurSize, std::vector<float>(blurSize, 1.0f / (blurSize * blurSize)));
     printf("Kernel size: %d\n", blurSize);
     Kernel k = kernel(blurSize, kernelVector);
-    img = applyConvolution(img, k, 1.0f, 0.0f,stride); // ! HARDCODED JUST FOR TESTING. FIX
+    img = applyConvolution(img, k, config); 
 }
 
 void sharpenFilter(image& img, const char* args[]) {

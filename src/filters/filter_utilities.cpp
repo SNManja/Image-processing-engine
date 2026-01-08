@@ -52,9 +52,11 @@ void applyFilterOnEveryPPM(const char* dir, basicFilter filter, const char* args
     closedir(directory);
 }
 
-
-image applyConvolution(image& img, const Kernel& kernel, float scale, float offset, int stride){
+image applyConvolution(image& img, const Kernel& kernel, const convolutionConfig& config){
     image newImg;
+    float scale = config.scale;
+    float offset = config.offset;
+    int stride = config.stride;
     int inW = img.width;
     int inH = img.height;
     int k = kernel.size;

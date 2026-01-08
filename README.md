@@ -14,7 +14,6 @@ C++ image processing engine for PPM files. Main goal is to make scalable and rea
 - Supports "Same" padding strategy to mantain spacial correspondence, with configurable stride and clamped edge handling
 
 ## To do
-- Change the way i pass parameters through applyConvolution
 - Add common parameters to applyConvolution (Custom border strategy, Dilation)
 - Add parameters to already implemented filters
 - Change return from applyConvolution to src and dst
@@ -23,6 +22,7 @@ C++ image processing engine for PPM files. Main goal is to make scalable and rea
 - Sobel operator
 - Check easy performance improvements before going into more complex filters
 - "Valid" padding strategy
+- Evaluate if even kernels have any utility, and make them usable check how to handle them well.
 
 
 ## Potential goals for the future
