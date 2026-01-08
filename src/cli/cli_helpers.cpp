@@ -23,7 +23,7 @@ void printHelp() {
         printf("  Description: %s\n", entry.second.description.c_str());
         printf("  Category: %s\n", entry.second.category.c_str());
         if (!entry.second.paramsDesc.empty()) {
-            printf("  Usage:\n");
+            printf("  Parameters:\n");
             for (const std::string& param : entry.second.paramsDesc) {
                 printf("    %s\n", param.c_str());
             }

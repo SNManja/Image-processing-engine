@@ -32,7 +32,7 @@ FilterRegistry getRegistry(){
                 invertFilter,
                 "Color inverter, also called negative filter.",
                 "Point",
-                {""}
+                {}
             }
         },
         {
@@ -40,7 +40,7 @@ FilterRegistry getRegistry(){
                 thresholdingFilter,
                 "Binarize the image.",
                 "Point",
-                {""}
+                {}
             }
         },
         {
@@ -48,7 +48,7 @@ FilterRegistry getRegistry(){
                 blackAndWhiteFilter,
                 "Classic black and white filter.",
                 "Point",
-                {""}
+                {}
             }
         },
         {
@@ -56,7 +56,7 @@ FilterRegistry getRegistry(){
                 sepiaFilter,
                 "Sepia filter. Gives a warm, brownish tone.",
                 "Point",
-                {""}
+                {}
             }
         },
         {
@@ -64,7 +64,7 @@ FilterRegistry getRegistry(){
                 mirrorFilter,
                 "Mirrors the image.",
                 "Geometric",
-                {""}
+                {}
             }
         },
         {
@@ -82,7 +82,7 @@ FilterRegistry getRegistry(){
                 enbossFilter,
                 "Enboss filter. Highlights edges and contours.",
                 "Convolutional",
-                {""}
+                {}
             }
         },
         {
@@ -90,7 +90,7 @@ FilterRegistry getRegistry(){
                 laplacianOfGaussianFilter,
                 "Laplacian of Gaussian filter. Edge detection.",
                 "Convolutional",
-                {""}
+                {}
             }
         },
         {
@@ -98,7 +98,7 @@ FilterRegistry getRegistry(){
                 motionblurFilter,
                 "Motion blur filter. Simulates the effect of motion blur.",
                 "Convolutional",
-                {""}
+                {}
             }
         }
     };
