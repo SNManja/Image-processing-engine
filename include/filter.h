@@ -21,7 +21,7 @@ void boxblurFilter(image& img, const char* args[]);
 void sharpenFilter(image& img, const char* args[]);
 void laplacianOfGaussianFilter(image& img, const char* args[]);
 void motionblurFilter(image& img, const char* args[]);
-void enbossFilter(image& img, const char* args[]);
+void embossFilter(image& img, const char* args[]);
 
 struct Kernel {
     unsigned char size;

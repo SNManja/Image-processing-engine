@@ -78,9 +78,9 @@ FilterRegistry getRegistry(){
             }
         },
         {
-            "enboss", {
-                enbossFilter,
-                "Enboss filter. Highlights edges and contours.",
+            "emboss", {
+                embossFilter,
+                "Emboss filter. Highlights edges and contours.",
                 "Convolutional",
                 {}
             }

@@ -50,7 +50,7 @@ void sharpenFilter(image& img, const char* args[]) {
     img = applyConvolution(img, k, config);
 }
 
-void enbossFilter(image& img, const char* args[]) {
+void embossFilter(image& img, const char* args[]) {
     convolutionConfig config = readConvolutionConfig(args);
     Kernel k = kernel(3, {
         {-2, -1, 0},
