@@ -1,6 +1,5 @@
 #include "image.h"
 
-
 pixel* pixel_ptr(image& img, int x, int y){
     int width = img.width;
     int height = img.height;
@@ -36,6 +35,7 @@ pixel getPixelConstant(image& img, int x, int y){
 
     return img.data[y * width + x];
 }
+
 pixel getPixelWrapped(image& img, int x, int y) {
     int width = img.width;
     int height = img.height;

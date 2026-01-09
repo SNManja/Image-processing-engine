@@ -1,48 +1,49 @@
 #include "filter.h"
 #include "image.h"
-#include "args_parser.h"
 
-pointConfig readPointConfig(const char* args[]) {
-    pointConfig pConfig;
-    pConfig.brightness = getFlagValue(args, "--brightness", 0);
-    pConfig.contrast = getFlagValue(args, "--contrast", 1.0f);
-    pConfig.mixingWeight[0] = getFlagValue(args, "--red-mixing", 1.0f);
-    pConfig.mixingWeight[1] = getFlagValue(args, "--green-mixing", 1.0f);
-    pConfig.mixingWeight[2] = getFlagValue(args, "--blue-mixing", 1.0f);
-    return pConfig;
+
+void resizeToMatchSrc(image& src, image& dst) {
+    dst.width = src.width;
+    dst.height = src.height;
+    dst.data.resize(src.width * src.height);
+}
+
+void invertFilter(image& src, image& dst, const char* args[]) {
+
+    resizeToMatchSrc(src, dst);
+    applyPointTransform(src, dst, [](image& src, image& dst, int x, int y){
+        
+        setPixel(dst, x, y, getPixelConstant(src, x, y));
+        pixel* p = pixel_ptr(dst, x, y);
+        p->r = 255 - p->r;
+        p->g = 255 - p->g;
+        p->b = 255 - p->b;
+
+    });
 }
 
 
-void invertFilter(image& img, const char* args[]) {
-    pointConfig pConfig = readPointConfig(args);
-    applyPointTransform(img, [](image& img ,int x ,int y){
-        pixel*p = pixel_ptr(img,x,y);
-            if (p){
-                p->r = 255 - p->r;
-                p->g = 255 - p->g;
-                p->b = 255 - p->b;
-            }
-        }, pConfig);
+void blackAndWhiteFilter(image& src, image& dst, const char* args[]){
+
+    resizeToMatchSrc(src, dst);
+    applyPointTransform(src, dst, [](image& src, image& dst, int x, int y){
+        setPixel(dst, x, y, getPixelConstant(src, x, y));
+        pixel* p = pixel_ptr(dst, x, y);
+        if (p){
+            float formula = 0.299 * (p->r) + 0.577 * (p->g) + 0.114* (p->b);
+            p->r = formula;
+            p->g = formula;
+            p->b = formula;
+        }
+    });
 }
 
+void thresholdingFilter(image& src, image& dst, const char* args[]){
 
-void blackAndWhiteFilter(image& img, const char* args[]){
-    pointConfig pConfig = readPointConfig(args);
-    applyPointTransform(img, [](image& img ,int x ,int y){
-        pixel*p = pixel_ptr(img,x,y);
-            if (p){
-                float formula = 0.299 * (p->r) + 0.577 * (p->g) + 0.114* (p->b);
-                p->r = formula;
-                p->g = formula;
-                p->b = formula;
-            }
-        }, pConfig);
-}
-
-void thresholdingFilter(image& img, const char* args[]){
-    pointConfig pConfig = readPointConfig(args);
-    applyPointTransform(img, [](image& img, int x, int y){
-        pixel* p = pixel_ptr(img, x, y);
+    resizeToMatchSrc(src, dst);
+    applyPointTransform(src, dst, [](image& src, image& dst, int x, int y){
+        setPixel(dst, x, y, getPixelConstant(src, x, y));
+        pixel* p = pixel_ptr(dst, x, y);
         if (p) {
             float formula = 0.299 * (p->r) + 0.577 * (p->g) + 0.114 * (p->b);
             if (formula > 128) {
@@ -55,13 +56,16 @@ void thresholdingFilter(image& img, const char* args[]){
                 p->b = 0;
             }
         }
-    },pConfig);
+    });
 }
 
-void sepiaFilter(image& img, const char* args[]){
-    pointConfig pConfig = readPointConfig(args);
-    applyPointTransform(img, [](image& img, int x, int y){
-        pixel* p = pixel_ptr(img, x, y);
+void sepiaFilter(image& src, image& dst, const char* args[]){
+
+    resizeToMatchSrc(src, dst);
+    applyPointTransform(src, dst, [](image& src, image& dst, int x, int y){
+        
+        setPixel(dst, x, y, getPixelConstant(src, x, y));
+        pixel* p = pixel_ptr(dst, x, y);
         if  (p) {
             int red = (p->r);
             int green = (p->g);
@@ -70,20 +74,21 @@ void sepiaFilter(image& img, const char* args[]){
             p->g = clamp((0.349*red)+(0.686*green)+(0.168*blue));
             p->b = clamp((0.272*red)+(0.534*green)+(0.131*blue));
         }
-    }, pConfig);
+    });
 }
 
-void mirrorFilter(image& img, const char* args[]){
-    pointConfig pConfig = readPointConfig(args);
-    int center = img.width/2;
-    applyPointTransform(img, [center](image& img, int x, int y){
+void mirrorFilter(image& src, image& dst, const char* args[]){
+
+    resizeToMatchSrc(src, dst);
+    int center = src.width/2;
+    applyPointTransform(src, dst, [center](image& src, image& dst, int x, int y){
         if (x < center){
-            int opuestoX = img.width-x-1;
-            pixel mirrPix = getPixelClamped(img, opuestoX, y);
-            pixel basePix = getPixelClamped(img, x, y);
-            setPixel(img, x, y, mirrPix);
-            setPixel(img, opuestoX, y, basePix);
+            int opuestoX = src.width-x-1;
+            pixel mirrPix = getPixelClamped(src, opuestoX, y);
+            pixel basePix = getPixelClamped(src, x, y);
+            setPixel(dst, x, y, mirrPix);
+            setPixel(dst, opuestoX, y, basePix);
         }
-    },pConfig);
+    });
 }
 

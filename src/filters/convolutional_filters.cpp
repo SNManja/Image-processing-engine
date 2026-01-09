@@ -12,7 +12,7 @@ convolutionConfig readConvolutionConfig(const char* args[]) {
     return config;
 }
 
-void boxblurFilter(image& img, const char* args[]) {
+void boxblurFilter(image& src, image& dst, const char* args[]) {
     convolutionConfig config = readConvolutionConfig(args);
     // blur size
     int sizeFlagIndex = getFlagIndex(args, "--size");
@@ -29,10 +29,10 @@ void boxblurFilter(image& img, const char* args[]) {
     std::vector<std::vector<float>> kernelVector(blurSize, std::vector<float>(blurSize, 1.0f / (blurSize * blurSize)));
     printf("Kernel size: %d\n", blurSize);
     Kernel k = kernel(blurSize, kernelVector);
-    img = applyConvolution(img, k, config); 
+    applyConvolution(src, dst, k, config);
 }
 
-void sharpenFilter(image& img, const char* args[]) {
+void sharpenFilter(image& src, image& dst, const char* args[]) {
     convolutionConfig config = readConvolutionConfig(args);
 
     int amountFlagIndex = getFlagIndex(args, "--amount");
@@ -47,20 +47,20 @@ void sharpenFilter(image& img, const char* args[]) {
         {-amountValue, amountValue * 5, -amountValue},
         {0, -amountValue, 0}
     });
-    img = applyConvolution(img, k, config);
+    applyConvolution(src, dst, k, config);
 }
 
-void embossFilter(image& img, const char* args[]) {
+void embossFilter(image& src, image& dst, const char* args[]) {
     convolutionConfig config = readConvolutionConfig(args);
     Kernel k = kernel(3, {
         {-2, -1, 0},
         {-1, 1, 1},
         {0, 1, 2}
     });
-    img = applyConvolution(img, k, config);
+    applyConvolution(src, dst, k, config);
 }
 
-void laplacianOfGaussianFilter(image& img, const char* args[]) {
+void laplacianOfGaussianFilter(image& src, image& dst, const char* args[]) {
     convolutionConfig config = readConvolutionConfig(args);
     Kernel k = kernel(5, {
         {0, 0, -1, 0, 0},
@@ -69,10 +69,10 @@ void laplacianOfGaussianFilter(image& img, const char* args[]) {
         {0, -1, -2, -1, 0},
         {0, 0, -1, 0, 0}
     });
-    img = applyConvolution(img, k, config);
+    applyConvolution(src, dst, k, config);
 }
 
-void motionblurFilter(image& img, const char* args[]) {
+void motionblurFilter(image& src, image& dst, const char* args[]) {
     convolutionConfig config = readConvolutionConfig(args);
     Kernel k = kernel(5, {
         {1/5.0, 0, 0, 0, 0},
@@ -81,5 +81,5 @@ void motionblurFilter(image& img, const char* args[]) {
         {0, 0, 0, 1/5.0, 0},
         {0, 0, 0, 0, 1/5.0}
     });
-    img = applyConvolution(img, k, config);
+    applyConvolution(src, dst, k, config);
 }

@@ -4,27 +4,56 @@
 #include <dirent.h>
 #include <string.h>
 #include <functional>
+#include "args_parser.h"
 
-void applyPointTransform(image& img, coordinateFunction f, pointConfig pConfig){
+postprocessingConfig readPostprocessingConfig(const char* args[]) {
+    postprocessingConfig pConfig;
+    pConfig.brightness = getFlagValue(args, "--brightness", 0);
+    pConfig.contrast = getFlagValue(args, "--contrast", 1.0f);
+    pConfig.mixingWeight[0] = getFlagValue(args, "--red-mixing", 1.0f);
+    pConfig.mixingWeight[1] = getFlagValue(args, "--green-mixing", 1.0f);
+    pConfig.mixingWeight[2] = getFlagValue(args, "--blue-mixing", 1.0f);
+    printf("Postprocessing values: brightness=%f, contrast=%f, red-mixing=%f, green-mixing=%f, blue-mixing=%f\n",
+           pConfig.brightness, pConfig.contrast,
+           pConfig.mixingWeight[0], pConfig.mixingWeight[1], pConfig.mixingWeight[2]);
+    return pConfig;
+}
+
+void applyPointTransform(image& src, image& dst, coordinateFunction f){
+
+    if (src.height != dst.height || src.width != dst.width){
+        perror("Source and destination images must have the same dimensions");
+        return;
+    }
+    for (int y = 0; y < src.height; y++) {
+        for (int x = 0; x < src.width; x++) {
+            f(src, dst, x, y);
+        }
+    }
+}
+
+void applyPostProcessing(image& baseImg, image& filteredImg, postprocessingConfig pConfig){
     int brightness = pConfig.brightness;
     float contrast = pConfig.contrast;
     float channel[3] = {pConfig.mixingWeight[0], pConfig.mixingWeight[1], pConfig.mixingWeight[2]};
 
-    for (int y = 0; y < img.height; y++) {
-        for (int x = 0; x < img.width; x++) {
-            pixel pIni = getPixelConstant(img, x, y);
-            f(img, x, y);
-            pixel* p = pixel_ptr(img, x, y);
+    for (int y = 0; y < baseImg.height; y++) {
+        for (int x = 0; x < baseImg.width; x++) {
+            pixel* pBase = pixel_ptr(baseImg, x, y);
+            pixel* pFiltered = pixel_ptr(filteredImg, x, y);
+            if (pBase && pFiltered){
+                float newR = (pFiltered->r * channel[0] + pBase->r * (1 - channel[0]));
+                float newG = (pFiltered->g * channel[1] + pBase->g * (1 - channel[1]));
+                float newB = (pFiltered->b * channel[2] + pBase->b * (1 - channel[2]));
 
-            // Brightness and contrast
-            float p_r = (p->r - 127.5)*contrast + 127.5 + brightness;
-            float p_g = (p->g - 127.5)*contrast + 127.5 + brightness;
-            float p_b = (p->b - 127.5)*contrast + 127.5 + brightness;
-
-            // Channel masking
-            p->r = clamp(pIni.r * (1-channel[0]) + p_r * (channel[0]));
-            p->g = clamp(pIni.g * (1-channel[1]) + p_g * (channel[1]));
-            p->b = clamp(pIni.b * (1-channel[2]) + p_b * (channel[2]));
+                newR = (newR - 127.5f) * contrast + 127.5f + brightness;
+                newG = (newG - 127.5f) * contrast + 127.5f + brightness;
+                newB = (newB - 127.5f) * contrast + 127.5f + brightness;
+                
+                pFiltered->r = clamp(newR);
+                pFiltered->g = clamp(newG);
+                pFiltered->b = clamp(newB);
+            }
         }
     }
 }
@@ -37,14 +66,17 @@ Kernel kernel(int n, std::vector<std::vector<float>> values) {
 }
 
 
-void apply_filter(image& img, basicFilter filter, const char* args[], const char* output_name) {
+void apply_filter(image& src, image& dst, basicFilter filter, const char* args[], const char* output_name) {
     // Apply the filter to the image
-    filter(img, args);
+    filter(src, dst, args);
 
     char output_path[512];
+    printf("Applying postprocessing...\n");
+    applyPostProcessing(src, dst, readPostprocessingConfig(args));
+
     printf("Generating %s\n", output_name);
     snprintf(output_path, sizeof(output_path), "./output/%s", output_name);
-    printToPPM(img, output_path);
+    printToPPM(dst, output_path);
 }
 
 void applyFilterOnEveryPPM(const char* dir, basicFilter filter, const char* args[]){
@@ -58,11 +90,12 @@ void applyFilterOnEveryPPM(const char* dir, basicFilter filter, const char* args
             snprintf(img_path, sizeof(img_path), "%s/%s", dir, dirEntry->d_name);
             printf("Looking at %s\n", img_path);
             image img = read_image(img_path);
+            image filtered_img;
             if (!img.data.empty()) {
                 // Apply filter to the image
                 printf("Applying filter to %s\n", dirEntry->d_name);
-                const char* output_name = dirEntry->d_name ;
-                apply_filter(img, filter, args,output_name);
+                const char* output_name = dirEntry->d_name;
+                apply_filter(img, filtered_img, filter, args,  output_name);
             }
         }
     }
@@ -88,28 +121,28 @@ GetPixelFunc getPixelFunction(const std::string& borderStrategy) {
     return getPixelClamped; // Default to clamp
 }
 
-image applyConvolution(image& img, const Kernel& kernel, const convolutionConfig& config){
-    image newImg;
+void applyConvolution(image& src, image& dst, const Kernel& kernel, const convolutionConfig& config){
+    
     float scale = config.scale;
     float offset = config.offset;
     int stride = config.stride;
     GetPixelFunc getPixStrat = getPixelFunction(config.borderStrategy);
 
-    int inW = img.width;
-    int inH = img.height;
+    int inW = src.width;
+    int inH = src.height;
     int k = kernel.size;
     if (k % 2 == 0){
         perror("Kernel size has to be odd");
-        return img;
+        return;
     }
 
     const int kernelCenter = k / 2;
     int padding = kernelCenter; 
     int outW = ((int)((inW-k+2*padding))/stride)+1;
     int outH = ((int)((inH-k+2*padding))/stride)+1;
-    newImg.width = outW; 
-    newImg.height = outH;
-    newImg.data.resize(outW * outH);
+    dst.width = outW; 
+    dst.height = outH;
+    dst.data.resize(outW * outH);
 
     for(int y = 0; y < outH; y++){
         for(int x = 0; x < outW; x++){
@@ -119,16 +152,16 @@ image applyConvolution(image& img, const Kernel& kernel, const convolutionConfig
             for (int i=0; i < k; i++){
                 for (int j=0; j < k; j++){
                     // !For this function call without inlining we will have a lot of performance loss
-                    pixel neigh = getPixStrat(img,inX+i-kernelCenter,inY+j-kernelCenter); 
+                    pixel neigh = getPixStrat(src,inX+i-kernelCenter,inY+j-kernelCenter); 
                     newValueR += (neigh.r) * kernel.values[i][j];
                     newValueG += (neigh.g) * kernel.values[i][j];
                     newValueB += (neigh.b) * kernel.values[i][j];
                 }
             }
             pixel newPix = {clamp((int)(newValueR*scale+offset)), clamp((int)(newValueG*scale+offset)), clamp((int)(newValueB*scale+offset))};
-            setPixel(newImg,x,y,newPix);
+            setPixel(dst,x,y,newPix);
         }
         
     }
-    return newImg;
+    return;
 }
