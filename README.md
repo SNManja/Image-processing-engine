@@ -17,10 +17,9 @@ C++ image processing engine for PPM files. Main goal is to make scalable and rea
 
 
 ## To do
-- Separate post-processing from filtering settings. So it can be universally applied to any filter. This goes hand in hand with fixing the --help documentation redundancies and impresitions
+- Fix --help. Postprocessing parameters would be great to be in a different category than the filter's parameter list
 - Add dilation parameter to convolution. 
 - Add custom parameters to already implemented filters
-- Change return from applyConvolution to src and dst
 - Documentation for each filter and its parameters (partially done)
 - Median filter
 - Sobel operator
