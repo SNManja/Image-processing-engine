@@ -10,12 +10,12 @@ postprocessingConfig readPostprocessingConfig(const char* args[]) {
     postprocessingConfig pConfig;
     pConfig.brightness = getFlagValue(args, "--brightness", 0);
     pConfig.contrast = getFlagValue(args, "--contrast", 1.0f);
-    pConfig.mixingWeight[0] = getFlagValue(args, "--red-mixing", 1.0f);
-    pConfig.mixingWeight[1] = getFlagValue(args, "--green-mixing", 1.0f);
-    pConfig.mixingWeight[2] = getFlagValue(args, "--blue-mixing", 1.0f);
+    pConfig.blending[0] = getFlagValue(args, "--red-mixing", 1.0f);
+    pConfig.blending[1] = getFlagValue(args, "--green-mixing", 1.0f);
+    pConfig.blending[2] = getFlagValue(args, "--blue-mixing", 1.0f);
     printf("Postprocessing values: brightness=%f, contrast=%f, red-mixing=%f, green-mixing=%f, blue-mixing=%f\n",
            pConfig.brightness, pConfig.contrast,
-           pConfig.mixingWeight[0], pConfig.mixingWeight[1], pConfig.mixingWeight[2]);
+           pConfig.blending[0], pConfig.blending[1], pConfig.blending[2]);
     return pConfig;
 }
 
@@ -35,16 +35,16 @@ void applyPointTransform(image& src, image& dst, coordinateFunction f){
 void applyPostProcessing(image& baseImg, image& filteredImg, postprocessingConfig pConfig){
     int brightness = pConfig.brightness;
     float contrast = pConfig.contrast;
-    float channel[3] = {pConfig.mixingWeight[0], pConfig.mixingWeight[1], pConfig.mixingWeight[2]};
+    float blending[3] = {pConfig.blending[0], pConfig.blending[1], pConfig.blending[2]};
 
     for (int y = 0; y < baseImg.height; y++) {
         for (int x = 0; x < baseImg.width; x++) {
             pixel* pBase = pixel_ptr(baseImg, x, y);
             pixel* pFiltered = pixel_ptr(filteredImg, x, y);
             if (pBase && pFiltered){
-                float newR = (pFiltered->r * channel[0] + pBase->r * (1 - channel[0]));
-                float newG = (pFiltered->g * channel[1] + pBase->g * (1 - channel[1]));
-                float newB = (pFiltered->b * channel[2] + pBase->b * (1 - channel[2]));
+                float newR = (pFiltered->r * blending[0] + pBase->r * (1 - blending[0]));
+                float newG = (pFiltered->g * blending[1] + pBase->g * (1 - blending[1]));
+                float newB = (pFiltered->b * blending[2] + pBase->b * (1 - blending[2]));
 
                 newR = (newR - 127.5f) * contrast + 127.5f + brightness;
                 newG = (newG - 127.5f) * contrast + 127.5f + brightness;

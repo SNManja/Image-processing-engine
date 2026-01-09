@@ -13,13 +13,13 @@ std::vector<std::string> getConvolutionalParamsList() {
     };
 };
 
-std::vector<std::string> getPointParamsList() {
+std::vector<std::string> getPostProcessingParamsList() {
     return {
         "--brightness (int): Offset added to the pixel intensity. Default 0.",
         "--contrast (float): Multiplier for the contrast adjustment. Default 1.0.",
-        "--red-mixing (float): Blend between original and filtered Red channel. 0 = Original, 1 = Filtered.",
-        "--green-mixing (float): Blend between original and filtered Green channel. 0 = Original, 1 = Filtered.",
-        "--blue-mixing (float): Blend between original and filtered Blue channel. 0 = Original, 1 = Filtered."
+        "--red-blending (float): Blend between original and filtered Red channel. 0 = Original, 1 = Filtered.",
+        "--green-blending (float): Blend between original and filtered Green channel. 0 = Original, 1 = Filtered.",
+        "--blue-blending (float): Blend between original and filtered Blue channel. 0 = Original, 1 = Filtered."
     };
 };
 
@@ -118,10 +118,11 @@ FilterRegistry getRegistry(){
             desc.paramsDesc.insert(desc.paramsDesc.end(), convParamList.begin(), convParamList.end());
         }
         if(desc.category == "Point") {
-            std::vector<std::string> pointParamList = getPointParamsList();
+            std::vector<std::string> pointParamList = {};
             desc.paramsDesc.insert(desc.paramsDesc.end(), pointParamList.begin(), pointParamList.end());
         }
     }
+
 
     return registry;
 }

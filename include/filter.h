@@ -32,7 +32,7 @@ struct Kernel {
 struct postprocessingConfig{
     float brightness = 0.0f;
     float contrast = 1.0f;
-    float mixingWeight[3] = {1.0f, 1.0f, 1.0f};
+    float blending[3] = {1.0f, 1.0f, 1.0f};
 };
 
 postprocessingConfig readPostprocessingConfig(const char* args[]);

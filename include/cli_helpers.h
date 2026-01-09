@@ -17,6 +17,7 @@ FilterDescriptor getFilterDescriptor(const std::string& filterName);
 
 typedef std::map<std::string, FilterDescriptor> FilterRegistry;
 FilterRegistry getRegistry();
+std::vector<std::string> getPostProcessingParamsList();
 
 void printHelp();
 
