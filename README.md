@@ -11,7 +11,7 @@ C++ image processing engine for PPM files. Main goal is to make scalable and rea
 - **Point filters**: Black and white, Sepia, Thresholding
 - **Geometric filters**: Mirror 
 - Basic CLI implementation with `--help` flag to use as documentation. There's info about each filter and it's parameters
-- Supports "Same" padding strategy to mantain spacial correspondence, with configurable stride.
+- Supports "Same" padding strategy to maintain spacial correspondence, with configurable stride.
 - Custom border strategy for convolutional filters (Clamping, Wrap, Mirror, Constant)
 - Supports **post-processing** settings such as brightness, contrast and blend/mixing per channel
 - **Histogram support** (currently not supported via cli): greyscale, channel (r,g,b), intensity, value and chroma.
@@ -19,6 +19,7 @@ C++ image processing engine for PPM files. Main goal is to make scalable and rea
 
 
 ## To do
+- To extend to a more complex and customizable pipeline, CLI interface will change and be simplified to a json file so the whole pipeline and settings can scale. This is the first step to filter chaining. 
 - ASCII histogram representation via CLI. 
 - Output info, like histogram values, filters applied, settings used would be cool to implement.
 - Add dilation parameter to convolution. 
@@ -27,17 +28,17 @@ C++ image processing engine for PPM files. Main goal is to make scalable and rea
 - Documentation for each filter and its parameters (partially done)
 - Median filter
 - Sobel operator
-- Filter chaining (process numerous filters one after the other)
 - Check easy performance improvements before going into more complex filters
 - Implement "Valid" padding strategy
 - Evaluate if even kernels have any utility, and make them usable check how to handle them well.
 - Make a template driven applyConvolution so it generates different versions of the function in compile time. The main goal of this would be performance optimization (Less function calls with inlining). For getFlagValue too.
-- User interface? Using just cli for debbuging is kinda annoying 
+- Simple pipeline support via cli using stdin stdout, supporting pipes in posix systems
 
 ## Potential goals for the future
 - Applying this engine to computer vision
 - Performance optimizations
 - Make a simpler and better user interface or cli tool
+- Add user interface
 
 ## Why ppm?
 It's a simpler format. Does not depend on compression or complex encoding (like jpeg or png). At the time it's what i will be using. The goal of the project (as any other project of mine) is to implement things and understand then thoroughly. So im interested in implementing the conversion of formats by myself in the future when the project grows in size.
@@ -48,3 +49,6 @@ It's a simpler format. Does not depend on compression or complex encoding (like 
 3. Add your ppm images on `./pics`
 4. Use `./imgengine (name of filter)` to process your ppm images or `./imgengine --help` to ger info about each filter
 5. Obtain the resulting images from `./output`
+
+# Dependencies
+The whole point of this project is to make things from scratch. So i will be explicit in which external libraries i use. From the time being, the only one is **nlohmann/json** which is already **included** in the repository to ensure a zero-dependency setup and avoid installation headaches.
