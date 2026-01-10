@@ -62,12 +62,12 @@ histogram blueChannelHistogram(const image& img){
 double histogramMean(const histogram& h){
     assert(h.size() > 0);
     int totalPixels = 0;
-    int sum;
+    int sum = 0;
     for (int i = 0; i < h.size(); i++){
         sum += h[i] * i;
         totalPixels += h[i];
     }
-    return (sum/totalPixels);
+    return (((double)sum)/((double)totalPixels));
 }
 
 double averageOpticalDensity(const histogram& h){
