@@ -1,0 +1,22 @@
+{
+  "name": "example_pipeline",
+  "pipeline": [
+    { "filter": "sepia" },
+    { 
+        "filter": "blur" , 
+        "params": { "size": 21 }
+    }
+  ],
+  "postprocessing": {
+    "brightness": {
+      "factor": 1.1
+    },
+    "blending": {
+      "r": 0.8,
+      "g": 0.9,
+      "b": 1.0
+    }
+  },
+  "statistics": false,
+  "output_suffix": "_processed"
+}

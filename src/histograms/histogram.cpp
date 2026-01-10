@@ -63,7 +63,7 @@ double histogramMean(const histogram& h){
     assert(h.size() > 0);
     int totalPixels = 0;
     int sum = 0;
-    for (int i = 0; i < h.size(); i++){
+    for (size_t i = 0; i < h.size(); i++){
         sum += h[i] * i;
         totalPixels += h[i];
     }

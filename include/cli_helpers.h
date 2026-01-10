@@ -21,5 +21,7 @@ std::vector<std::string> getPostProcessingParamsList();
 
 void printHelp();
 
+void pipelineViaJSON();
+
 #endif
 

@@ -4,25 +4,27 @@
 #include "image.h"
 #include <functional>
 #include <string>
+#include "json.hpp"
 
 
-using basicFilter = void(*)(image&, image&, const char*[]);
+using json = nlohmann::json;
+
+using basicFilter = void(*)(image&, image&, const json&);
 using coordinateFunction = std::function<void(image& src, image& dst, int, int)>;
 
-
 // point filters
-void invertFilter(image& src, image& dst, const char* args[]);
-void blackAndWhiteFilter(image& src, image& dst, const char* args[]);
-void sepiaFilter(image& src, image& dst, const char* args[]);
-void thresholdingFilter(image& src, image& dst, const char* args[]);
-void mirrorFilter(image& src, image& dst, const char* args[]);
+void invertFilter(image& src, image& dst, const json& args);
+void blackAndWhiteFilter(image& src, image& dst, const json& args);
+void sepiaFilter(image& src, image& dst, const json& args);
+void thresholdingFilter(image& src, image& dst, const json& args);
+void mirrorFilter(image& src, image& dst, const json& args);
 
 // convolutional filters
-void boxblurFilter(image& src, image& dst, const char* args[]);
-void sharpenFilter(image& src, image& dst, const char* args[]);
-void laplacianOfGaussianFilter(image& src, image& dst, const char* args[]);
-void motionblurFilter(image& src, image& dst, const char* args[]);
-void embossFilter(image& src, image& dst, const char* args[]);
+void boxblurFilter(image& src, image& dst, const json& args);
+void sharpenFilter(image& src, image& dst, const json& args);
+void laplacianOfGaussianFilter(image& src, image& dst, const json& args);
+void motionblurFilter(image& src, image& dst, const json& args);
+void embossFilter(image& src, image& dst, const json& args);
 
 struct Kernel {
     unsigned char size;
@@ -48,8 +50,8 @@ struct convolutionConfig
 Kernel kernel(int n, std::vector<std::vector<float>> values);
 void applyConvolution(image& src, image& dst, const Kernel& kernel, const convolutionConfig& config={});
 
-void apply_filter(image& src, image& dst, basicFilter filter, const char* args[], const char* output_name);
-void applyFilterOnEveryPPM(const char* dir, basicFilter filter, const char* args[]);
+void apply_filter(image& src, image& dst, basicFilter filter, const json& data, const char* output_name);
+void applyFilterOnEveryPPM(const char* dir, basicFilter filter, const json& data);
 void applyPointTransform(image& src, image& dst, coordinateFunction f);
 void applyPostProcessing(image& baseImg, image& filteredImg, postprocessingConfig pConfig);
 

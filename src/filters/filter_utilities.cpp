@@ -5,6 +5,10 @@
 #include <string.h>
 #include <functional>
 #include "args_parser.h"
+#include <json.hpp>
+
+
+using json = nlohmann::json;
 
 postprocessingConfig readPostprocessingConfig(const char* args[]) {
     postprocessingConfig pConfig;
@@ -66,20 +70,22 @@ Kernel kernel(int n, std::vector<std::vector<float>> values) {
 }
 
 
-void apply_filter(image& src, image& dst, basicFilter filter, const char* args[], const char* output_name) {
+void apply_filter(image& src, image& dst, basicFilter filter, const json& data, const char* output_name) {
     // Apply the filter to the image
-    filter(src, dst, args);
+    filter(src, dst, data);
 
     char output_path[512];
-    printf("Applying postprocessing...\n");
-    applyPostProcessing(src, dst, readPostprocessingConfig(args));
+
+    printf("Postprocessing not functional until json parsing transition is complete \n");
+    // printf("Applying postprocessing...\n");
+    // applyPostProcessing(src, dst, readPostprocessingConfig(data));
 
     printf("Generating %s\n", output_name);
     snprintf(output_path, sizeof(output_path), "./output/%s", output_name);
     printToPPM(dst, output_path);
 }
 
-void applyFilterOnEveryPPM(const char* dir, basicFilter filter, const char* args[]){
+void applyFilterOnEveryPPM(const char* dir, basicFilter filter, const json& data){
     DIR* directory = opendir(dir);
     struct dirent* dirEntry;
     int numberOfImages = 0;
@@ -95,7 +101,7 @@ void applyFilterOnEveryPPM(const char* dir, basicFilter filter, const char* args
                 // Apply filter to the image
                 printf("Applying filter to %s\n", dirEntry->d_name);
                 const char* output_name = dirEntry->d_name;
-                apply_filter(img, filtered_img, filter, args,  output_name);
+                apply_filter(img, filtered_img, filter, data,  output_name);
             }
         }
     }

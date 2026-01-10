@@ -1,6 +1,7 @@
 #include "filter.h"
 #include "image.h"
-
+#include "json.hpp"
+using json = nlohmann::json;
 
 void resizeToMatchSrc(image& src, image& dst) {
     dst.width = src.width;
@@ -8,7 +9,7 @@ void resizeToMatchSrc(image& src, image& dst) {
     dst.data.resize(src.width * src.height);
 }
 
-void invertFilter(image& src, image& dst, const char* args[]) {
+void invertFilter(image& src, image& dst, const json& data) {
 
     resizeToMatchSrc(src, dst);
     applyPointTransform(src, dst, [](image& src, image& dst, int x, int y){
@@ -23,7 +24,7 @@ void invertFilter(image& src, image& dst, const char* args[]) {
 }
 
 
-void blackAndWhiteFilter(image& src, image& dst, const char* args[]){
+void blackAndWhiteFilter(image& src, image& dst, const json& data){
 
     resizeToMatchSrc(src, dst);
     applyPointTransform(src, dst, [](image& src, image& dst, int x, int y){
@@ -38,7 +39,7 @@ void blackAndWhiteFilter(image& src, image& dst, const char* args[]){
     });
 }
 
-void thresholdingFilter(image& src, image& dst, const char* args[]){
+void thresholdingFilter(image& src, image& dst, const json& data){
 
     resizeToMatchSrc(src, dst);
     applyPointTransform(src, dst, [](image& src, image& dst, int x, int y){
@@ -59,7 +60,7 @@ void thresholdingFilter(image& src, image& dst, const char* args[]){
     });
 }
 
-void sepiaFilter(image& src, image& dst, const char* args[]){
+void sepiaFilter(image& src, image& dst, const json& data){
 
     resizeToMatchSrc(src, dst);
     applyPointTransform(src, dst, [](image& src, image& dst, int x, int y){
@@ -77,7 +78,7 @@ void sepiaFilter(image& src, image& dst, const char* args[]){
     });
 }
 
-void mirrorFilter(image& src, image& dst, const char* args[]){
+void mirrorFilter(image& src, image& dst, const json& data){
 
     resizeToMatchSrc(src, dst);
     int center = src.width/2;

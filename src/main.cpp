@@ -8,23 +8,22 @@
 #include "cli_helpers.h"
 
 
+
+
 int main(const int argc, const char* argv[]) 
 {
-    const std::string filterName = getStringArg(argv, 1, "");
-    if (filterName.empty()) {
-        perror("No filter name provided");
-        return 1;
+    if(argc == 1){
+        // Defaults to json config
+        pipelineViaJSON();
     }
+
+    const std::string filterName = getStringArg(argv, 1, "");
+    
     if(strcmp(filterName.c_str(), "--help") == 0) {
         printHelp();
         return 0;
     }
-    FilterDescriptor filterDesc = getFilterDescriptor(filterName);
-    if (filterDesc.func != nullptr) {
-        applyFilterOnEveryPPM("./pics", filterDesc.func, argv);
-    } else {
-        printf("Filter not found: %s\n", filterName.c_str());
-    }
+
     printf("Process completed\n");
     return 0;
 }
