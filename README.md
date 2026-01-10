@@ -7,26 +7,32 @@ C++ image processing engine for PPM files. Main goal is to make scalable and rea
 
 ## Capabilities
 - Processing PPM files 
-- Convolutional filters: Gaussian blur, Sharpen, Emboss, Laplacian of Gausian (LoG)
-- Point filters: Black and white, Sepia, Thresholding
-- Geometric filters: Mirror 
+- **Convolutional filters**: Gaussian blur, Sharpen, Emboss, Laplacian of Gaussian (LoG)
+- **Point filters**: Black and white, Sepia, Thresholding
+- **Geometric filters**: Mirror 
 - Basic CLI implementation with `--help` flag to use as documentation. There's info about each filter and it's parameters
 - Supports "Same" padding strategy to mantain spacial correspondence, with configurable stride.
 - Custom border strategy for convolutional filters (Clamping, Wrap, Mirror, Constant)
-- Supports post-processing settings such as brightness, contrast and blend/mixing per channel
+- Supports **post-processing** settings such as brightness, contrast and blend/mixing per channel
+- **Histogram support** (currently not supported via cli): greyscale, channel (r,g,b), intensity, value and chroma.
+- **Image statistics**: Currently just Average Optical Density with histograms. More in the future
 
 
 ## To do
+- ASCII histogram representation via CLI. 
+- Output info, like histogram values, filters applied, settings used would be cool to implement.
 - Add dilation parameter to convolution. 
 - Add common postprocessing parameters (white balance, gain, gamma, normalization, clamping, etc)
 - Add custom parameters to already implemented filters
 - Documentation for each filter and its parameters (partially done)
 - Median filter
 - Sobel operator
+- Filter chaining (process numerous filters one after the other)
 - Check easy performance improvements before going into more complex filters
 - Implement "Valid" padding strategy
 - Evaluate if even kernels have any utility, and make them usable check how to handle them well.
 - Make a template driven applyConvolution so it generates different versions of the function in compile time. The main goal of this would be performance optimization (Less function calls with inlining). For getFlagValue too.
+- User interface? Using just cli for debbuging is kinda annoying 
 
 ## Potential goals for the future
 - Applying this engine to computer vision
