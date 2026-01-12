@@ -116,10 +116,9 @@ FilterRegistry getRegistry(){
         {
             "alphaBlending", {
                 alphaBlending,
-                "Blends the source image with a base image using alpha values for each color channel.",
+                "Blends the source image with a base image using alpha values for each color channel. Base image size has to match with source image size.",
                 "Point",
                 {
-                    "base_image (string): Path to the base image to blend with.",
                     "alpha (list of 3 floats): List of three floats (between 0 and 1) representing the alpha values for R, G, and B channels."
                 }
             }

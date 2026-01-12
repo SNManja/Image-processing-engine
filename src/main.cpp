@@ -15,15 +15,22 @@ int main(const int argc, const char* argv[])
     if(argc == 1){
         // Defaults to json config
         pipelineViaJSON();
+        return 0;
     }
 
     const std::string filterName = getStringArg(argv, 1, "");
     
+    if(strcmp(filterName.c_str(), "--list") == 0) {
+        filterList();
+        return 0;
+    }
+
+
     if(strcmp(filterName.c_str(), "--help") == 0) {
         printHelp();
         return 0;
     }
 
-    printf("Process completed\n");
-    return 0;
+    printf("Invalid parameters\n");
+    return 1;
 }

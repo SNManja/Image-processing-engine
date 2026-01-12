@@ -20,11 +20,11 @@ C++ image processing engine for PPM files. Main goal is to make scalable and rea
 
 ## To do
 - Statistics output
+- Refactor
 - Custom output suffix 
-- Clean up previous CLI implementation. Refactor is NECESSARY 
-- New --help or documentation ASAP
 - ASCII histogram representation via CLI. 
 - Output info, like histogram values, filters applied, settings used would be cool to implement.
+- Current pipeline operates in 8-bit per stage. Float pipeline is a must at some point.
 - Add dilation parameter to convolution. 
 - Add common postprocessing parameters (white balance, gain, gamma, normalization, clamping, etc)
 - Add custom parameters to already implemented filters
@@ -50,8 +50,12 @@ It's a simpler format. Does not depend on compression or complex encoding (like 
 1. Clone the repo.
 2. Compile with `make` command on your terminal
 3. Add your ppm images on `./pics`
-4. Use `./imgengine` to process your ppm images in batch ~~or `./imgengine --help` to get info about each filter~~ (Help is outdated)
+4. Use `./imgengine` to process your ppm images in batch 
 5. Obtain the resulting images from `./output`
+
+# Documentation
+- `--help` for capabilities, commands and JSON format
+- `--list` for list of filters, parameters and descriptions
 
 # Dependencies
 The whole point of this project is to make things from scratch. So i will be explicit in which external libraries i use. From the time being, the only one is **nlohmann/json** which is already **included** in the repository to ensure a zero-dependency setup and avoid installation headaches.

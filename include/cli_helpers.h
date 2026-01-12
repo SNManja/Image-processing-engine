@@ -19,6 +19,7 @@ typedef std::map<std::string, FilterDescriptor> FilterRegistry;
 FilterRegistry getRegistry();
 std::vector<std::string> getPostProcessingParamsList();
 
+void filterList();
 void printHelp();
 
 void pipelineViaJSON();

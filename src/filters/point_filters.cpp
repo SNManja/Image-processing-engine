@@ -4,8 +4,6 @@
 using json = nlohmann::json;
 
 
-
-
 void applyPointTransform(image& src, image& dst, coordinateFunction f){
 
     if (src.height != dst.height || src.width != dst.width){
