@@ -25,6 +25,12 @@
     }
 
   ],
-  "statistics": false,
+  "statistics": {
+    "histograms": {
+      "red": true,
+      "green": true,
+      "blue": true
+    }
+  },
   "output_suffix": "_processed"
 }

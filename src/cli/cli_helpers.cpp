@@ -73,8 +73,8 @@ Notes:
 - The JSON pipeline is the only supported external API.
 - All images are processed as 8-bit RGB.
 - Intermediate results are clamped to [0, 255].
-- statistics and output_suffix are currently not implemented.
-- Blending not working after spline 
+- statistics are currently not implemented.
+- Blending not working after applying stride in previous filter (differs base image size with src image size)
 
 ---------------------------------------------------------------------------------------------------------------------------------------------
 

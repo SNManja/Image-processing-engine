@@ -10,7 +10,7 @@ C++ image processing engine for PPM files. Main goal is to make scalable and rea
 - **Convolutional filters**: Gaussian blur, Sharpen, Emboss, Laplacian of Gaussian (LoG)
 - **Point filters**: Black and white, Sepia, Thresholding, Alpha blending, Linear Adjustment
 - **Geometric filters**: Mirror 
-- Basic CLI implementation with ~~`--help` flag to use as documentation. There's info about each filter and it's parameters~~ (Help incomplete atm)
+- Basic CLI implementation with `--help` flag to use as documentation
 - Supports "Same" padding strategy to maintain spacial correspondence, with configurable stride.
 - Custom border strategy for convolutional filters (Clamping, Wrap, Mirror, Constant)
 - **Histogram support** (currently not supported via cli): greyscale, channel (r,g,b), intensity, value and chroma.
@@ -20,8 +20,6 @@ C++ image processing engine for PPM files. Main goal is to make scalable and rea
 
 ## To do
 - Statistics output
-- Refactor
-- Custom output suffix 
 - ASCII histogram representation via CLI. 
 - Output info, like histogram values, filters applied, settings used would be cool to implement.
 - Current pipeline operates in 8-bit per stage. Float pipeline is a must at some point.

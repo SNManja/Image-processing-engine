@@ -17,6 +17,10 @@ void pipelineViaJSON() {
 
     assert(data.contains("pipeline") && data["pipeline"].is_array());   
 
+    json statsConfig = json::object();
+    if (data.contains("statistics")) {
+        statsConfig = data["statistics"];
+    }
 
     DIR* directory = opendir(PICS_DIR.c_str());
     assert(directory); // Directory opened successfully
@@ -42,16 +46,34 @@ void pipelineViaJSON() {
                         std::swap(src, dst);
                     }
                 }
+                if(data.contains("output_suffix")) {
+                    std::string outputSuffix = data["output_suffix"];
+                    fileName = fileName.substr(0, fileName.find_last_of(".")) + outputSuffix;
+                    fileName += ".ppm";
+                }
+                std::string ppmOutPath = OUTPUT_DIR + "/" + fileName;
 
-                std::string outPath = OUTPUT_DIR + "/" + fileName;
-                printToPPM(src, outPath.c_str()); 
+                std::string statsName = OUTPUT_DIR + "/" + fileName.substr(0, fileName.find_last_of(".")) + "_stats.json";
+                calcStatistics(src, statsConfig, OUTPUT_DIR);
+                printToPPM(src, ppmOutPath.c_str());
                 numberOfImages++;
             }
         }
                 
     }
     closedir(directory);
+}
 
-    
-
+void calcStatistics(const image& img, const json& statsConfig, std::string outPath) {
+    if(statsConfig.contains("histograms")){
+        if(statsConfig["histograms"]["red"]) {
+            // Calculate and print histogram for red channel
+        }
+        if(statsConfig["histograms"]["green"]) {
+            // Calculate and print histogram for green channel
+        }
+        if(statsConfig["histograms"]["blue"]) {
+            // Calculate and print histogram for blue channel
+        }
+    }
 }
