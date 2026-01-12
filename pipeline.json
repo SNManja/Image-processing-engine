@@ -20,7 +20,7 @@
     {
       "filter": "alphaBlending",
       "params": {
-        "alpha": [0.0, 0.5, 0.5]
+        "alpha": [0.5, 0.5, 0.0]
       }
     }
 

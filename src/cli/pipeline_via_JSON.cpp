@@ -4,6 +4,7 @@
 #include <json.hpp>
 #include <fstream>
 #include <dirent.h>
+#include "histogram.h"
 
 std::string PICS_DIR = "./pics";
 std::string OUTPUT_DIR = "./output";
@@ -52,9 +53,7 @@ void pipelineViaJSON() {
                     fileName += ".ppm";
                 }
                 std::string ppmOutPath = OUTPUT_DIR + "/" + fileName;
-
-                std::string statsName = OUTPUT_DIR + "/" + fileName.substr(0, fileName.find_last_of(".")) + "_stats.json";
-                calcStatistics(src, statsConfig, OUTPUT_DIR);
+                calcStatistics(src, statsConfig, fileName);
                 printToPPM(src, ppmOutPath.c_str());
                 numberOfImages++;
             }
@@ -64,16 +63,34 @@ void pipelineViaJSON() {
     closedir(directory);
 }
 
-void calcStatistics(const image& img, const json& statsConfig, std::string outPath) {
+void saveJson(const json& j, const std::string& path) {
+    std::ofstream out(path);
+    if (!out.is_open()) {
+        throw std::runtime_error("Could not open file: " + path);
+    }
+    out << j.dump(4); // 4 = indent bonito
+}
+
+void calcStatistics(const image& img, const json& statsConfig, std::string fileName) {
+    std::string STAT_PATH = "./output/stats/" + fileName.substr(0, fileName.find_last_of(".")) + "_stats.json";
+    json histogramsJson = json::object();
     if(statsConfig.contains("histograms")){
         if(statsConfig["histograms"]["red"]) {
-            // Calculate and print histogram for red channel
+            //printf("Red histogram enabled\n");
+            histogram redHist = redChannelHistogram(img);
+            histogramsJson["red"] = redHist;
         }
         if(statsConfig["histograms"]["green"]) {
-            // Calculate and print histogram for green channel
+            //printf("Green histogram enabled\n");
+            histogram greenHist = greenChannelHistogram(img);
+            histogramsJson["green"] = greenHist;
         }
         if(statsConfig["histograms"]["blue"]) {
-            // Calculate and print histogram for blue channel
+            //printf("Blue histogram enabled\n");
+            histogram blueHist = blueChannelHistogram(img);
+            histogramsJson["blue"] = blueHist;
         }
     }
+    
+    saveJson(histogramsJson, STAT_PATH);
 }
