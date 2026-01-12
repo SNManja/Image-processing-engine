@@ -9,11 +9,10 @@ void resizeToMatchSrc(image& src, image& dst) {
     dst.data.resize(src.width * src.height);
 }
 
-void invertFilter(image& src, image& dst, const json& data) {
+void invertFilter(image& src, image& dst, const filterContext& ctx) {
 
     resizeToMatchSrc(src, dst);
-    applyPointTransform(src, dst, [](image& src, image& dst, int x, int y){
-        
+    applyPointTransform(src, dst, [ctx](image& src, image& dst, int x, int y){
         setPixel(dst, x, y, getPixelConstant(src, x, y));
         pixel* p = pixel_ptr(dst, x, y);
         p->r = 255 - p->r;
@@ -24,10 +23,10 @@ void invertFilter(image& src, image& dst, const json& data) {
 }
 
 
-void blackAndWhiteFilter(image& src, image& dst, const json& data){
+void blackAndWhiteFilter(image& src, image& dst, const filterContext& ctx){
 
     resizeToMatchSrc(src, dst);
-    applyPointTransform(src, dst, [](image& src, image& dst, int x, int y){
+    applyPointTransform(src, dst, [ctx](image& src, image& dst, int x, int y){
         setPixel(dst, x, y, getPixelConstant(src, x, y));
         pixel* p = pixel_ptr(dst, x, y);
         if (p){
@@ -39,10 +38,10 @@ void blackAndWhiteFilter(image& src, image& dst, const json& data){
     });
 }
 
-void thresholdingFilter(image& src, image& dst, const json& data){
+void thresholdingFilter(image& src, image& dst, const filterContext& ctx){
 
     resizeToMatchSrc(src, dst);
-    applyPointTransform(src, dst, [](image& src, image& dst, int x, int y){
+    applyPointTransform(src, dst, [ctx](image& src, image& dst, int x, int y){
         setPixel(dst, x, y, getPixelConstant(src, x, y));
         pixel* p = pixel_ptr(dst, x, y);
         if (p) {
@@ -60,11 +59,11 @@ void thresholdingFilter(image& src, image& dst, const json& data){
     });
 }
 
-void sepiaFilter(image& src, image& dst, const json& data){
+void sepiaFilter(image& src, image& dst, const filterContext& ctx){
 
     resizeToMatchSrc(src, dst);
-    applyPointTransform(src, dst, [](image& src, image& dst, int x, int y){
-        
+    applyPointTransform(src, dst, [ctx](image& src, image& dst, int x, int y){
+
         setPixel(dst, x, y, getPixelConstant(src, x, y));
         pixel* p = pixel_ptr(dst, x, y);
         if  (p) {
@@ -78,7 +77,7 @@ void sepiaFilter(image& src, image& dst, const json& data){
     });
 }
 
-void mirrorFilter(image& src, image& dst, const json& data){
+void mirrorFilter(image& src, image& dst, const filterContext& ctx){
 
     resizeToMatchSrc(src, dst);
     int center = src.width/2;
@@ -93,11 +92,12 @@ void mirrorFilter(image& src, image& dst, const json& data){
     });
 }
 
-void alphaBlending(image& src, image& dst,const image& base, const json& data){
+void alphaBlending(image& src, image& dst, const filterContext& ctx){
 
     resizeToMatchSrc(src, dst);
     std::vector<float> alpha = {1.0f, 1.0f, 1.0f}; 
-    
+    json data = ctx.data;
+    const image& base = ctx.base;
     if (data.contains("params") && data["params"].contains("alpha")) {
         alpha = data["params"]["alpha"].get<std::vector<float>>();
     }
@@ -107,14 +107,15 @@ void alphaBlending(image& src, image& dst,const image& base, const json& data){
     assert(alpha[1] >= 0.0f && alpha[1] <= 1.0f);
     assert(alpha[2] >= 0.0f && alpha[2] <= 1.0f);
 
-    if(src.width != base.width || src.height != base.height){
-        perror("Source and base images must have the same dimensions for alpha blending");
+    if (src.width != base.width || src.height != base.height) {
+        printf("Source and base images must have the same dimensions for alpha blending");
         return;
     }
+    assert(src.width == base.width && src.height == base.height);
 
     applyPointTransform(src, dst, [&alpha, &base](image& src, image& dst, int x, int y){
         pixel pBase = getPixelConstant(base, x, y);
-        pixel pSrc = getPixelConstant(dst, x, y);
+        pixel pSrc = getPixelConstant(src, x, y);
         pixel* pointDst = pixel_ptr(dst, x, y);
         if (pointDst){
             pointDst->r = clamp((int)(pSrc.r * (1 - alpha[0]) + pBase.r * alpha[0]));
@@ -124,15 +125,15 @@ void alphaBlending(image& src, image& dst,const image& base, const json& data){
     });
 }
 
-void linearAdjustment(image& src, image& dst, const json& data){
+void linearAdjustment(image& src, image& dst, const filterContext& ctx){
 
     int offset = 0;
     float scale = 1.0f;
-    if (data.contains("params") && data["params"].contains("offset")) {
-        offset = data["params"]["offset"];
+    if (ctx.data.contains("params") && ctx.data["params"].contains("offset")) {
+        offset = ctx.data["params"]["offset"];
     }
-    if(data.contains("params") && data["params"].contains("scale")) {
-        scale = data["params"]["scale"];
+    if (ctx.data.contains("params") && ctx.data["params"].contains("scale")) {
+        scale = ctx.data["params"]["scale"];
     }
 
     resizeToMatchSrc(src, dst);

@@ -17,12 +17,12 @@ convolutionConfig readConvolutionConfig(const json& data) {
     return config;
 }
 
-void boxblurFilter(image& src, image& dst, const json& data) {
-    convolutionConfig config = readConvolutionConfig(data);
+void boxblurFilter(image& src, image& dst, const filterContext& ctx) {
+    convolutionConfig config = readConvolutionConfig(ctx.data);
     // blur size
     int blurSize = 3;
-    if(data.contains("params") && data["params"].contains("size")) {
-        blurSize = data["params"]["size"];
+    if(ctx.data.contains("params") && ctx.data["params"].contains("size")) {
+        blurSize = ctx.data["params"]["size"];
     }
     if(blurSize % 2 == 0) {
         blurSize++;  // Make sure the blur size is odd
@@ -36,12 +36,12 @@ void boxblurFilter(image& src, image& dst, const json& data) {
     applyConvolution(src, dst, k, config);
 }
 
-void sharpenFilter(image& src, image& dst, const json& data) {
-    convolutionConfig config = readConvolutionConfig(data);
+void sharpenFilter(image& src, image& dst, const filterContext& ctx) {
+    convolutionConfig config = readConvolutionConfig(ctx.data);
 
     float amountValue = 1.0;
-    if(data.contains("params") && data["params"].contains("amount")) {
-        amountValue = data["params"]["amount"];
+    if(ctx.data.contains("params") && ctx.data["params"].contains("amount")) {
+        amountValue = ctx.data["params"]["amount"];
     }
     printf("Sharpening with amount: %f\n", amountValue);
 
@@ -53,8 +53,8 @@ void sharpenFilter(image& src, image& dst, const json& data) {
     applyConvolution(src, dst, k, config);
 }
 
-void embossFilter(image& src, image& dst, const json& data) {
-    convolutionConfig config = readConvolutionConfig(data);
+void embossFilter(image& src, image& dst, const filterContext& ctx) {
+    convolutionConfig config = readConvolutionConfig(ctx.data);
     Kernel k = kernel(3, {
         {-2, -1, 0},
         {-1, 1, 1},
@@ -63,8 +63,8 @@ void embossFilter(image& src, image& dst, const json& data) {
     applyConvolution(src, dst, k, config);
 }
 
-void laplacianOfGaussianFilter(image& src, image& dst, const json& data) {
-    convolutionConfig config = readConvolutionConfig(data);
+void laplacianOfGaussianFilter(image& src, image& dst, const filterContext& ctx) {
+    convolutionConfig config = readConvolutionConfig(ctx.data);
     Kernel k = kernel(5, {
         {0, 0, -1, 0, 0},
         {0, -1, -2, -1, 0},
@@ -75,8 +75,8 @@ void laplacianOfGaussianFilter(image& src, image& dst, const json& data) {
     applyConvolution(src, dst, k, config);
 }
 
-void motionblurFilter(image& src, image& dst, const json& data) {
-    convolutionConfig config = readConvolutionConfig(data);
+void motionblurFilter(image& src, image& dst, const filterContext& ctx) {
+    convolutionConfig config = readConvolutionConfig(ctx.data);
     Kernel k = kernel(5, {
         {1/5.0, 0, 0, 0, 0},
         {0, 1/5.0, 0, 0, 0},

@@ -20,7 +20,7 @@ FilterRegistry getRegistry(){
     FilterRegistry registry = {
         {
             "blur", {
-                boxblurFilter, 
+                boxblurFilter,
                 "Box blur. A simple blur.",
                 "Convolutional",
                 {
@@ -64,7 +64,7 @@ FilterRegistry getRegistry(){
             "mirror", {
                 mirrorFilter,
                 "Mirrors the image. Flips it horizontally. If we are technical about it, it's really a geometric filter. But it has the same postprocessing nuances that a point filter has",
-                "Point",
+                "Geometric",
                 {}
             }
         },
@@ -88,7 +88,7 @@ FilterRegistry getRegistry(){
         },
         {
             "lof", {
-                laplacianOfGaussianFilter,
+                laplacianOfGaussianFilter,  
                 "Laplacian of Gaussian filter. Edge detection.",
                 "Convolutional",
                 {}
@@ -115,7 +115,7 @@ FilterRegistry getRegistry(){
         },
         {
             "alphaBlending", {
-                nullptr,
+                alphaBlending,
                 "Blends the source image with a base image using alpha values for each color channel.",
                 "Point",
                 {

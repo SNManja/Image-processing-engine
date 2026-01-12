@@ -9,6 +9,7 @@ std::string PICS_DIR = "./pics";
 std::string OUTPUT_DIR = "./output";
 std::string JSON_PATH = "./pipeline.json";
 using json = nlohmann::json;
+
 void pipelineViaJSON() {
     std::ifstream file(JSON_PATH);
     assert(file.is_open());
@@ -27,6 +28,7 @@ void pipelineViaJSON() {
             std::string fileName = dirEntry->d_name;
             if (fileName.substr(fileName.find_last_of(".") + 1) == "ppm") {
                 image src = read_image((PICS_DIR + "/" + fileName).c_str());
+                image original = src; // Keep a copy of the original image
                 for(const auto& step : data["pipeline"]){
                     if (step.contains("filter")) {
                         image dst;
@@ -36,7 +38,7 @@ void pipelineViaJSON() {
                             printf("Skipping unknown filter %s\n", filterName.c_str());
                             continue;
                         }
-                        apply_filter(src, dst, fdesc.func, step, fileName.c_str());
+                        fdesc.func(src, dst, { step, original });
                         std::swap(src, dst);
                     }
                 }

@@ -32,24 +32,9 @@ Kernel kernel(int n, std::vector<std::vector<float>> values) {
 }
 
 
-void apply_filter(image& src, image& dst, basicFilter filter, const json& data, const char* output_name) {
-    // Apply the filter to the image
-    filter(src, dst, data);
-
-    char output_path[512];
-
-    printf("Postprocessing not functional until json parsing transition is complete \n");
-    // printf("Applying postprocessing...\n");
-    // applyPostProcessing(src, dst, readPostprocessingConfig(data));
-
-    printf("Generating %s\n", output_name);
-    snprintf(output_path, sizeof(output_path), "./output/%s", output_name);
-    printToPPM(dst, output_path);
-}
-
 
 using GetPixelFunc = pixel (*)(const image&, int, int);
-GetPixelFunc getPixelStrategyFunction(const std::string& borderStrategy) {
+GetPixelFunc getPixelFunction(const std::string& borderStrategy) {
     printf("Using strategy: %s (if valid)\n", borderStrategy.c_str());
     if (borderStrategy == "clamp") {
         return getPixelClamped;
@@ -72,7 +57,7 @@ void applyConvolution(image& src, image& dst, const Kernel& kernel, const convol
     float scale = config.scale;
     float offset = config.offset;
     int stride = config.stride;
-    GetPixelFunc getPixStrat = getPixelStrategyFunction(config.borderStrategy);
+    GetPixelFunc getPixStrat = getPixelFunction(config.borderStrategy);
 
     int inW = src.width;
     int inH = src.height;

@@ -16,7 +16,14 @@
         "offset": 10,
         "scale": 1.2
       }
+    },
+    {
+      "filter": "alphaBlending",
+      "params": {
+        "alpha": [0.0, 0.5, 0.5]
+      }
     }
+
   ],
   "statistics": false,
   "output_suffix": "_processed"

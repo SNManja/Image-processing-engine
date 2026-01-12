@@ -11,9 +11,9 @@ struct pixel {
 };
 
 struct image {
-    int width;
-    int height;
-    std::vector<pixel> data;
+    int width = 0;
+    int height = 0;
+    std::vector<pixel> data = {};
 };
 
 pixel* pixel_ptr(image& img, int x, int y);
