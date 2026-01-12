@@ -10,19 +10,6 @@
 
 using json = nlohmann::json;
 
-postprocessingConfig readPostprocessingConfig(const char* args[]) {
-    postprocessingConfig pConfig;
-    pConfig.brightness = getFlagValue(args, "--brightness", 0);
-    pConfig.contrast = getFlagValue(args, "--contrast", 1.0f);
-    pConfig.blending[0] = getFlagValue(args, "--red-mixing", 1.0f);
-    pConfig.blending[1] = getFlagValue(args, "--green-mixing", 1.0f);
-    pConfig.blending[2] = getFlagValue(args, "--blue-mixing", 1.0f);
-    printf("Postprocessing values: brightness=%f, contrast=%f, red-mixing=%f, green-mixing=%f, blue-mixing=%f\n",
-           pConfig.brightness, pConfig.contrast,
-           pConfig.blending[0], pConfig.blending[1], pConfig.blending[2]);
-    return pConfig;
-}
-
 void applyPointTransform(image& src, image& dst, coordinateFunction f){
 
     if (src.height != dst.height || src.width != dst.width){
@@ -36,31 +23,6 @@ void applyPointTransform(image& src, image& dst, coordinateFunction f){
     }
 }
 
-void applyPostProcessing(image& baseImg, image& filteredImg, postprocessingConfig pConfig){
-    int brightness = pConfig.brightness;
-    float contrast = pConfig.contrast;
-    float blending[3] = {pConfig.blending[0], pConfig.blending[1], pConfig.blending[2]};
-
-    for (int y = 0; y < baseImg.height; y++) {
-        for (int x = 0; x < baseImg.width; x++) {
-            pixel* pBase = pixel_ptr(baseImg, x, y);
-            pixel* pFiltered = pixel_ptr(filteredImg, x, y);
-            if (pBase && pFiltered){
-                float newR = (pFiltered->r * blending[0] + pBase->r * (1 - blending[0]));
-                float newG = (pFiltered->g * blending[1] + pBase->g * (1 - blending[1]));
-                float newB = (pFiltered->b * blending[2] + pBase->b * (1 - blending[2]));
-
-                newR = (newR - 127.5f) * contrast + 127.5f + brightness;
-                newG = (newG - 127.5f) * contrast + 127.5f + brightness;
-                newB = (newB - 127.5f) * contrast + 127.5f + brightness;
-                
-                pFiltered->r = clamp(newR);
-                pFiltered->g = clamp(newG);
-                pFiltered->b = clamp(newB);
-            }
-        }
-    }
-}
 
 Kernel kernel(int n, std::vector<std::vector<float>> values) {
     Kernel k;
@@ -85,31 +47,9 @@ void apply_filter(image& src, image& dst, basicFilter filter, const json& data, 
     printToPPM(dst, output_path);
 }
 
-void applyFilterOnEveryPPM(const char* dir, basicFilter filter, const json& data){
-    DIR* directory = opendir(dir);
-    struct dirent* dirEntry;
-    int numberOfImages = 0;
-    while ((dirEntry = readdir(directory)) != NULL) {
-        if (strstr(dirEntry->d_name, ".ppm")) {
-            numberOfImages++;
-            char img_path[512];
-            snprintf(img_path, sizeof(img_path), "%s/%s", dir, dirEntry->d_name);
-            printf("Looking at %s\n", img_path);
-            image img = read_image(img_path);
-            image filtered_img;
-            if (!img.data.empty()) {
-                // Apply filter to the image
-                printf("Applying filter to %s\n", dirEntry->d_name);
-                const char* output_name = dirEntry->d_name;
-                apply_filter(img, filtered_img, filter, data,  output_name);
-            }
-        }
-    }
-    closedir(directory);
-}
 
-using GetPixelFunc = pixel (*)(image&, int, int);
-GetPixelFunc getPixelFunction(const std::string& borderStrategy) {
+using GetPixelFunc = pixel (*)(const image&, int, int);
+GetPixelFunc getPixelStrategyFunction(const std::string& borderStrategy) {
     printf("Using strategy: %s (if valid)\n", borderStrategy.c_str());
     if (borderStrategy == "clamp") {
         return getPixelClamped;
@@ -132,7 +72,7 @@ void applyConvolution(image& src, image& dst, const Kernel& kernel, const convol
     float scale = config.scale;
     float offset = config.offset;
     int stride = config.stride;
-    GetPixelFunc getPixStrat = getPixelFunction(config.borderStrategy);
+    GetPixelFunc getPixStrat = getPixelStrategyFunction(config.borderStrategy);
 
     int inW = src.width;
     int inH = src.height;

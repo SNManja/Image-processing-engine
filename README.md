@@ -6,21 +6,20 @@ C++ image processing engine for PPM files. Main goal is to make scalable and rea
 </p>
 
 ## Capabilities
-- Processing PPM files
+- Processing PPM files with a **flexible pipeline**
 - **Convolutional filters**: Gaussian blur, Sharpen, Emboss, Laplacian of Gaussian (LoG)
 - **Point filters**: Black and white, Sepia, Thresholding
 - **Geometric filters**: Mirror 
-- Basic CLI implementation with `--help` flag to use as documentation. There's info about each filter and it's parameters
+- Basic CLI implementation with ~~`--help` flag to use as documentation. There's info about each filter and it's parameters~~ (Help incomplete atm)
 - Supports "Same" padding strategy to maintain spacial correspondence, with configurable stride.
 - Custom border strategy for convolutional filters (Clamping, Wrap, Mirror, Constant)
-- (Needs fixing) ~~Supports **post-processing** settings such as brightness, contrast and blend/mixing per channel~~
 - **Histogram support** (currently not supported via cli): greyscale, channel (r,g,b), intensity, value and chroma.
 - **Image statistics**: Currently just Average Optical Density with histograms. More in the future
-- **Filter chaining** with **JSON-based** pipeline. This ables to do complex filter chaining with custom parameters and readable configuration. Plus being able to save configurations as templates.
+- **Filter chaining** with **JSON-based** pipeline specifications. This enables complex filter chaining with custom parameters and readable configuration. Plus being able to save configurations as templates. 
 - **Batch processing**: Process all the files in a folder at the same time
 
 ## To do
-- Fix postprocessing
+- Fix alpha/blending and registry. Decide what to do. Adding a new filter function firm is probably the optimal way.
 - Clean up previous CLI implementation. Refactor is NECESSARY 
 - New --help or documentation ASAP
 - ASCII histogram representation via CLI. 
@@ -50,7 +49,7 @@ It's a simpler format. Does not depend on compression or complex encoding (like 
 1. Clone the repo.
 2. Compile with `make` command on your terminal
 3. Add your ppm images on `./pics`
-4. Use `./imgengine` to process your ppm images in batch ~~or `./imgengine --help` to ger info about each filter~~ (Help is outdated)
+4. Use `./imgengine` to process your ppm images in batch ~~or `./imgengine --help` to get info about each filter~~ (Help is outdated)
 5. Obtain the resulting images from `./output`
 
 # Dependencies

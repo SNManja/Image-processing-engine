@@ -6,22 +6,13 @@
 
 std::vector<std::string> getConvolutionalParamsList() {
     return {
-        "--stride (int): Takes an integer for the stride, which modifies the step size of the filter. Changes image size when different to 1",
-        "--scale (float): Takes a float for the scaling factor applied to the filter output.",
-        "--offset (float): Takes a float for the offset added to the filter output.",
-        "--border (string): Takes a string for the border strategy (clamp, wrap, mirror, constant)."
+        "stride (int): Takes an integer for the stride, which modifies the step size of the filter. Changes image size when different to 1",
+        "scale (float): Takes a float for the scaling factor applied to the filter output.",
+        "offset (float): Takes a float for the offset added to the filter output.",
+        "border (string): Takes a string for the border strategy (clamp, wrap, mirror, constant)."
     };
 };
 
-std::vector<std::string> getPostProcessingParamsList() {
-    return {
-        "--brightness (int): Offset added to the pixel intensity. Default 0.",
-        "--contrast (float): Multiplier for the contrast adjustment. Default 1.0.",
-        "--red-blending (float): Blend between original and filtered Red channel. 0 = Original, 1 = Filtered.",
-        "--green-blending (float): Blend between original and filtered Green channel. 0 = Original, 1 = Filtered.",
-        "--blue-blending (float): Blend between original and filtered Blue channel. 0 = Original, 1 = Filtered."
-    };
-};
 
 
 typedef std::map<std::string, FilterDescriptor> FilterRegistry;
@@ -33,7 +24,7 @@ FilterRegistry getRegistry(){
                 "Box blur. A simple blur.",
                 "Convolutional",
                 {
-                    "--size (int): Takes an integer for the blur size. Only odd values (kernel has to have a defined center)",   
+                    "size (int): Takes an integer for the blur size. Only odd values (kernel has to have a defined center)",   
                 }
             }
         },
@@ -83,7 +74,7 @@ FilterRegistry getRegistry(){
                 "Sharpens the image. Makes borders more saturated",
                 "Convolutional",
                 {
-                    "--amount (float): Takes a float and uses it for controlling the amount of sharpness"
+                    "amount (float): Takes a float and uses it for controlling the amount of sharpness"
                 }
             }
         },
@@ -110,8 +101,32 @@ FilterRegistry getRegistry(){
                 "Convolutional",
                 {}
             }
+        },
+        {
+            "linearAdjustment", {
+                linearAdjustment,
+                "Applies a linear adjustment to the image colors.",
+                "Point",
+                {
+                    "offset (int): Takes an integer for the offset to be added to each color channel.",
+                    "scale (float): Takes a float for the scaling factor applied to each color channel."
+                }
+            }
+        },
+        {
+            "alphaBlending", {
+                nullptr,
+                "Blends the source image with a base image using alpha values for each color channel.",
+                "Point",
+                {
+                    "base_image (string): Path to the base image to blend with.",
+                    "alpha (list of 3 floats): List of three floats (between 0 and 1) representing the alpha values for R, G, and B channels."
+                }
+            }
         }
     };
+    
+    
     std::vector<std::string> convParamList = getConvolutionalParamsList();
     for (auto& [name, desc] : registry) {
         if(desc.category == "Convolutional") {

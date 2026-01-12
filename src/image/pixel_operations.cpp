@@ -12,7 +12,7 @@ pixel* pixel_ptr(image& img, int x, int y){
 }
 
 
-pixel getPixelClamped(image& img, int x, int y){
+pixel getPixelClamped(const image& img, int x, int y){
     int width = img.width;
     int height = img.height;
 
@@ -24,7 +24,7 @@ pixel getPixelClamped(image& img, int x, int y){
     return img.data[y * width + x];
 }
 
-pixel getPixelConstant(image& img, int x, int y){
+pixel getPixelConstant(const image& img, int x, int y){
     int width = img.width;
     int height = img.height;
 
@@ -36,7 +36,7 @@ pixel getPixelConstant(image& img, int x, int y){
     return img.data[y * width + x];
 }
 
-pixel getPixelWrapped(image& img, int x, int y) {
+pixel getPixelWrapped(const image& img, int x, int y) {
     int width = img.width;
     int height = img.height;
 
@@ -45,7 +45,7 @@ pixel getPixelWrapped(image& img, int x, int y) {
     return img.data[wrappedY * width + wrappedX];
 }
 
-pixel getPixelMirrored(image& img, int x, int y){
+pixel getPixelMirrored(const image& img, int x, int y){
     int width = img.width;
     int height = img.height;
 

@@ -93,3 +93,57 @@ void mirrorFilter(image& src, image& dst, const json& data){
     });
 }
 
+void alphaBlending(image& src, image& dst,const image& base, const json& data){
+
+    resizeToMatchSrc(src, dst);
+    std::vector<float> alpha = {1.0f, 1.0f, 1.0f}; 
+    
+    if (data.contains("params") && data["params"].contains("alpha")) {
+        alpha = data["params"]["alpha"].get<std::vector<float>>();
+    }
+
+    assert(alpha.size() == 3);
+    assert(alpha[0] >= 0.0f && alpha[0] <= 1.0f);   
+    assert(alpha[1] >= 0.0f && alpha[1] <= 1.0f);
+    assert(alpha[2] >= 0.0f && alpha[2] <= 1.0f);
+
+    if(src.width != base.width || src.height != base.height){
+        perror("Source and base images must have the same dimensions for alpha blending");
+        return;
+    }
+
+    applyPointTransform(src, dst, [&alpha, &base](image& src, image& dst, int x, int y){
+        pixel pBase = getPixelConstant(base, x, y);
+        pixel pSrc = getPixelConstant(dst, x, y);
+        pixel* pointDst = pixel_ptr(dst, x, y);
+        if (pointDst){
+            pointDst->r = clamp((int)(pSrc.r * (1 - alpha[0]) + pBase.r * alpha[0]));
+            pointDst->g = clamp((int)(pSrc.g * (1 - alpha[1]) + pBase.g * alpha[1]));
+            pointDst->b = clamp((int)(pSrc.b * (1 - alpha[2]) + pBase.b * alpha[2]));
+        }
+    });
+}
+
+void linearAdjustment(image& src, image& dst, const json& data){
+
+    int offset = 0;
+    float scale = 1.0f;
+    if (data.contains("params") && data["params"].contains("offset")) {
+        offset = data["params"]["offset"];
+    }
+    if(data.contains("params") && data["params"].contains("scale")) {
+        scale = data["params"]["scale"];
+    }
+
+    resizeToMatchSrc(src, dst);
+    applyPointTransform(src, dst, [offset, scale](image& src, image& dst, int x, int y){
+
+        setPixel(dst, x, y, getPixelConstant(src, x, y));
+        pixel* p = pixel_ptr(dst, x, y);
+        if (p){
+            p->r = clamp((int)(p->r * scale + offset));
+            p->g = clamp((int)(p->g * scale + offset));
+            p->b = clamp((int)(p->b * scale + offset));
+        }
+    });
+}

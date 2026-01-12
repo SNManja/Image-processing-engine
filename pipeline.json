@@ -4,19 +4,20 @@
     { "filter": "sepia" },
     { 
         "filter": "blur" , 
-        "params": { "size": 21 }
+        "params": { "size": 15 }
+    },
+    {
+        "filter": "sharpen" , 
+        "params": { "amount": 1.5 }
+    },
+    {
+      "filter": "linearAdjustment",
+      "params": {
+        "offset": 10,
+        "scale": 1.2
+      }
     }
   ],
-  "postprocessing": {
-    "brightness": {
-      "factor": 1.1
-    },
-    "blending": {
-      "r": 0.8,
-      "g": 0.9,
-      "b": 1.0
-    }
-  },
   "statistics": false,
   "output_suffix": "_processed"
 }

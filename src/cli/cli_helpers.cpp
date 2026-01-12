@@ -11,6 +11,7 @@ FilterDescriptor getFilterDescriptor(const std::string& filterName) {
             return registry[filterName];
         }
     }
+    printf("Filter %s not found\n", filterName.c_str());
     return {};
 }
 
@@ -30,12 +31,4 @@ void printHelp() {
         }
         printf("\n");
     }
-
-    printf("\n----------------------------------------------------------------------------------------------------------------------------\n");
-    printf("Postprocessing parameters:\n");
-    for (const auto& param : getPostProcessingParamsList()) {
-        printf("  %s\n", param.c_str());
-    }
-    printf("----------------------------------------------------------------------------------------------------------------------------\n");
-
 }

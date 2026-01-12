@@ -18,10 +18,10 @@ struct image {
 
 pixel* pixel_ptr(image& img, int x, int y);
 
-pixel getPixelClamped(image& img, int x, int y);
-pixel getPixelConstant(image& img, int x, int y);
-pixel getPixelWrapped(image& img, int x, int y);
-pixel getPixelMirrored(image& img, int x, int y);
+pixel getPixelClamped(const image& img, int x, int y);
+pixel getPixelConstant(const image& img, int x, int y);
+pixel getPixelWrapped(const image& img, int x, int y);
+pixel getPixelMirrored(const image& img, int x, int y);
 
 void setPixel(image& img, int x, int y, pixel p);
 

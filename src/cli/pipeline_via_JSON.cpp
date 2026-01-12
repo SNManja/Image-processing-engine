@@ -32,6 +32,10 @@ void pipelineViaJSON() {
                         image dst;
                         std::string filterName = step.at("filter");
                         FilterDescriptor fdesc = getFilterDescriptor(filterName);
+                        if (fdesc.func == nullptr) {
+                            printf("Skipping unknown filter %s\n", filterName.c_str());
+                            continue;
+                        }
                         apply_filter(src, dst, fdesc.func, step, fileName.c_str());
                         std::swap(src, dst);
                     }
