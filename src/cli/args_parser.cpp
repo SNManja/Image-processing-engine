@@ -4,6 +4,11 @@
 #include "args_parser.h"
 
 
+/*
+ Right now this is not of much use. But in the future will probably include a simple CLI pipeline
+ So these definitions will stay here even if i dont use them currently. Will probably be used in the future
+*/
+
 int getIntArg(const char* args[], int index, int defaultValue) {
     // Precond: Index has to be in range
     if (args[index] != nullptr) {

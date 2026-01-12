@@ -3,6 +3,23 @@
 #include "json.hpp"
 using json = nlohmann::json;
 
+
+
+
+void applyPointTransform(image& src, image& dst, coordinateFunction f){
+
+    if (src.height != dst.height || src.width != dst.width){
+        perror("Source and destination images must have the same dimensions");
+        return;
+    }
+    for (int y = 0; y < src.height; y++) {
+        for (int x = 0; x < src.width; x++) {
+            f(src, dst, x, y);
+        }
+    }
+}
+
+
 void resizeToMatchSrc(image& src, image& dst) {
     dst.width = src.width;
     dst.height = src.height;
