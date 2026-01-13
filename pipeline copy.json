@@ -1,0 +1,36 @@
+{
+  "name": "example_pipeline",
+  "pipeline": [
+    { "filter": "sepia" },
+    { 
+        "filter": "blur" , 
+        "params": { "size": 15 }
+    },
+    {
+        "filter": "sharpen" , 
+        "params": { "amount": 1.5 }
+    },
+    {
+      "filter": "linearAdjustment",
+      "params": {
+        "offset": 10,
+        "scale": 1.2
+      }
+    },
+    {
+      "filter": "alphaBlending",
+      "params": {
+        "alpha": [0.5, 0.5, 0.0]
+      }
+    }
+
+  ],
+  "statistics": {
+    "histograms": {
+      "red": false,
+      "green": false,
+      "blue": false
+    }
+  },
+  "output_suffix": "_processed"
+}

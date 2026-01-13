@@ -13,7 +13,7 @@ C++ image processing engine for PPM files. Main goal is to make scalable and rea
 - Basic CLI implementation with `--help` flag to use as documentation
 - Supports "Same" padding strategy to maintain spacial correspondence, with configurable stride.
 - Custom border strategy for convolutional filters (Clamping, Wrap, Mirror, Constant)
-- **Histogram support** (currently not supported via cli): greyscale, channel (r,g,b), intensity, value and chroma.
+- **Histogram support**: greyscale, channel (r,g,b), intensity, value and chroma.
 - **Image statistics**: Just histograms at the moment. More in the future
 - **Filter chaining** with **JSON-based** pipeline specifications. This enables complex filter chaining with custom parameters and readable configuration. Plus being able to save configurations as templates. 
 - **Batch processing**: Process all the files in a folder at the same time

@@ -2,6 +2,7 @@
 #include <vector>
 #include <functional>
 #include <cassert>
+#include <string>
 
 using histogramPerPixelFunction = std::function<int(const pixel*)>; // These functions must return a number between 0 and 255.
 
@@ -15,5 +16,7 @@ histogram chromaHistogram(const image& img);
 histogram redChannelHistogram(const image& img);
 histogram greenChannelHistogram(const image& img);
 histogram blueChannelHistogram(const image& img);
+
+void graphicHistogram(histogram& hist, std::string name);
 
 double averageOpticalDensity(const histogram& h); // TODO
