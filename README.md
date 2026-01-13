@@ -18,6 +18,8 @@ C++ image processing engine for PPM files. Main goal is to make scalable and rea
 - **Batch processing**: Process all the files in a folder at the same time
 
 ## To do
+- Split rank 1 kernels so convolutions are O(2k) per pixel rather than O(k^2) 
+- Improve histogram (provide some kind of guide on values). And document them better
 - Current pipeline operates in 8-bit per stage. Float pipeline is a must at some point.
 - Add dilation parameter to convolution. 
 - Add common postprocessing parameters (white balance, gain, gamma, normalization, clamping, etc)
@@ -52,4 +54,6 @@ It's a simpler format. Does not depend on compression or complex encoding (like 
 - `--list` for list of filters, parameters and descriptions
 
 # Dependencies
-The whole point of this project is to make things from scratch. So i will be explicit in which external libraries i use. From the time being, the only one is **nlohmann/json** which is already **included** in the repository to ensure a zero-dependency setup and avoid installation headaches.
+The whole point of this project is to make things from scratch. So i will be explicit in which external libraries i use. From the time being, the only one is **nlohmann/json** which is already **included** in the repository to ensure a zero-dependency setup and avoid installation headaches. 
+
+To be clear. This implicates no use of ffmpeg, matplotlib or any other library. At least at the moment. Everything is made from scratch.

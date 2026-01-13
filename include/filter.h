@@ -49,8 +49,8 @@ struct convolutionConfig
 };
 
 Kernel kernel(int n, std::vector<std::vector<float>> values);
-void applyConvolution(image& src, image& dst, const Kernel& kernel, const convolutionConfig& config={});
-void applyPointTransform(image& src, image& dst, coordinateFunction f);
+void applyConvolution(const image& src, image& dst, const Kernel& kernel, const convolutionConfig& config={});
+void applyPointTransform(const image& src, image& dst, coordinateFunction f);
 
 inline unsigned char clamp(float value) {
     if (value > 255.0f) return 255;

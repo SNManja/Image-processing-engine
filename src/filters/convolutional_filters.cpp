@@ -2,6 +2,7 @@
 #include "image.h"
 #include "args_parser.h"
 #include "json.hpp"
+#include <cassert>
 
 /*
     Convolution processing functions
@@ -13,6 +14,20 @@ Kernel kernel(int n, std::vector<std::vector<float>> values) {
     Kernel k;
     k.size = n;
     k.values = values;
+    return k;
+}
+
+struct SplitKernel { // TODO implement split kernel optimization in convolutions
+    int size;
+    std::vector<float> rowValues;
+    std::vector<float> colValues;
+};
+
+SplitKernel splitKernel(int n, std::vector<float> rowValues, std::vector<float> colValues) {
+    SplitKernel k;
+    k.size = n;
+    k.rowValues = rowValues;
+    k.colValues = colValues;
     return k;
 }
 
@@ -35,7 +50,18 @@ GetPixelFunc getPixelFunction(const std::string& borderStrategy) {
     return getPixelClamped; // Default to clamp
 }
 
-void applyConvolution(image& src, image& dst, const Kernel& kernel, const convolutionConfig& config){
+void applyConvolution(const image& src, image& dst, const Kernel& kernel, const convolutionConfig& config){
+    int kSize = kernel.size;
+    if (kSize % 2 == 0){
+        perror("Kernel size has to be odd");
+        return;
+    }
+    assert(kernel.values.size() == (kSize * kSize));
+    genericConvolution(src, dst, kernel, config);
+}
+
+
+void genericConvolution(const image& src, image& dst, const Kernel& kernel, const convolutionConfig& config){
     
     float scale = config.scale;
     float offset = config.offset;
@@ -45,11 +71,7 @@ void applyConvolution(image& src, image& dst, const Kernel& kernel, const convol
     int inW = src.width;
     int inH = src.height;
     int k = kernel.size;
-    if (k % 2 == 0){
-        perror("Kernel size has to be odd");
-        return;
-    }
-
+  
     const int kernelCenter = k / 2;
     int padding = kernelCenter; 
     int outW = ((int)((inW-k+2*padding))/stride)+1;
@@ -65,7 +87,7 @@ void applyConvolution(image& src, image& dst, const Kernel& kernel, const convol
             float newValueR = 0, newValueB = 0, newValueG = 0;
             for (int i=0; i < k; i++){
                 for (int j=0; j < k; j++){
-                    // !For this function call without inlining we will have a lot of performance loss
+                    // !This function call without inlining we will have a lot of performance loss
                     pixel neigh = getPixStrat(src,inX+i-kernelCenter,inY+j-kernelCenter); 
                     newValueR += (neigh.r) * kernel.values[i][j];
                     newValueG += (neigh.g) * kernel.values[i][j];
@@ -79,6 +101,7 @@ void applyConvolution(image& src, image& dst, const Kernel& kernel, const convol
     }
     return;
 }
+
 
 /*
     Filters
