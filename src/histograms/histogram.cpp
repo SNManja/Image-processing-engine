@@ -73,3 +73,15 @@ double histogramMean(const histogram& h){
 double averageOpticalDensity(const histogram& h){
     return histogramMean(h);
 }   
+
+histogramRegistry getHistogramRegistry() {
+    histogramRegistry histograms;
+    histograms["red"] = redChannelHistogram;
+    histograms["green"] = greenChannelHistogram;
+    histograms["blue"] = blueChannelHistogram;
+    histograms["greyscale"] = greyscaleHistogram;
+    histograms["intensity"] = intensityHistogram;
+    histograms["value"] = valueHistogram;
+    histograms["chroma"] = chromaHistogram;
+    return histograms;
+}

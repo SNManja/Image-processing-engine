@@ -8,6 +8,8 @@ using histogramPerPixelFunction = std::function<int(const pixel*)>; // These fun
 
 using histogram = std::vector<int>;
 
+using histogramRegistry = std::unordered_map<std::string, histogram(*)(const image&)>;
+
 histogram computeHistogram(const image& img, histogramPerPixelFunction calc);
 histogram greyscaleHistogram(const image& img);
 histogram intensityHistogram(const image& img);
@@ -18,5 +20,6 @@ histogram greenChannelHistogram(const image& img);
 histogram blueChannelHistogram(const image& img);
 
 void graphicHistogram(histogram& hist, std::string name);
+histogramRegistry getHistogramRegistry();
 
 double averageOpticalDensity(const histogram& h); // TODO

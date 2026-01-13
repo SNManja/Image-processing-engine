@@ -18,14 +18,13 @@ C++ image processing engine for PPM files. Main goal is to make scalable and rea
 - **Batch processing**: Process all the files in a folder at the same time
 
 ## To do
-- Output info, like histogram values, filters applied, settings used would be cool to implement.
 - Current pipeline operates in 8-bit per stage. Float pipeline is a must at some point.
 - Add dilation parameter to convolution. 
 - Add common postprocessing parameters (white balance, gain, gamma, normalization, clamping, etc)
 - Add custom parameters to already implemented filters
-- Documentation for each filter and its parameters 
 - Median filter
 - Sobel operator
+- Output info, like histograms calculated, filters applied, settings used would be cool to implement.
 - Check easy performance improvements before going into more complex filters
 - Implement "Valid" padding strategy
 - Evaluate if even kernels have any utility, and make them usable check how to handle them well.
