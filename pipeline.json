@@ -6,14 +6,24 @@
       "params": {
         "alpha": [0.0, 0.0, 0.0]
       }
+    },
+    {
+      "filter": "sharpen",
+      "params": {
+        "amount": 1.5
+      }
     }
 
   ],
   "statistics": {
     "histograms": {
       "red": true,
-      "green": false,
-      "blue": false
+      "green": true,
+      "blue": true,
+      "greyscale": true,
+      "intensity": true,
+      "value": true,
+      "chroma": true
     }
   },
   "output_suffix": "_processed"

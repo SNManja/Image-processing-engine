@@ -77,31 +77,37 @@ void calcStatistics(const image& img, const json& statsConfig, std::string fileN
     if(statsConfig.contains("histograms")){
         if(statsConfig["histograms"].contains("red") && statsConfig["histograms"]["red"]) {
             histogram redHist = redChannelHistogram(img);
-            graphicHistogram(redHist, "red");
+            graphicHistogram(redHist, fileName + "_red");
             histogramsJson["red"] = redHist;
         }
         if(statsConfig["histograms"].contains("green") && statsConfig["histograms"]["green"]) {
             histogram greenHist = greenChannelHistogram(img);
+            graphicHistogram(greenHist, fileName + "_green");
             histogramsJson["green"] = greenHist;
         }
         if(statsConfig["histograms"].contains("blue") && statsConfig["histograms"]["blue"]) {
             histogram blueHist = blueChannelHistogram(img);
+            graphicHistogram(blueHist, fileName + "_blue");
             histogramsJson["blue"] = blueHist;
         }
         if(statsConfig["histograms"].contains("greyscale") && statsConfig["histograms"]["greyscale"]){
             histogram greyHist = greyscaleHistogram(img);
+            graphicHistogram(greyHist, fileName + "_greyscale");
             histogramsJson["greyscale"] = greyHist;
         }
         if(statsConfig["histograms"].contains("intensity") && statsConfig["histograms"]["intensity"]){
             histogram intensityHist = intensityHistogram(img);
+            graphicHistogram(intensityHist, fileName + "_intensity");
             histogramsJson["intensity"] = intensityHist;
         }
         if(statsConfig["histograms"].contains("value") && statsConfig["histograms"]["value"]){
             histogram valueHist = valueHistogram(img);
+            graphicHistogram(valueHist, fileName + "_value");
             histogramsJson["value"] = valueHist;
         }
         if(statsConfig["histograms"].contains("chroma") && statsConfig["histograms"]["chroma"]){
             histogram chromaHist = chromaHistogram(img);
+            graphicHistogram(chromaHist, fileName + "_chroma");
             histogramsJson["chroma"] = chromaHist;
         }
 
