@@ -122,6 +122,14 @@ FilterRegistry getRegistry(){
                     "alpha (list of 3 floats): List of three floats (between 0 and 1) representing the alpha values for R, G, and B channels."
                 }
             }
+        },
+        {
+            "sobel", {
+                sobelOperatorFilter,
+                "Sobel operator. Edge detection filter.",
+                "Gradient",
+                {}
+            }
         }
     };
     

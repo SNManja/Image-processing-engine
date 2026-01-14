@@ -45,7 +45,7 @@ void blackAndWhiteFilter(const image<float>& src, image<float>& dst, const filte
         setPixel(dst, x, y, getPixelConstant(src, x, y));
         pixel<float>* p = pixel_ptr(dst, x, y);
         if (p){
-            float formula = 0.299 * (p->r) + 0.577 * (p->g) + 0.114* (p->b);
+            float formula = 0.299 * (p->r) + 0.587 * (p->g) + 0.114* (p->b);
             p->r = formula;
             p->g = formula;
             p->b = formula;

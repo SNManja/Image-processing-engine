@@ -37,6 +37,9 @@ void laplacianOfGaussianFilter(const image<float>& src, image<float>& dst, const
 void motionblurFilter(const image<float>& src, image<float>& dst, const filterContext& ctx);
 void embossFilter(const image<float>& src, image<float>& dst, const filterContext& ctx);
 
+// Gradient
+void sobelOperatorFilter(const image<float>& src, image<float>& dst,const filterContext& cfg);
+
 struct Kernel {
     unsigned char size;
     std::vector<std::vector<float>> values;
@@ -53,7 +56,7 @@ struct convolutionConfig
 Kernel kernel(int n, std::vector<std::vector<float>> values);
 void applyConvolution(const image<float>& src, image<float>& dst, const Kernel& kernel, const convolutionConfig& config={});
 void applyPointTransform(const image<float>& src, image<float>& dst, coordinateFunction f);
-
+convolutionConfig readConvolutionConfig(const json& data);
 
 
 
