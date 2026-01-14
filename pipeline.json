@@ -19,11 +19,14 @@
     {
       "filter": "alphaBlending",
       "params": {
-        "alpha": [0.0, 0.0, 0.0]
+        "alpha": [1.0, 1.0, 1.0]
       }
     },
     {
-      "filter": "sobel"
+      "filter": "sobel",
+      "params": {
+        "greyscale": false
+      }
     }
 
   ],

@@ -1,14 +1,14 @@
 #include "filter.h"
 #include "image.h"
 #include "json.hpp"
+#include <stdexcept>
 using json = nlohmann::json;
 
 
 void applyPointTransform(const image<float>& src, image<float>& dst, coordinateFunction f){
 
-    if (src.height != dst.height || src.width != dst.width){
-        perror("Source and destination images must have the same dimensions");
-        return;
+    if (src.height != dst.height || src.width != dst.width) {
+        throw std::invalid_argument("Source and destination images must have the same dimensions");
     }
     for (int y = 0; y < src.height; y++) {
         for (int x = 0; x < src.width; x++) {
@@ -133,9 +133,9 @@ void alphaBlending(const image<float>& src, image<float>& dst, const filterConte
         pixel<float> pSrc = getPixelConstant(src, x, y);
         pixel<float>* pointDst = pixel_ptr(dst, x, y);
         if (pointDst){
-            pointDst->r = clamp((int)(pSrc.r * (1 - alpha[0]) + pBase.r * alpha[0]));
-            pointDst->g = clamp((int)(pSrc.g * (1 - alpha[1]) + pBase.g * alpha[1]));
-            pointDst->b = clamp((int)(pSrc.b * (1 - alpha[2]) + pBase.b * alpha[2]));
+            pointDst->r = clamp((int)(pSrc.r * (alpha[0]) + pBase.r * (1 - alpha[0])));
+            pointDst->g = clamp((int)(pSrc.g * (alpha[1]) + pBase.g * (1 - alpha[1])));
+            pointDst->b = clamp((int)(pSrc.b * (alpha[2]) + pBase.b * (1 - alpha[2])));
         }
     });
 }

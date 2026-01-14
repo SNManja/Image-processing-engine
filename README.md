@@ -6,7 +6,7 @@ C++ image processing engine for PPM files. Main goal is to make scalable and rea
 </p>
 
 ## Capabilities
-- Processing PPM files with a **flexible pipeline**
+- Processing PPM files with a **flexible pipeline** 
 - **Convolutional filters**: Gaussian blur, Sharpen, Emboss, Laplacian of Gaussian (LoG)
 - **Point filters**: Black and white, Sepia, Thresholding, Alpha blending, Linear Adjustment
 - **Geometric filters**: Mirror 
@@ -18,10 +18,11 @@ C++ image processing engine for PPM files. Main goal is to make scalable and rea
 - **Filter chaining** with **JSON-based** pipeline specifications. This enables complex filter chaining with custom parameters and readable configuration. Plus being able to save configurations as templates. 
 - **Batch processing**: Process all the files in a folder at the same time
 
+
 ## To do
 - Update documentation on --help.
-- Add a config for sobel to not do greyscale would be cool just for artistic reasons. Looks cool
-- Check common sobel parameters and implement them
+- Float pipeline from [0,255] to [0,1] would improve float operations precision
+- Check common sobel parameters and implement them. Scharr is a must
 - Split rank 1 kernels so convolutions are O(2k) per pixel rather than O(k^2) 
 - Improve histogram (provide some kind of guide on values). And document them better
 - Add dilation parameter to convolution. 

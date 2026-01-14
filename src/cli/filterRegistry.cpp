@@ -126,9 +126,11 @@ FilterRegistry getRegistry(){
         {
             "sobel", {
                 sobelOperatorFilter,
-                "Sobel operator. Edge detection filter.",
+                "Sobel operator. Edge detection filter. Usual gradient parameters are added for the x and y convolutions",
                 "Gradient",
-                {}
+                {
+                    "greyscale (bool): A flag indicating whether to convert the image to greyscale before applying the filter. Defaults to true."
+                }
             }
         }
     };
@@ -142,6 +144,10 @@ FilterRegistry getRegistry(){
         if(desc.category == "Point") {
             std::vector<std::string> pointParamList = {};
             desc.paramsDesc.insert(desc.paramsDesc.end(), pointParamList.begin(), pointParamList.end());
+        }
+        if(desc.category == "Gradient"){
+            std::vector<std::string> gradientParamList = convParamList;
+            desc.paramsDesc.insert(desc.paramsDesc.end(), gradientParamList.begin(), gradientParamList.end());
         }
     }
 

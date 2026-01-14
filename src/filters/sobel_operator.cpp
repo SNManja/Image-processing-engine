@@ -17,8 +17,16 @@ image<float> operateBetween(image<float>& img1, image<float>& img2, betweenPixel
 
 void sobelOperatorFilter(const image<float>& src, image<float>& dst,const filterContext& cfg){
     assert((int)src.data.size() == (src.height * src.width));
-    image<float> greyscaleSrc;
-    blackAndWhiteFilter(src, greyscaleSrc, cfg);
+    image<float> prep;
+    bool greyscale = true;
+    if (cfg.data.contains("params") && cfg.data["params"].contains("greyscale")) {
+        greyscale = cfg.data["params"]["greyscale"];
+    }
+    if(greyscale){
+        blackAndWhiteFilter(src, prep, cfg);
+    }else {
+        prep = src;
+    }
     convolutionConfig convConfig = readConvolutionConfig(cfg.data);
     image<float> Gx, Gy;
     Kernel sobelKernelX = kernel(3,
@@ -31,8 +39,8 @@ void sobelOperatorFilter(const image<float>& src, image<float>& dst,const filter
          {0,0,0},
          {1,2,1}}
     );
-    applyConvolution(greyscaleSrc, Gx, sobelKernelX, convConfig);
-    applyConvolution(greyscaleSrc, Gy, sobelKernelY, convConfig);
+    applyConvolution(prep, Gx, sobelKernelX, convConfig);
+    applyConvolution(prep, Gy, sobelKernelY, convConfig);
 
     dst = operateBetween(Gx,Gy, [](const pixel<float>& p1, const pixel<float>& p2)->pixel<float>{
         return {
