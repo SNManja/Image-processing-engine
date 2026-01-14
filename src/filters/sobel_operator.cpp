@@ -1,8 +1,8 @@
 #include "filter.h"
 #include "image.h"
 
-void sobelOperatorFilter(const image& src, image& dst, convolutionConfig cfg){
-    image Gx, Gy;
+void sobelOperatorFilter(const image<float>& src, image<float>& dst, convolutionConfig cfg){
+    image<float> Gx, Gy;
     Kernel sobelKernelX = kernel(3,
         {{-1,0,1},
          {-2,0,2},

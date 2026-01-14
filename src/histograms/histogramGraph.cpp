@@ -6,14 +6,14 @@ void graphicHistogram(histogram& hist, std::string name){
     const int imgHeight = 768;
     const int imgWidth = 768;
 
-    pixel graphBorders = {0, 0, 0};
-    pixel graphBackground = {235, 235, 235};
-    pixel graphForeground = {125, 125, 125}; // TODO: Find a cool color
+    pixel<unsigned char> graphBorders = {0, 0, 0};
+    pixel<unsigned char> graphBackground = {235, 235, 235};
+    pixel<unsigned char> graphForeground = {125, 125, 125}; // TODO: Find a cool color
 
-    image img = {
+    image<unsigned char> img = {
         imgWidth,
         imgHeight,
-        std::vector<pixel>(imgWidth * imgHeight, graphBackground)
+        std::vector<pixel<unsigned char>>(imgWidth * imgHeight, graphBackground)
     };
 
     const int histWidth = 512;

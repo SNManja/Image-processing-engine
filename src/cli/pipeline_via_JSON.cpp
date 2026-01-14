@@ -32,11 +32,11 @@ void pipelineViaJSON() {
         if (dirEntry->d_type == DT_REG) {
             std::string fileName = dirEntry->d_name;
             if (fileName.substr(fileName.find_last_of(".") + 1) == "ppm") {
-                image src = read_image((PICS_DIR + "/" + fileName).c_str());
-                image original = src; // Keep a copy of the original image
+                image<float> src = read_image((PICS_DIR + "/" + fileName).c_str());
+                image<float> original = src; // Keep a copy of the original image
                 for(const auto& step : data["pipeline"]){
                     if (step.contains("filter")) {
-                        image dst;
+                        image<float> dst;
                         std::string filterName = step.at("filter");
                         FilterDescriptor fdesc = getFilterDescriptor(filterName);
                         if (fdesc.func == nullptr) {
@@ -53,8 +53,9 @@ void pipelineViaJSON() {
                     fileName += ".ppm";
                 }
                 std::string ppmOutPath = OUTPUT_DIR + "/" + fileName;
-                calcStatistics(src, statsConfig, fileName);
-                printToPPM(src, ppmOutPath.c_str());
+                image<unsigned char> ucharRes = src;
+                calcStatistics(ucharRes, statsConfig, fileName);
+                printToPPM(ucharRes, ppmOutPath.c_str());
                 numberOfImages++;
             }
         }
@@ -71,7 +72,7 @@ void saveJson(const json& j, const std::string& path) {
     out << j.dump(4); // 4 = indent bonito
 }
 
-void calcStatistics(const image& img, const json& statsConfig, std::string fileName) {
+void calcStatistics(const image<unsigned char>& img, const json& statsConfig, std::string fileName) {
     std::string STAT_PATH = "./output/stats/" + fileName.substr(0, fileName.find_last_of(".")) + "_stats.json";
     json histogramsJson = json::object();
     histogramRegistry histogramsReg = getHistogramRegistry();

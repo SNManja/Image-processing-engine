@@ -20,7 +20,6 @@ C++ image processing engine for PPM files. Main goal is to make scalable and rea
 ## To do
 - Split rank 1 kernels so convolutions are O(2k) per pixel rather than O(k^2) 
 - Improve histogram (provide some kind of guide on values). And document them better
-- Current pipeline operates in 8-bit per stage. Float pipeline is a must at some point.
 - Add dilation parameter to convolution. 
 - Add common postprocessing parameters (white balance, gain, gamma, normalization, clamping, etc)
 - Add custom parameters to already implemented filters

@@ -7,33 +7,35 @@
 #include "json.hpp"
 
 
+
+
 using json = nlohmann::json;
 
 
 struct filterContext {
     const json& data;
-    const image& base;
+    const image<float>& base;
 };
 
-using BasicFilter = std::function<void(image&,image&, const filterContext&)>;
-using coordinateFunction = std::function<void(image& src, image& dst, int, int)>;
+using BasicFilter = std::function<void(const image<float>&,image<float>&, const filterContext&)>;
+using coordinateFunction = std::function<void(const image<float>& src, image<float>& dst, int, int)>;
 
 // point filters
-void invertFilter(image& src, image& dst, const filterContext& ctx);
-void blackAndWhiteFilter(image& src, image& dst, const filterContext& ctx);
-void sepiaFilter(image& src, image& dst, const filterContext& ctx);
-void thresholdingFilter(image& src, image& dst, const filterContext& ctx);
-void mirrorFilter(image& src, image& dst, const filterContext& ctx);
+void invertFilter(const image<float>& src, image<float>& dst, const filterContext& ctx);
+void blackAndWhiteFilter(const image<float>& src, image<float>& dst, const filterContext& ctx);
+void sepiaFilter(const image<float>& src, image<float>& dst, const filterContext& ctx);
+void thresholdingFilter(const image<float>& src, image<float>& dst, const filterContext& ctx);
+void mirrorFilter(const image<float>& src, image<float>& dst, const filterContext& ctx);
 
-void linearAdjustment(image& src, image& dst, const filterContext& ctx);
-void alphaBlending(image& src, image& dst, const filterContext& ctx);
+void linearAdjustment(const image<float>& src, image<float>& dst, const filterContext& ctx);
+void alphaBlending(const image<float>& src, image<float>& dst, const filterContext& ctx);
 
 // convolutional filters
-void boxblurFilter(image& src, image& dst, const filterContext& ctx);
-void sharpenFilter(image& src, image& dst, const filterContext& ctx);
-void laplacianOfGaussianFilter(image& src, image& dst, const filterContext& ctx);
-void motionblurFilter(image& src, image& dst, const filterContext& ctx);
-void embossFilter(image& src, image& dst, const filterContext& ctx);
+void boxblurFilter(const image<float>& src, image<float>& dst, const filterContext& ctx);
+void sharpenFilter(const image<float>& src, image<float>& dst, const filterContext& ctx);
+void laplacianOfGaussianFilter(const image<float>& src, image<float>& dst, const filterContext& ctx);
+void motionblurFilter(const image<float>& src, image<float>& dst, const filterContext& ctx);
+void embossFilter(const image<float>& src, image<float>& dst, const filterContext& ctx);
 
 struct Kernel {
     unsigned char size;
@@ -49,14 +51,9 @@ struct convolutionConfig
 };
 
 Kernel kernel(int n, std::vector<std::vector<float>> values);
-void applyConvolution(const image& src, image& dst, const Kernel& kernel, const convolutionConfig& config={});
-void applyPointTransform(const image& src, image& dst, coordinateFunction f);
+void applyConvolution(const image<float>& src, image<float>& dst, const Kernel& kernel, const convolutionConfig& config={});
+void applyPointTransform(const image<float>& src, image<float>& dst, coordinateFunction f);
 
-inline unsigned char clamp(float value) {
-    if (value > 255.0f) return 255;
-    if (value < 0.0f) return 0;
-    return (unsigned char)value;
-}
 
 
 

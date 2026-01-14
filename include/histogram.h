@@ -4,20 +4,20 @@
 #include <cassert>
 #include <string>
 
-using histogramPerPixelFunction = std::function<int(const pixel*)>; // These functions must return a number between 0 and 255.
+using histogramPerPixelFunction = std::function<int(const pixel<unsigned char>*)>; // These functions must return a number between 0 and 255.
 
 using histogram = std::vector<int>;
 
-using histogramRegistry = std::unordered_map<std::string, histogram(*)(const image&)>;
+using histogramRegistry = std::unordered_map<std::string, histogram(*)(const image<unsigned char>&)>;
 
-histogram computeHistogram(const image& img, histogramPerPixelFunction calc);
-histogram greyscaleHistogram(const image& img);
-histogram intensityHistogram(const image& img);
-histogram valueHistogram(const image& img);
-histogram chromaHistogram(const image& img);
-histogram redChannelHistogram(const image& img);
-histogram greenChannelHistogram(const image& img);
-histogram blueChannelHistogram(const image& img);
+histogram computeHistogram(const image<unsigned char>& img, histogramPerPixelFunction calc);
+histogram greyscaleHistogram(const image<unsigned char>& img);
+histogram intensityHistogram(const image<unsigned char>& img);
+histogram valueHistogram(const image<unsigned char>& img);
+histogram chromaHistogram(const image<unsigned char>& img);
+histogram redChannelHistogram(const image<unsigned char>& img);
+histogram greenChannelHistogram(const image<unsigned char>& img);
+histogram blueChannelHistogram(const image<unsigned char>& img);
 
 void graphicHistogram(histogram& hist, std::string name);
 histogramRegistry getHistogramRegistry();

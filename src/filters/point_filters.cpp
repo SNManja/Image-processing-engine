@@ -4,7 +4,7 @@
 using json = nlohmann::json;
 
 
-void applyPointTransform(image& src, image& dst, coordinateFunction f){
+void applyPointTransform(const image<float>& src, image<float>& dst, coordinateFunction f){
 
     if (src.height != dst.height || src.width != dst.width){
         perror("Source and destination images must have the same dimensions");
@@ -18,18 +18,18 @@ void applyPointTransform(image& src, image& dst, coordinateFunction f){
 }
 
 
-void resizeToMatchSrc(image& src, image& dst) {
+void resizeToMatchSrc(const image<float>& src, image<float>& dst) {
     dst.width = src.width;
     dst.height = src.height;
     dst.data.resize(src.width * src.height);
 }
 
-void invertFilter(image& src, image& dst, const filterContext& ctx) {
+void invertFilter(const image<float>& src, image<float>& dst, const filterContext& ctx) {
 
     resizeToMatchSrc(src, dst);
-    applyPointTransform(src, dst, [ctx](image& src, image& dst, int x, int y){
+    applyPointTransform(src, dst, [ctx](const image<float>& src, image<float>& dst, int x, int y){
         setPixel(dst, x, y, getPixelConstant(src, x, y));
-        pixel* p = pixel_ptr(dst, x, y);
+        pixel<float>* p = pixel_ptr(dst, x, y);
         p->r = 255 - p->r;
         p->g = 255 - p->g;
         p->b = 255 - p->b;
@@ -38,12 +38,12 @@ void invertFilter(image& src, image& dst, const filterContext& ctx) {
 }
 
 
-void blackAndWhiteFilter(image& src, image& dst, const filterContext& ctx){
+void blackAndWhiteFilter(const image<float>& src, image<float>& dst, const filterContext& ctx){
 
     resizeToMatchSrc(src, dst);
-    applyPointTransform(src, dst, [ctx](image& src, image& dst, int x, int y){
+    applyPointTransform(src, dst, [ctx](const image<float>& src, image<float>& dst, int x, int y){
         setPixel(dst, x, y, getPixelConstant(src, x, y));
-        pixel* p = pixel_ptr(dst, x, y);
+        pixel<float>* p = pixel_ptr(dst, x, y);
         if (p){
             float formula = 0.299 * (p->r) + 0.577 * (p->g) + 0.114* (p->b);
             p->r = formula;
@@ -53,12 +53,12 @@ void blackAndWhiteFilter(image& src, image& dst, const filterContext& ctx){
     });
 }
 
-void thresholdingFilter(image& src, image& dst, const filterContext& ctx){
+void thresholdingFilter(const image<float>& src, image<float>& dst, const filterContext& ctx){
 
     resizeToMatchSrc(src, dst);
-    applyPointTransform(src, dst, [ctx](image& src, image& dst, int x, int y){
+    applyPointTransform(src, dst, [ctx](const image<float>& src, image<float>& dst, int x, int y){
         setPixel(dst, x, y, getPixelConstant(src, x, y));
-        pixel* p = pixel_ptr(dst, x, y);
+        pixel<float>* p = pixel_ptr(dst, x, y);
         if (p) {
             float formula = 0.299 * (p->r) + 0.577 * (p->g) + 0.114 * (p->b);
             if (formula > 128) {
@@ -74,13 +74,13 @@ void thresholdingFilter(image& src, image& dst, const filterContext& ctx){
     });
 }
 
-void sepiaFilter(image& src, image& dst, const filterContext& ctx){
+void sepiaFilter(const image<float>& src, image<float>& dst, const filterContext& ctx){
 
     resizeToMatchSrc(src, dst);
-    applyPointTransform(src, dst, [ctx](image& src, image& dst, int x, int y){
+    applyPointTransform(src, dst, [ctx](const image<float>& src, image<float>& dst, int x, int y){
 
         setPixel(dst, x, y, getPixelConstant(src, x, y));
-        pixel* p = pixel_ptr(dst, x, y);
+        pixel<float>* p = pixel_ptr(dst, x, y);
         if  (p) {
             int red = (p->r);
             int green = (p->g);
@@ -92,27 +92,27 @@ void sepiaFilter(image& src, image& dst, const filterContext& ctx){
     });
 }
 
-void mirrorFilter(image& src, image& dst, const filterContext& ctx){
+void mirrorFilter(const image<float>& src, image<float>& dst, const filterContext& ctx){
 
     resizeToMatchSrc(src, dst);
     int center = src.width/2;
-    applyPointTransform(src, dst, [center](image& src, image& dst, int x, int y){
+    applyPointTransform(src, dst, [center](const image<float>& src, image<float>& dst, int x, int y){
         if (x < center){
             int opuestoX = src.width-x-1;
-            pixel mirrPix = getPixelClamped(src, opuestoX, y);
-            pixel basePix = getPixelClamped(src, x, y);
-            setPixel(dst, x, y, mirrPix);
-            setPixel(dst, opuestoX, y, basePix);
+            pixel<float> mirrPix = getPixelClamped(src, opuestoX, y);
+            pixel<float> basePix = getPixelClamped(src, x, y);
+            setPixel<float>(dst, x, y, mirrPix);
+            setPixel<float>(dst, opuestoX, y, basePix);
         }
     });
 }
 
-void alphaBlending(image& src, image& dst, const filterContext& ctx){
+void alphaBlending(const image<float>& src, image<float>& dst, const filterContext& ctx){
 
     resizeToMatchSrc(src, dst);
     std::vector<float> alpha = {1.0f, 1.0f, 1.0f}; 
     json data = ctx.data;
-    const image& base = ctx.base;
+    const image<float>& base = ctx.base;
     if (data.contains("params") && data["params"].contains("alpha")) {
         alpha = data["params"]["alpha"].get<std::vector<float>>();
     }
@@ -128,10 +128,10 @@ void alphaBlending(image& src, image& dst, const filterContext& ctx){
     }
     assert(src.width == base.width && src.height == base.height);
 
-    applyPointTransform(src, dst, [&alpha, &base](image& src, image& dst, int x, int y){
-        pixel pBase = getPixelConstant(base, x, y);
-        pixel pSrc = getPixelConstant(src, x, y);
-        pixel* pointDst = pixel_ptr(dst, x, y);
+    applyPointTransform(src, dst, [&alpha, &base](const image<float>& src, image<float>& dst, int x, int y){
+        pixel<float> pBase = getPixelConstant(base, x, y);
+        pixel<float> pSrc = getPixelConstant(src, x, y);
+        pixel<float>* pointDst = pixel_ptr(dst, x, y);
         if (pointDst){
             pointDst->r = clamp((int)(pSrc.r * (1 - alpha[0]) + pBase.r * alpha[0]));
             pointDst->g = clamp((int)(pSrc.g * (1 - alpha[1]) + pBase.g * alpha[1]));
@@ -140,7 +140,7 @@ void alphaBlending(image& src, image& dst, const filterContext& ctx){
     });
 }
 
-void linearAdjustment(image& src, image& dst, const filterContext& ctx){
+void linearAdjustment(const image<float>& src, image<float>& dst, const filterContext& ctx){
 
     int offset = 0;
     float scale = 1.0f;
@@ -152,10 +152,10 @@ void linearAdjustment(image& src, image& dst, const filterContext& ctx){
     }
 
     resizeToMatchSrc(src, dst);
-    applyPointTransform(src, dst, [offset, scale](image& src, image& dst, int x, int y){
+    applyPointTransform(src, dst, [offset, scale](const image<float>& src, image<float>& dst, int x, int y){
 
         setPixel(dst, x, y, getPixelConstant(src, x, y));
-        pixel* p = pixel_ptr(dst, x, y);
+        pixel<float>* p = pixel_ptr(dst, x, y);
         if (p){
             p->r = clamp((int)(p->r * scale + offset));
             p->g = clamp((int)(p->g * scale + offset));

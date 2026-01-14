@@ -23,7 +23,7 @@ void filterList();
 void printHelp();
 
 void pipelineViaJSON();
-void calcStatistics(const image& img, const json& statsConfig, std::string outPath);
+void calcStatistics(const image<unsigned char>& img, const json& statsConfig, std::string outPath);
 
 #endif
 

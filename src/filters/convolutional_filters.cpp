@@ -31,7 +31,7 @@ SplitKernel splitKernel(int n, std::vector<float> rowValues, std::vector<float> 
     return k;
 }
 
-using GetPixelFunc = pixel (*)(const image&, int, int);
+using GetPixelFunc = pixel<float> (*)(const image<float>&, int, int);
 GetPixelFunc getPixelFunction(const std::string& borderStrategy) {
     printf("Using strategy: %s (if valid)\n", borderStrategy.c_str());
     if (borderStrategy == "clamp") {
@@ -50,19 +50,10 @@ GetPixelFunc getPixelFunction(const std::string& borderStrategy) {
     return getPixelClamped; // Default to clamp
 }
 
-void applyConvolution(const image& src, image& dst, const Kernel& kernel, const convolutionConfig& config){
-    int kSize = kernel.size;
-    if (kSize % 2 == 0){
-        perror("Kernel size has to be odd");
-        return;
-    }
-    assert(kernel.values.size() == (kSize * kSize));
-    genericConvolution(src, dst, kernel, config);
-}
 
 
-void genericConvolution(const image& src, image& dst, const Kernel& kernel, const convolutionConfig& config){
-    
+void genericConvolution(const image<float>& src, image<float>& dst, const Kernel& kernel, const convolutionConfig& config){
+
     float scale = config.scale;
     float offset = config.offset;
     int stride = config.stride;
@@ -88,19 +79,31 @@ void genericConvolution(const image& src, image& dst, const Kernel& kernel, cons
             for (int i=0; i < k; i++){
                 for (int j=0; j < k; j++){
                     // !This function call without inlining we will have a lot of performance loss
-                    pixel neigh = getPixStrat(src,inX+i-kernelCenter,inY+j-kernelCenter); 
+                    pixel<float> neigh = getPixStrat(src,inX+i-kernelCenter,inY+j-kernelCenter);
                     newValueR += (neigh.r) * kernel.values[i][j];
                     newValueG += (neigh.g) * kernel.values[i][j];
                     newValueB += (neigh.b) * kernel.values[i][j];
                 }
             }
-            pixel newPix = {clamp((int)(newValueR*scale+offset)), clamp((int)(newValueG*scale+offset)), clamp((int)(newValueB*scale+offset))};
-            setPixel(dst,x,y,newPix);
+            pixel<float> newPix = {(newValueR*scale+offset), (newValueG*scale+offset), (newValueB*scale+offset)};
+            setPixel<float>(dst,x,y,newPix);
         }
         
     }
     return;
 }
+
+void applyConvolution(const image<float>& src, image<float>& dst, const Kernel& kernel, const convolutionConfig& config){
+    int kSize = kernel.size;
+    if (kSize % 2 == 0){
+        printf("Kernel size has to be odd, skipping filter");
+        dst = src;
+        return;
+    }
+    assert((int)(kernel.values.size()*kernel.values[0].size()) == (kSize * kSize));
+    genericConvolution(src, dst, kernel, config);
+}
+
 
 
 /*
@@ -120,7 +123,7 @@ convolutionConfig readConvolutionConfig(const json& data) {
     return config;
 }
 
-void boxblurFilter(image& src, image& dst, const filterContext& ctx) {
+void boxblurFilter(const image<float>& src, image<float>& dst, const filterContext& ctx) {
     convolutionConfig config = readConvolutionConfig(ctx.data);
     // blur size
     int blurSize = 3;
@@ -139,7 +142,7 @@ void boxblurFilter(image& src, image& dst, const filterContext& ctx) {
     applyConvolution(src, dst, k, config);
 }
 
-void sharpenFilter(image& src, image& dst, const filterContext& ctx) {
+void sharpenFilter(const image<float>& src, image<float>& dst, const filterContext& ctx) {
     convolutionConfig config = readConvolutionConfig(ctx.data);
 
     float amountValue = 1.0;
@@ -156,7 +159,7 @@ void sharpenFilter(image& src, image& dst, const filterContext& ctx) {
     applyConvolution(src, dst, k, config);
 }
 
-void embossFilter(image& src, image& dst, const filterContext& ctx) {
+void embossFilter(const image<float>& src, image<float>& dst, const filterContext& ctx) {
     convolutionConfig config = readConvolutionConfig(ctx.data);
     Kernel k = kernel(3, {
         {-2, -1, 0},
@@ -166,7 +169,7 @@ void embossFilter(image& src, image& dst, const filterContext& ctx) {
     applyConvolution(src, dst, k, config);
 }
 
-void laplacianOfGaussianFilter(image& src, image& dst, const filterContext& ctx) {
+void laplacianOfGaussianFilter(const image<float>& src, image<float>& dst, const filterContext& ctx) {
     convolutionConfig config = readConvolutionConfig(ctx.data);
     Kernel k = kernel(5, {
         {0, 0, -1, 0, 0},
@@ -178,7 +181,7 @@ void laplacianOfGaussianFilter(image& src, image& dst, const filterContext& ctx)
     applyConvolution(src, dst, k, config);
 }
 
-void motionblurFilter(image& src, image& dst, const filterContext& ctx) {
+void motionblurFilter(const image<float>& src, image<float>& dst, const filterContext& ctx) {
     convolutionConfig config = readConvolutionConfig(ctx.data);
     Kernel k = kernel(5, {
         {1/5.0, 0, 0, 0, 0},

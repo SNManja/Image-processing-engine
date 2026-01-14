@@ -1,6 +1,6 @@
 #include "image.h"
 
-pixel* pixel_ptr(image& img, int x, int y){
+template <typename T> pixel<T>* pixel_ptr(image<T>& img, int x, int y){
     int width = img.width;
     int height = img.height;
 
@@ -12,7 +12,7 @@ pixel* pixel_ptr(image& img, int x, int y){
 }
 
 
-pixel getPixelClamped(const image& img, int x, int y){
+template <typename T> pixel<T> getPixelClamped(const image<T>& img, int x, int y){
     int width = img.width;
     int height = img.height;
 
@@ -24,19 +24,20 @@ pixel getPixelClamped(const image& img, int x, int y){
     return img.data[y * width + x];
 }
 
-pixel getPixelConstant(const image& img, int x, int y){
+
+template <typename T> pixel<T> getPixelConstant(const image<T>& img, int x, int y){
     int width = img.width;
     int height = img.height;
 
     if (x < 0 || x >= width || y < 0 || y >= height) {
-        pixel constantPixel = {0, 0, 0};  // Black pixel
+        pixel<T> constantPixel = {0, 0, 0};  // Black pixel
         return constantPixel;
     }
 
     return img.data[y * width + x];
 }
 
-pixel getPixelWrapped(const image& img, int x, int y) {
+template <typename T> pixel<T> getPixelWrapped(const image<T>& img, int x, int y) {
     int width = img.width;
     int height = img.height;
 
@@ -45,7 +46,7 @@ pixel getPixelWrapped(const image& img, int x, int y) {
     return img.data[wrappedY * width + wrappedX];
 }
 
-pixel getPixelMirrored(const image& img, int x, int y){
+template <typename T> pixel<T> getPixelMirrored(const image<T>& img, int x, int y){
     int width = img.width;
     int height = img.height;
 
@@ -60,7 +61,7 @@ pixel getPixelMirrored(const image& img, int x, int y){
     return img.data[mirroredY * width + mirroredX];
 }
 
-void setPixel(image& img, int x, int y, pixel p) {
+template <typename T> void setPixel(image<T>& img, int x, int y, pixel<T> p) {
     if(x < 0 || x >= img.width || y < 0 || y >= img.height) {
         perror("Coordenadas fuera de los límites");
         return;

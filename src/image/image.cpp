@@ -5,7 +5,7 @@
 #include "image.h"
 
 
-void printToPPM(const image& img, const char* output_path) {
+void printToPPM(const image<unsigned char>& img, const char* output_path) {
     FILE* f = fopen(output_path, "wb");
     if (!f) {
         perror("Error opening output file");
@@ -16,13 +16,13 @@ void printToPPM(const image& img, const char* output_path) {
     int width = img.width;
     int height = img.height;
     fprintf(f, "P6\n%d %d\n255\n", width, height);
-    fwrite(img.data.data(), sizeof(pixel), width * height, f);
+    fwrite(img.data.data(), sizeof(pixel<unsigned char>), width * height, f);
     fclose(f);
 }
 
 
 
-image read_image(const char* path) {
+image<unsigned char> read_image(const char* path) {
     FILE* f = fopen(path, "rb");
     printf("Reading image from %s\n", path);
     if (!f) {
@@ -40,17 +40,17 @@ image read_image(const char* path) {
         return {};
     }
 
-    image img;
+    image<unsigned char> img;
     img.width = width;
     img.height = height;
     img.data.resize(width * height);
-    fread(img.data.data(), sizeof(pixel), width * height, f);
+    fread(img.data.data(), sizeof(pixel<unsigned char>), width * height, f);
     fclose(f);
     return img;
 }
 
-image copyImage(const image& img) {
-    image newImg;
+image<unsigned char> copyImage(const image<unsigned char>& img) {
+    image<unsigned char> newImg;
     newImg.width = img.width;
     newImg.height = img.height;
     newImg.data = img.data; // Copy pixel data

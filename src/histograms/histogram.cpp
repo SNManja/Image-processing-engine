@@ -1,11 +1,11 @@
 
 #include "histogram.h"
 
-histogram computeHistogram(const image& img, histogramPerPixelFunction calc){
+histogram computeHistogram(const image<unsigned char>& img, histogramPerPixelFunction calc){
     assert((img.width * img.height) > 0);
     assert(img.data.size() > 0);
     histogram h((255 + 1), 0); // 255 is max pixel value. Includes 0
-    for (const pixel& p : img.data){
+    for (const pixel<unsigned char>& p : img.data){
         int pValue = calc(&p);
         assert(pValue >= 0 && pValue <= 255);
         h[pValue] += 1;
@@ -14,45 +14,45 @@ histogram computeHistogram(const image& img, histogramPerPixelFunction calc){
 }   
 
 
-histogram greyscaleHistogram(const image& img){ // also called luminance
-    return computeHistogram(img, [](const pixel* p){
+histogram greyscaleHistogram(const image<unsigned char>& img){ // also called luminance
+    return computeHistogram(img, [](const pixel<unsigned char>* p){
         return (int)((0.2126 * p->r)+(0.7152 * p->g)+(0.0722 * p->b));
     });
 }
 
 
-histogram intensityHistogram(const image& img){
-    return computeHistogram(img, [](const pixel* p){
+histogram intensityHistogram(const image<unsigned char>& img){
+    return computeHistogram(img, [](const pixel<unsigned char>* p){
         return (int)((p->r+p->g+p->b)/3);
     });
 }
 
-histogram valueHistogram(const image& img){
-    return computeHistogram(img, [](const pixel* p){
+histogram valueHistogram(const image<unsigned char>& img){
+    return computeHistogram(img, [](const pixel<unsigned char>* p){
         return std::max({p->r, p->g, p->b});
     });
 }
 
-histogram chromaHistogram(const image& img){ // Also called saturation
-    return computeHistogram(img, [](const pixel* p){
+histogram chromaHistogram(const image<unsigned char>& img){ // Also called saturation
+    return computeHistogram(img, [](const pixel<unsigned char>* p){
         return std::max({p->r, p->g, p->b})-std::min({p->r, p->g, p->b});
     });
 }
 
-histogram redChannelHistogram(const image& img){
-    return computeHistogram(img, [](const pixel* p){
+histogram redChannelHistogram(const image<unsigned char>& img){
+    return computeHistogram(img, [](const pixel<unsigned char>* p){
         return p->r;
     });
 }
 
-histogram greenChannelHistogram(const image& img){
-    return computeHistogram(img, [](const pixel* p){
+histogram greenChannelHistogram(const image<unsigned char>& img){
+    return computeHistogram(img, [](const pixel<unsigned char>* p){
         return p->g;
     });
 }
 
-histogram blueChannelHistogram(const image& img){
-    return computeHistogram(img, [](const pixel* p){
+histogram blueChannelHistogram(const image<unsigned char>& img){
+    return computeHistogram(img, [](const pixel<unsigned char>* p){
         return p->b;
     });
 }
