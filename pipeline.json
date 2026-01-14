@@ -25,16 +25,14 @@
     {
       "filter": "sobel",
       "params": {
-        "greyscale": false
+        "greyscale": true,
+        "scharr": true
       }
     }
 
   ],
   "statistics": {
     "histograms": {
-      "red": true,
-      "green": true,
-      "blue": true,
       "greyscale": true
     }
   },

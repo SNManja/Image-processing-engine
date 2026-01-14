@@ -1,5 +1,6 @@
 #include "filter.h"
 #include "image.h"
+#include "cli_helpers.h"
 
 // TODO move this function to a better file
 using betweenPixelOperation = std::function<pixel<float>(const pixel<float>&,const pixel<float>&)>;
@@ -18,10 +19,8 @@ image<float> operateBetween(image<float>& img1, image<float>& img2, betweenPixel
 void sobelOperatorFilter(const image<float>& src, image<float>& dst,const filterContext& cfg){
     assert((int)src.data.size() == (src.height * src.width));
     image<float> prep;
-    bool greyscale = true;
-    if (cfg.data.contains("params") && cfg.data["params"].contains("greyscale")) {
-        greyscale = cfg.data["params"]["greyscale"];
-    }
+    bool greyscale = getJSONParam(cfg, "greyscale", true);
+    bool scharr = getJSONParam(cfg, "scharr", false);
     if(greyscale){
         blackAndWhiteFilter(src, prep, cfg);
     }else {
@@ -29,16 +28,31 @@ void sobelOperatorFilter(const image<float>& src, image<float>& dst,const filter
     }
     convolutionConfig convConfig = readConvolutionConfig(cfg.data);
     image<float> Gx, Gy;
-    Kernel sobelKernelX = kernel(3,
-        {{-1,0,1},
-         {-2,0,2},
-         {-1,0,1}}
-    );
-    Kernel sobelKernelY = kernel(3,
-        {{-1,-2,-1},
-         {0,0,0},
-         {1,2,1}}
-    );
+    
+    Kernel sobelKernelX, sobelKernelY;
+    if (scharr){
+        sobelKernelX = kernel(3,
+            {{-3,0,3},
+             {-10,0,10},
+             {-3,0,3}}
+        );
+        sobelKernelY = kernel(3,
+            {{-3,-10,-3},
+             {0,0,0},
+             {3,10,3}}
+        );
+    } else {
+        sobelKernelX = kernel(3,
+            {{-1,0,1},
+             {-2,0,2},
+             {-1,0,1}}
+        );
+        sobelKernelY = kernel(3,
+            {{-1,-2,-1},
+             {0,0,0},
+             {1,2,1}}
+        );
+    }
     applyConvolution(prep, Gx, sobelKernelX, convConfig);
     applyConvolution(prep, Gy, sobelKernelY, convConfig);
 

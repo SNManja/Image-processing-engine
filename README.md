@@ -20,9 +20,10 @@ C++ image processing engine for PPM files. Main goal is to make scalable and rea
 
 
 ## To do
+- Clean up stats folder files each iteration
 - Update documentation on --help.
 - Float pipeline from [0,255] to [0,1] would improve float operations precision
-- Check common sobel parameters and implement them. Scharr is a must
+- Check common sobel parameters and implement them
 - Split rank 1 kernels so convolutions are O(2k) per pixel rather than O(k^2) 
 - Improve histogram (provide some kind of guide on values). And document them better
 - Add dilation parameter to convolution. 

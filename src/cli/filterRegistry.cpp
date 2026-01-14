@@ -129,7 +129,8 @@ FilterRegistry getRegistry(){
                 "Sobel operator. Edge detection filter. Usual gradient parameters are added for the x and y convolutions",
                 "Gradient",
                 {
-                    "greyscale (bool): A flag indicating whether to convert the image to greyscale before applying the filter. Defaults to true."
+                    "greyscale (bool): A flag indicating whether to convert the image to greyscale before applying the filter. Defaults to true.",
+                    "scharr (bool): A flag indicating whether to use the Scharr operator instead of the Sobel operator. Defaults to false."
                 }
             }
         }
