@@ -2,14 +2,16 @@
   "name": "example_pipeline",
   "pipeline": [
     {
-      
+      "sobel": {
+        "scharr": true
+      }
     }
-    
-
   ],
+
+  
   "statistics": {
     "histograms": {
-      "greyscale": true
+      "redChannel": true
     }
   },
   "output_suffix": "_processed"

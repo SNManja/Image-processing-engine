@@ -11,6 +11,23 @@ std::string OUTPUT_DIR = "./output";
 std::string JSON_PATH = "./pipeline.json";
 using json = nlohmann::json;
 
+void clearFolder(std::string path){
+    DIR* directory = opendir(path.c_str());
+    if(!directory){
+        return;
+    }
+    struct dirent* dirEntry;
+    while((dirEntry = readdir(directory)) != NULL){
+        // TODO delete file
+        if(dirEntry->d_type == DT_REG || dirEntry->d_type == DT_LNK) {
+            std::string filePath = path + "/" + dirEntry->d_name;
+            if (remove(filePath.c_str()) != 0) {
+                perror(("Error deleting file: " + filePath).c_str());
+            }
+        }
+    }
+}
+
 void pipelineViaJSON() {
     std::ifstream file(JSON_PATH);
     assert(file.is_open());
@@ -28,6 +45,7 @@ void pipelineViaJSON() {
 
     struct dirent* dirEntry;
     int numberOfImages = 0;
+    clearFolder(OUTPUT_DIR + "/stats/");
     while ((dirEntry = readdir(directory)) != NULL) {
         if (dirEntry->d_type == DT_REG) {
             std::string fileName = dirEntry->d_name;

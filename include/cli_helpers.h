@@ -26,6 +26,7 @@ void printHistograms();
 
 void pipelineViaJSON();
 void calcStatistics(const image<unsigned char>& img, const json& statsConfig, std::string outPath);
+void clearFolder(std::string path);
 
 template<typename T>
 T getJSONParam(const filterContext& cfg, const std::string& key, const T& defaultValue) {

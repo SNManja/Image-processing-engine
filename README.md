@@ -20,7 +20,6 @@ C++ image processing engine for PPM files. Main goal is to make scalable and rea
 
 
 ## To do
-- Clean up stats folder files each iteration
 - Add an static web interface. Need to learn web asm.
 - Check common sobel parameters and implement them
 - Split rank 1 kernels so convolutions are O(2k) per pixel rather than O(k^2) 
