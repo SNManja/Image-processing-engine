@@ -19,8 +19,10 @@ typedef std::map<std::string, FilterDescriptor> FilterRegistry;
 FilterRegistry getRegistry();
 std::vector<std::string> getPostProcessingParamsList();
 
+
 void filterList();
 void printHelp();
+void printHistograms();
 
 void pipelineViaJSON();
 void calcStatistics(const image<unsigned char>& img, const json& statsConfig, std::string outPath);

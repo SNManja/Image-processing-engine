@@ -75,11 +75,11 @@ void saveJson(const json& j, const std::string& path) {
 void calcStatistics(const image<unsigned char>& img, const json& statsConfig, std::string fileName) {
     std::string STAT_PATH = "./output/stats/" + fileName.substr(0, fileName.find_last_of(".")) + "_stats.json";
     json histogramsJson = json::object();
-    histogramRegistry histogramsReg = getHistogramRegistry();
+    HistogramRegistry histogramsReg = getHistogramRegistry();
     if(statsConfig.contains("histograms")){
-        for(const auto& [name, histFunc] : histogramsReg) {
+        for(const auto& [name, desc] : histogramsReg) {
             if(statsConfig["histograms"].contains(name) && statsConfig["histograms"][name]) {
-                histogram histResult = histFunc(img);
+                histogram histResult = desc.func(img);
                 graphicHistogram(histResult, fileName + "_" + name);
                 histogramsJson[name] = histResult;
             }

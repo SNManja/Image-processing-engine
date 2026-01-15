@@ -11,7 +11,7 @@ C++ image processing engine for PPM files. Main goal is to make scalable and rea
 - **Point filters**: Black and white, Sepia, Thresholding, Alpha blending, Linear Adjustment
 - **Geometric filters**: Mirror 
 - **Gradients**: Sobel operator
-- Basic CLI implementation with `--help` flag to use as documentation (kinda dated, needs an update asap. But functional nonetheless)
+- Basic CLI implementation with `--help` flag to use as documentation
 - Supports "Same" padding strategy to maintain spacial correspondence, with configurable stride.
 - Custom border strategy for convolutional filters (Clamping, Wrap, Mirror, Constant)
 - **Histogram support**: greyscale, channel (r,g,b), intensity, value and chroma. With **Graph plotting**.
@@ -21,7 +21,7 @@ C++ image processing engine for PPM files. Main goal is to make scalable and rea
 
 ## To do
 - Clean up stats folder files each iteration
-- Update documentation on --help.
+- Add an static web interface. Need to learn web asm.
 - Float pipeline from [0,255] to [0,1] would improve float operations precision
 - Check common sobel parameters and implement them
 - Split rank 1 kernels so convolutions are O(2k) per pixel rather than O(k^2) 
@@ -34,7 +34,7 @@ C++ image processing engine for PPM files. Main goal is to make scalable and rea
 - Check easy performance improvements
 - Implement "Valid" padding strategy
 - Evaluate if even kernels have any utility, and make them usable check how to handle them well.
-- Make a template driven applyConvolution so it generates different versions of the function in compile time. The main goal of this would be performance optimization (Less function calls with inlining). For getFlagValue too.
+- Make a template driven applyConvolution so it generates different versions of the function in compile time. The main goal of this would be performance optimization (Less function calls with inlining). 
 - Simple pipeline support via cli using stdin stdout, supporting pipes in posix systems
 
 ## Potential goals for the future

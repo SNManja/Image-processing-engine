@@ -23,7 +23,7 @@ histogram greyscaleHistogram(const image<unsigned char>& img){ // also called lu
 
 histogram intensityHistogram(const image<unsigned char>& img){
     return computeHistogram(img, [](const pixel<unsigned char>* p){
-        return (int)((p->r+p->g+p->b)/3);
+        return (unsigned char)((p->r+p->g+p->b)/3);
     });
 }
 
@@ -74,14 +74,3 @@ double averageOpticalDensity(const histogram& h){
     return histogramMean(h);
 }   
 
-histogramRegistry getHistogramRegistry() {
-    histogramRegistry histograms;
-    histograms["red"] = redChannelHistogram;
-    histograms["green"] = greenChannelHistogram;
-    histograms["blue"] = blueChannelHistogram;
-    histograms["greyscale"] = greyscaleHistogram;
-    histograms["intensity"] = intensityHistogram;
-    histograms["value"] = valueHistogram;
-    histograms["chroma"] = chromaHistogram;
-    return histograms;
-}

@@ -119,7 +119,7 @@ FilterRegistry getRegistry(){
                 "Blends the source image with a base image using alpha values for each color channel. Base image size has to match with source image size.",
                 "Point",
                 {
-                    "alpha (list of 3 floats): List of three floats (between 0 and 1) representing the alpha values for R, G, and B channels."
+                    "alpha (list of 3 floats): List of three floats (between 0 and 1) representing the alpha values for R, G, and B channels. 1 is the filtered image, 0 is the base image"
                 }
             }
         },

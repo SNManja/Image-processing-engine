@@ -2,6 +2,7 @@
 #include <string>
 #include "filter.h"
 #include "cli_helpers.h"
+#include "histogram.h"
 
 FilterDescriptor getFilterDescriptor(const std::string& filterName) {
     printf("Looking for %s\n", filterName.c_str());
@@ -51,19 +52,30 @@ How it works:
 
 ---------------------------------------------------------------------------------------------------------------------------------------------
 
-JSON pipeline format example:
-
+JSON pipeline format:
+--------------------
 {
   "pipeline": [
     {
       "filter": "filter_name",
       "params": {
         "param1": "value1",
-        "param2": "value2"
+        "param2": "value2",
+            .
+            .
+            .
       }
     }
   ],
-  "statistics": (bool),
+  "statistics": {
+    "histograms": {
+      "histogramType1": (bool),
+      "histogramType2": (bool),
+            .
+            .
+            .
+    }
+  },
   "output_suffix": (string)
 }
 
@@ -72,17 +84,54 @@ Notes:
 - Filters are applied sequentially in the order they appear in the pipeline.
 - The JSON pipeline is the only supported external API.
 - All images are processed as 8-bit RGB.
-- Intermediate results are clamped to [0, 255].
-- statistics are currently not implemented.
+- Intermediate results are treated as floats to ensure precision.
+- Histogram support. Calculated at the end of the pipeline before output.
 - Blending not working after applying stride in previous filter (differs base image size with src image size)
 
 ---------------------------------------------------------------------------------------------------------------------------------------------
 
 Info commands:
---------
+--------------
 - --help : Displays this help message.
 - --list : Lists all available filters, with their respective descriptions and parameters.
-
+- --histograms: List all available histograms and output format
 )";
     std::puts(HELP_TEXT);
+}
+
+
+void printHistograms(){
+    HistogramRegistry histogramsReg = getHistogramRegistry();
+
+    printf("\nAvailable histograms:\n");
+    printf("-----------------------\n");
+    for (const auto& [name, desc] : histogramsReg) {
+        printf("- %s: %s\n", name.c_str(), desc.description.c_str());
+    }
+    constexpr const char* HELP_TEXT = R"(
+
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+Output format:
+--------------
+Histogram output can be seen in ./output/stats/ directory
+    
+The format is:
+{
+    "histogramName1": [value0, value1, ..., value255],
+    "histogramName2": [value0, value1, ..., value255],
+    "histogramName3": [value0, value1, ..., value255]
+        .
+        .
+        .
+}
+
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+More statistic tools will be implemented in the future.
+
+)";
+
+    std::puts(HELP_TEXT);
+
 }

@@ -18,16 +18,22 @@ int main(const int argc, const char* argv[])
         return 0;
     }
 
-    const std::string filterName = getStringArg(argv, 1, "");
+    const std::string flag = getStringArg(argv, 1, "");
+
     
-    if(strcmp(filterName.c_str(), "--list") == 0) {
+    if(strcmp(flag.c_str(), "--list") == 0) {
         filterList();
         return 0;
     }
 
 
-    if(strcmp(filterName.c_str(), "--help") == 0) {
+    if(strcmp(flag.c_str(), "--help") == 0) {
         printHelp();
+        return 0;
+    }
+
+    if(strcmp(flag.c_str(), "--histograms") == 0) {
+        printHistograms();
         return 0;
     }
 
