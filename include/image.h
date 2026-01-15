@@ -4,12 +4,13 @@
 #include <vector>
 #include <cstdio>
 
-inline unsigned char clamp(float value) {
-    if (value > 255.0f) return 255;
-    if (value < 0.0f) return 0;
-    return (unsigned char)value;
-}
+constexpr float MAX_PIXEL_VALUE = 1.0f;
 
+inline float clamp(float value) {
+    if (value > MAX_PIXEL_VALUE) return MAX_PIXEL_VALUE;
+    if (value < 0.0f) return 0;
+    return value;
+}
 
 template <typename T> struct pixel {
     T r;
@@ -23,13 +24,13 @@ template <typename T> struct pixel {
     template <typename U>
     pixel(const pixel<U>& orig) {
         if constexpr (std::is_same_v<T, unsigned char> && std::is_floating_point_v<U>) {
-            r = static_cast<T>(clamp(orig.r + 0.5f));
-            g = static_cast<T>(clamp(orig.g + 0.5f));
-            b = static_cast<T>(clamp(orig.b + 0.5f));
+            r = static_cast<T>(clamp(orig.r)*255.0f);
+            g = static_cast<T>(clamp(orig.g)*255.0f);
+            b = static_cast<T>(clamp(orig.b)*255.0f);
         } else {
-            r = static_cast<T>(orig.r);
-            g = static_cast<T>(orig.g);
-            b = static_cast<T>(orig.b);
+            r = static_cast<T>(orig.r/255.0f);
+            g = static_cast<T>(orig.g/255.0f);
+            b = static_cast<T>(orig.b/255.0f);
         }
     }
 };

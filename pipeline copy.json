@@ -1,0 +1,40 @@
+{
+  "name": "example_pipeline",
+  "pipeline": [
+    { 
+        "filter": "blur" , 
+        "params": { "size": 1 }
+    },
+    {
+        "filter": "sharpen" , 
+        "params": { "amount": 0.5 }
+    },
+    {
+      "filter": "linearAdjustment",
+      "params": {
+        "offset": 10,
+        "scale": 1.2
+      }
+    },
+    {
+      "filter": "sobel",
+      "params": {
+        "greyscale": true,
+        "scharr": false
+      }
+    },
+    {
+      "filter": "alphaBlending",
+      "params": {
+        "alpha": [1.0, 1.0, 1.0]
+      }
+    }
+
+  ],
+  "statistics": {
+    "histograms": {
+      "greyscale": true
+    }
+  },
+  "output_suffix": "_processed"
+}

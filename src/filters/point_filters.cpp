@@ -30,9 +30,9 @@ void invertFilter(const image<float>& src, image<float>& dst, const filterContex
     applyPointTransform(src, dst, [ctx](const image<float>& src, image<float>& dst, int x, int y){
         setPixel(dst, x, y, getPixelConstant(src, x, y));
         pixel<float>* p = pixel_ptr(dst, x, y);
-        p->r = 255 - p->r;
-        p->g = 255 - p->g;
-        p->b = 255 - p->b;
+        p->r = MAX_PIXEL_VALUE - p->r;
+        p->g = MAX_PIXEL_VALUE - p->g;
+        p->b = MAX_PIXEL_VALUE - p->b;
 
     });
 }
@@ -61,10 +61,10 @@ void thresholdingFilter(const image<float>& src, image<float>& dst, const filter
         pixel<float>* p = pixel_ptr(dst, x, y);
         if (p) {
             float formula = 0.299 * (p->r) + 0.577 * (p->g) + 0.114 * (p->b);
-            if (formula > 128) {
-                p->r = 255;
-                p->g = 255;
-                p->b = 255;
+            if (formula > (MAX_PIXEL_VALUE*0.5f)) {
+                p->r = MAX_PIXEL_VALUE;
+                p->g = MAX_PIXEL_VALUE;
+                p->b = MAX_PIXEL_VALUE;
             } else {
                 p->r = 0;
                 p->g = 0;
