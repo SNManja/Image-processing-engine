@@ -1,6 +1,19 @@
 {
     "configurations": [
         {
+            "name": "Wasm",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "${workspaceFolder}/include",
+                "/usr/share/emscripten/cache/sysroot/include"
+            ],
+            "defines": [],
+            "compilerPath": "/usr/bin/emcc",
+            "cStandard": "c17",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "linux-gcc-x64"
+        },
+        {
             "name": "Linux",
             "includePath": [
                 "${workspaceFolder}/include**"

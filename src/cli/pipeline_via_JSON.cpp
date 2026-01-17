@@ -6,9 +6,7 @@
 #include <dirent.h>
 #include "histogram.h"
 
-std::string PICS_DIR = "./pics";
-std::string OUTPUT_DIR = "./output";
-std::string JSON_PATH = "./pipeline.json";
+
 using json = nlohmann::json;
 
 void clearFolder(std::string path){
@@ -28,7 +26,7 @@ void clearFolder(std::string path){
     }
 }
 
-void pipelineViaJSON() {
+void pipelineViaJSON(std::string PICS_DIR, std::string OUTPUT_DIR, std::string JSON_PATH) {
     std::ifstream file(JSON_PATH);
     assert(file.is_open());
     json data = json::parse(file);
@@ -71,6 +69,8 @@ void pipelineViaJSON() {
                     fileName += ".ppm";
                 }
                 std::string ppmOutPath = OUTPUT_DIR + "/" + fileName;
+                printf("Processed img %d\n", numberOfImages);
+                printf("Output path: %s\n", ppmOutPath.c_str());
                 image<unsigned char> ucharRes = src;
                 calcStatistics(ucharRes, statsConfig, fileName);
                 printToPPM(ucharRes, ppmOutPath.c_str());

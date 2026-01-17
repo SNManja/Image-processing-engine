@@ -8,13 +8,16 @@
 #include "cli_helpers.h"
 
 
-
+std::string PICS_DIR = "./pics";
+std::string OUTPUT_DIR = "./output";
+std::string JSON_PATH = "./pipeline.json";
 
 int main(const int argc, const char* argv[]) 
 {
+    
     if(argc == 1){
         // Defaults to json config
-        pipelineViaJSON();
+        pipelineViaJSON(PICS_DIR, OUTPUT_DIR, JSON_PATH);
         return 0;
     }
 

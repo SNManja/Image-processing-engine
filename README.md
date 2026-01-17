@@ -17,10 +17,10 @@ C++ image processing engine for PPM files. Main goal is to make scalable and rea
 - **Histogram support**: greyscale, channel (r,g,b), intensity, value and chroma. With **Graph plotting**.
 - **Filter chaining** with **JSON-based** pipeline specifications. This enables complex filter chaining with custom parameters and readable configuration. Plus being able to save configurations as templates. 
 - **Batch processing**: Process all the files in a folder at the same time
-
+- **WebAssembly Integration (WIP)**: Core C++ engine compiled via Emscripten for high-performance, client-side image processing without server-side dependencies
 
 ## To do
-- Add an static web interface. Need to learn web asm.
+- Improve browser integration
 - Check common sobel parameters and implement them
 - Split rank 1 kernels so convolutions are O(2k) per pixel rather than O(k^2) 
 - Improve histogram (provide some kind of guide on values). And document them better
