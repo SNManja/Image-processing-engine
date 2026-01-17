@@ -21,6 +21,7 @@ C++ image processing engine for PPM files. Main goal is to make scalable and rea
 
 ## To do
 - Improve browser integration
+- 16 bit color compatibility. Is it worth it?
 - Check common sobel parameters and implement them
 - Split rank 1 kernels so convolutions are O(2k) per pixel rather than O(k^2) 
 - Improve histogram (provide some kind of guide on values). And document them better
