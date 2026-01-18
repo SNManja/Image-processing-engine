@@ -2,8 +2,8 @@
   "name": "example_pipeline",
   "pipeline": [
     {
-        "filter": "sharpen" , 
-        "params": { "amount": 0.5 }
+        "filter": "blur" , 
+        "params": { "size":21 }
     }
   ],
   "statistics": {

@@ -2,8 +2,11 @@
   "name": "example_pipeline",
   "pipeline": [
     {
-        "filter": "sharpen" , 
-        "params": { "amount": 0.5 }
+      "filter": "bnw"
+    },
+    {
+      "filter": "linearAdjustment",
+      "params": { "offset": 0.0, "scale": 1.0 }
     }
   ],
   "statistics": {
