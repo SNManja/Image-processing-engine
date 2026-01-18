@@ -31,4 +31,3 @@ wasm:
 
 clean:
 	rm -f $(TARGET)
-	rm -rf $(WASM_OUT_DIR)
