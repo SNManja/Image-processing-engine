@@ -1,0 +1,19 @@
+name: CompileChecking
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build_native:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: make
+  build_wasm:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: mymindstorm/setup-emsdk@v14
+      - run: emcc -v
+      - run: make wasm
