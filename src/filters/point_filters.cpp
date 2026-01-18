@@ -60,7 +60,7 @@ void thresholdingFilter(const image<float>& src, image<float>& dst, const filter
         setPixel(dst, x, y, getPixelConstant(src, x, y));
         pixel<float>* p = pixel_ptr(dst, x, y);
         if (p) {
-            float formula = 0.299 * (p->r) + 0.577 * (p->g) + 0.114 * (p->b);
+            float formula = 0.299 * (p->r) + 0.587 * (p->g) + 0.114 * (p->b);
             if (formula > (MAX_PIXEL_VALUE*0.5f)) {
                 p->r = MAX_PIXEL_VALUE;
                 p->g = MAX_PIXEL_VALUE;
@@ -82,9 +82,9 @@ void sepiaFilter(const image<float>& src, image<float>& dst, const filterContext
         setPixel(dst, x, y, getPixelConstant(src, x, y));
         pixel<float>* p = pixel_ptr(dst, x, y);
         if  (p) {
-            int red = (p->r);
-            int green = (p->g);
-            int blue = (p->b);
+            float red = (p->r);
+            float green = (p->g);
+            float blue = (p->b);
             p->r = clamp((0.393*red)+(0.769*green)+(0.189*blue));
             p->g = clamp((0.349*red)+(0.686*green)+(0.168*blue));
             p->b = clamp((0.272*red)+(0.534*green)+(0.131*blue));
@@ -133,19 +133,19 @@ void alphaBlending(const image<float>& src, image<float>& dst, const filterConte
         pixel<float> pSrc = getPixelConstant(src, x, y);
         pixel<float>* pointDst = pixel_ptr(dst, x, y);
         if (pointDst){
-            pointDst->r = clamp((int)(pSrc.r * (alpha[0]) + pBase.r * (1 - alpha[0])));
-            pointDst->g = clamp((int)(pSrc.g * (alpha[1]) + pBase.g * (1 - alpha[1])));
-            pointDst->b = clamp((int)(pSrc.b * (alpha[2]) + pBase.b * (1 - alpha[2])));
+            pointDst->r = clamp(pSrc.r * (alpha[0]) + pBase.r * (1 - alpha[0]));
+            pointDst->g = clamp(pSrc.g * (alpha[1]) + pBase.g * (1 - alpha[1]));
+            pointDst->b = clamp(pSrc.b * (alpha[2]) + pBase.b * (1 - alpha[2]));
         }
     });
 }
 
 void linearAdjustment(const image<float>& src, image<float>& dst, const filterContext& ctx){
 
-    int offset = 0;
+    float offset = 0;
     float scale = 1.0f;
     if (ctx.data.contains("params") && ctx.data["params"].contains("offset")) {
-        offset = ctx.data["params"]["offset"];
+        offset = ((float)ctx.data["params"]["offset"])/MAX_PIXEL_VALUE;
     }
     if (ctx.data.contains("params") && ctx.data["params"].contains("scale")) {
         scale = ctx.data["params"]["scale"];
@@ -157,9 +157,9 @@ void linearAdjustment(const image<float>& src, image<float>& dst, const filterCo
         setPixel(dst, x, y, getPixelConstant(src, x, y));
         pixel<float>* p = pixel_ptr(dst, x, y);
         if (p){
-            p->r = clamp((int)(p->r * scale + offset));
-            p->g = clamp((int)(p->g * scale + offset));
-            p->b = clamp((int)(p->b * scale + offset));
+            p->r = clamp(p->r * scale + offset);
+            p->g = clamp(p->g * scale + offset);
+            p->b = clamp(p->b * scale + offset);
         }
     });
 }
