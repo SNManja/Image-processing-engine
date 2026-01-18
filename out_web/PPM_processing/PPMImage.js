@@ -70,8 +70,12 @@ export default class PPMImage {
         return new PPMImage(width, height, maxVal, imgData);
     }
 
-    drawImage(canvasId){
-        const container = document.getElementById("canvas-container");
+    toImageData(){
+        return new ImageData(this.data, this.width, this.height);
+    }
+
+    drawImage(containerID){
+        const container = document.getElementById(containerID);
         if(!container){
             console.error("Container not found");
             return;
@@ -85,6 +89,7 @@ export default class PPMImage {
         const imgData = new ImageData(this.data, this.width, this.height);
         ctx.putImageData(imgData, 0, 0);
         container.appendChild(canvas);
+        return canvas;
     }
     
 }
