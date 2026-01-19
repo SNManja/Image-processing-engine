@@ -73,6 +73,7 @@ export class FileAdministrator {
         const rowsParent = document.querySelector("#slot-rows-parent");
 
         const canvasRow = new CanvasRow({ 
+            aspect: `${img.width}/${img.height}`,
             step: this.counter++, 
             originalName: img.name 
         }).mount(rowsParent);

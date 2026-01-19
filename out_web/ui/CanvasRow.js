@@ -19,7 +19,7 @@ export class CanvasRow {
         // Estructura de ambas tarjetas (Original y Filtered)
         row.innerHTML = `
             <div class="rounded-2xl border border-zinc-800 bg-zinc-950/40 p-3">
-                <canvas class="aspect-[${this.aspect}] w-full rounded-xl border border-zinc-800 bg-zinc-950"></canvas>
+                <canvas class="aspect-[${this.aspect}] w-full rounded-xl border border-zinc-800 bg-zinc-950 image-render-pixelated"></canvas>
                 <div class="mt-2 flex items-center justify-between text-[11px] text-zinc-500">
                     <span>step ${this.step}</span>
                     <span data-role="orig-name">${this.originalName}</span>
@@ -27,7 +27,7 @@ export class CanvasRow {
             </div>
 
             <div class="rounded-2xl border border-zinc-800 bg-zinc-950/40 p-3">
-                <canvas class="aspect-[${this.aspect}] w-full rounded-xl border border-zinc-800 bg-zinc-950"></canvas>
+                <canvas class="aspect-[${this.aspect}] w-full rounded-xl border border-zinc-800 bg-zinc-950 image-render-pixelated"></canvas>
                 <div class="mt-2 flex items-center justify-between text-[11px] text-zinc-500">
                     <span>step ${this.step}</span>
                     <span data-role="filt-name">${this.filteredName}</span>

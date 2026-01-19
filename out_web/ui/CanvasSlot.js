@@ -32,6 +32,8 @@ export class CanvasSlot {
      * Dibuja ImageData aplicando "contain" (encajar sin deformar).
      */
     drawImageData(imageData) {
+        const aspect = imageData.width / imageData.height;
+        this.canvas.style.aspectRatio = `${aspect}`;
         this.syncBuffer();
         const { width: cw, height: ch } = this.canvas;
 
