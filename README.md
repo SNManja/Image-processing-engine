@@ -19,8 +19,20 @@ C++ image processing engine for PPM files. Main goal is to make scalable and rea
 - **Batch processing**: Process all the files in a folder at the same time
 - **WebAssembly Integration (WIP)**: Core C++ engine compiled via Emscripten for high-performance, client-side image processing without server-side dependencies
 
-## To do
-- Improve browser integration
+## WEB - To do
+- Ensure all buttons have a clear purpose 
+- Improve ppm visualization, Big view when clicked + metadata and stats attached
+- Add user ppm uploads (partially implemented, needs frontend wiring)
+- Clean spanglish (some comments and console logs are in spanish)
+- Add memory flush before each pipeline run.
+- Add pic deletion
+- Add maximum upload capacity (size centered, to not exceed browsers limits)
+- Improve JSON window. Currently is unusable and not confortable.
+- Add JSON presets and examples
+- Find a way to display cleanly the documentation
+
+## Engine - To do
+- Improve github actions testing and CI
 - 16 bit color compatibility. Is it worth it? 
 - Check common sobel parameters and implement them
 - Split rank 1 kernels so convolutions are O(2k) per pixel rather than O(k^2) 

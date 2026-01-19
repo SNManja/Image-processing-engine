@@ -1,10 +1,9 @@
 
 export const PATHS = {
-  testImg: "./pics/paisaje.ppm",
-
   picsDir: "./pics",
   outputDir: "./output",
   statsDir: "./output/stats",
+  examplesDir: "./examples"
 };
 
 export const ALL_DIRS = [

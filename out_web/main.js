@@ -11,10 +11,16 @@ async function runEngine(){
     window.fileAdmin = new FileAdministrator(engine);
     console.log("memfs initialized:", Module.FS);
     secureFolders();
+    loadExamplePics();
     initProcessBtn();
+
     }).catch(err => {
         console.error("Error cargando el motor:", err);
     });
+}
+
+function loadExamplePics(){
+    window.fileAdmin.addExamplePPM(["paisaje.ppm", "gato.ppm"]);
 }
 
 runEngine();
@@ -34,18 +40,15 @@ const statusEl = document.querySelector(".text-zinc-500 span"); // El "idle" del
 
         if (!pipelineData.ok) {
             console.error("Pipeline Error:", pipelineData.error);
-            // Podrías mostrar el error en el status de la UI
+            // ! Show error status in UI
             return;
         }
         console.log("json file \n" + pipelineData.text);
         try {
             //fileAdmin.cleanFilteredFolder();
             const OUTPUT_SUFFIX = "_processed";
-            // 2. Ejecutar C++ pasando el string del JSON
-            // Nota: usamos pipelineData.text que es el string validado
             engine.ccall('run_pipeline', null, ['string'], [pipelineData.text]);
 
-            // 3. Notificar a las filas que busquen sus archivos procesados
             console.log("Pipeline running...");
             window.fileAdmin.updateCanvasRows(OUTPUT_SUFFIX);
             
