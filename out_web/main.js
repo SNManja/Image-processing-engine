@@ -1,94 +1,84 @@
-import { getPPMFilesFromFolder } from "./PPM_processing/getPPMsFromFolder.js";
-import { loadImgToFS } from "./PPM_processing/loadImageToFS.js";
-import { ALL_DIRS as ALL_PATHS, PATHS } from "./PPM_processing/paths.js";
-import { CanvasRow } from "./ui/CanvasRow.js";
-import { drawPPMOnCanvas } from "./ui/drawPPMOnCanvas.js";
+import { FileAdministrator } from "./PPM_processing/FilesAdministrator.js";
+import { ALL_DIRS } from "./PPM_processing/paths.js";
+
+
+let engine;
 async function runEngine(){
     createEngine().then(async Module => {
-    console.log("Motor Wasm cargado correctamente");
+    console.log("Wasm engine loaded correctly");
     window.engineModule = Module;
-    console.log("Sistema de archivos virtual (FS):", Module.FS);
-    await loadImgToFS(PATHS.testImg);
-    console.log("Imagen " + PATHS.testImg + " cargada en el sistema de archivos virtual.");
-    testSlots();
-    //await runPipeline();
+    engine = window.engineModule;
+    window.fileAdmin = new FileAdministrator(engine);
+    console.log("memfs initialized:", Module.FS);
+    secureFolders();
+    initProcessBtn();
     }).catch(err => {
         console.error("Error cargando el motor:", err);
     });
 }
 
 runEngine();
-
-
-
-
-function testSlots(){
-
-    const rowsParent = document.querySelector(".space-y-3"); // mejor si le ponés id="rows"
-    const row0 = new CanvasRow({ step: 0, originalName: "original.ppm" }).mount(rowsParent);
-
-    let ppmFiles = getPPMFilesFromFolder(PATHS.picsDir);
-    console.log("Imagenes: " + ppmFiles.length);
-    const origPPM = ppmFiles[0];
-    const origCanvas = row0.getOriginalCanvas();
-    drawPPMOnCanvas(origPPM, origCanvas);
-
-    const filtCanvas = row0.ensureFilteredCanvas();
-    row0.setFilteredName("output.ppm");
-    drawPPMOnCanvas(origPPM, filtCanvas);
-
-}
-
-async function runPipeline(){
-    let engine = window.engineModule;
-
-    const json_pipeline = JSON.stringify({
-  "name": "example_pipeline",
-  "pipeline": [
-    {
-        "filter": "bnw"
-    },
-    {
-        
-        "filter": "alphaBlending" , 
-        "params": { "alpha": [0.0, 0.0, 0.0] }
-    }
-  ],
-  "statistics": {
-    "histograms": {
-      "greyscale": false
-    }
-  },
-  "output_suffix": "_processed"
-});
-
-    for (let path of ALL_PATHS){
+function secureFolders(){
+    // Checks if folders exist in memfs
+    for (let path of ALL_DIRS){
         if(engine.FS.analyzePath(path).exists === false){
             engine.FS.mkdir(path);
         }
     }
+}
+function initProcessBtn(){
+const processBtn = document.querySelector("#process-btn");
+const statusEl = document.querySelector(".text-zinc-500 span"); // El "idle" del HTML
+    processBtn.addEventListener("click", () => {
+        const pipelineData = obtainJSONPipeline();
 
-    let ppmFiles = getPPMFilesFromFolder(PATHS.picsDir);
-    console.log("Imagenes a procesar: " + ppmFiles.length);
-    let id = "baseImg-";
-    let count = 0;
-    for (let img of ppmFiles){
-        console.log("Procesando imagen "+ id + count);
-        img.drawImage(id + count);
-        count++;
-    }
-    console.log("Imágenes procesadas.");
+        if (!pipelineData.ok) {
+            console.error("Pipeline Error:", pipelineData.error);
+            // Podrías mostrar el error en el status de la UI
+            return;
+        }
+        console.log("json file \n" + pipelineData.text);
+        try {
+            //fileAdmin.cleanFilteredFolder();
+            const OUTPUT_SUFFIX = "_processed";
+            // 2. Ejecutar C++ pasando el string del JSON
+            // Nota: usamos pipelineData.text que es el string validado
+            engine.ccall('run_pipeline', null, ['string'], [pipelineData.text]);
 
+            // 3. Notificar a las filas que busquen sus archivos procesados
+            console.log("Pipeline running...");
+            window.fileAdmin.updateCanvasRows(OUTPUT_SUFFIX);
+            
+            console.log("Pipeline executed successfully");
+        } catch (e) {
+            console.error("Runtime Error:", e);
+        }
+    });
+}
+
+
+function runPipeline(){
+    secureFolders();
+    const json_pipeline = obtainJSONPipeline();
     engine.ccall('run_pipeline', null, ['string'], [json_pipeline]);
 
-    id = "outImg-";
-    ppmFiles = getPPMFilesFromFolder(PATHS.outputDir);
-    console.log("Imagenes procesadas: " + ppmFiles.length);
-    count = 0;
-    for(let img of ppmFiles){
-        img.drawImage(id + count);
-        count++;
-    }
-} 
+    // updateCanvasRows(); TODO not yet implemented
+}
 
+
+function obtainJSONPipeline(){
+    const el = document.querySelector("#pipeline-json-textarea");
+    const text = el?.value ?? "";
+
+    try {
+        const obj = JSON.parse(text);
+        if (!obj || typeof obj !== "object") throw new Error("JSON root must be an object");
+        if (!Array.isArray(obj.pipeline)) throw new Error('Missing "pipeline": expected an array');
+
+        return { ok: true, text, obj };
+    } catch (e) {
+        return { ok: false, text, error: e.message };
+    }
+
+}
 

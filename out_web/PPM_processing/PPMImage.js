@@ -1,10 +1,11 @@
 
 export default class PPMImage {
-    constructor(width, height, maxVal, data) {
+    constructor(width, height, maxVal, data,name) {
         this.width = width;
         this.height = height;
         this.maxVal = maxVal;
         this.data = data;
+        this.name = name ? name : "img-" + Math.random().toString(36).substring(7);
     }
 
     static FromPath(path){
@@ -67,7 +68,7 @@ export default class PPMImage {
             imgData[i * 4 + 2] = data[pixelesInicio + i * 3 + 2]; // B
             imgData[i * 4 + 3] = 255; // Fills alpha channel (ppm doesn't have alpha)
         }
-        return new PPMImage(width, height, maxVal, imgData);
+        return new PPMImage(width, height, maxVal, imgData, path.split("/").pop().replace(/\.[^/.]+$/, ""));
     }
 
     toImageData(){
