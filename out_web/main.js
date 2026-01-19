@@ -1,6 +1,6 @@
 import { FileAdministrator } from "./PPM_processing/FilesAdministrator.js";
 import { ALL_DIRS } from "./PPM_processing/paths.js";
-
+import { setupJSONEditor } from "./ui/setupJSONEditor.js";
 
 let engine;
 async function runEngine(){
@@ -13,6 +13,7 @@ async function runEngine(){
     secureFolders();
     loadExamplePics();
     initProcessBtn();
+    setupJSONEditor();
 
     }).catch(err => {
         console.error("Error cargando el motor:", err);

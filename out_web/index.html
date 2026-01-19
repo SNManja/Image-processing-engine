@@ -83,9 +83,11 @@
                 <span class="text-[11px] text-zinc-500">Ctrl+Enter</span>
               </div>
               <textarea
-                class="h-full w-full resize-none bg-transparent p-3 font-mono text-xs leading-5 text-zinc-100 outline-none"
                 id="pipeline-json-textarea"
-                spellcheck="false"
+                class="h-full w-full resize-none bg-transparent p-3 font-mono text-[13px] antialiased leading-relaxed text-cyan-400 outline-none"
+                spellcheck="false" 
+                autocorrect="off"
+                autocapitalize="off"
               >{
   "name": "example_pipeline",
   "pipeline": [
@@ -120,5 +122,6 @@
     <script type="module" src="./ui/CanvasSlot.js"></script>
     <script type="module" src="./PPM_processing/FilesAdministrator.js"></script>
     <script type="module" src="./PPM_processing/paths.js"></script>
+    <script type="module" src="./ui/setupJSONEditor.js"></script>
   </body>
 </html>

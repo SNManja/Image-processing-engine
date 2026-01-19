@@ -27,7 +27,6 @@ C++ image processing engine for PPM files. Main goal is to make scalable and rea
 - Add memory flush before each pipeline run.
 - Add pic deletion
 - Add maximum upload capacity (size centered, to not exceed browsers limits)
-- Improve JSON window. Currently is unusable and not confortable.
 - Add JSON presets and examples
 - Find a way to display cleanly the documentation
 
