@@ -19,6 +19,7 @@ export class FileAdministrator {
     }
 
     updateCanvasRows(output_suffix) { // Updates the canvas rows after processing
+
         for (let [name, entry] of this.entries) {
             try {
                 const { inputPath, img, canvasRow } = entry;
@@ -83,7 +84,33 @@ export class FileAdministrator {
     }
 
     cleanFilteredFolder() {
-        // Logic to clean filtered folder
+        const FS = this.engine.FS;
+        const dirPath = `${PATHS.outputDir}`;
+
+        if (!FS.analyzePath(dirPath).exists) {
+            console.warn("La carpeta /output no existe.");
+            return;
+        }
+
+        try {
+            const entries = FS.readdir(dirPath);
+
+            for (const name of entries) {
+                // Saltamos las referencias al directorio actual y padre
+                if (name === "." || name === "..") continue;
+
+                const fullPath = `${dirPath}/${name}`;
+                const stats = FS.stat(fullPath);
+
+                // Solo eliminamos si NO es un directorio
+                if (!FS.isDir(stats.mode)) {
+                    FS.unlink(fullPath);
+                }
+            }
+            console.log("Archivos en /output eliminados. Carpetas preservadas.");
+        } catch (e) {
+            console.warn("No se pudo limpiar la carpeta /output o no existe.");
+        }
     }
 
     deleteFile(file) {

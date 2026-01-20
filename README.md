@@ -23,11 +23,12 @@ C++ image processing engine for PPM files. Main goal is to make scalable and rea
 - Ensure all buttons have a clear purpose 
 - Add user ppm uploads (partially implemented, needs frontend wiring)
 - Clean spanglish (some comments and console logs are in spanish)
-- Add memory flush before each pipeline run.
 - Add pic deletion
-- Add maximum upload capacity (size defined so user do not exceed browsers limits)
+- Add maximum upload capacity (memory size pre-defined so user do not exceed browsers limits)
 - Add JSON presets and examples
 - Find a way to display cleanly the documentation
+- Prefixes are broken. At least on display
+- All canvas display the low res image of the ppm. Gotta fix that asap
 
 ## Engine - To do
 - Improve github actions testing and CI

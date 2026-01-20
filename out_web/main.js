@@ -45,23 +45,16 @@ function lightBoxSetup(){
             container.classList.remove("scale-90", "opacity-0");
             container.classList.add("scale-100", "opacity-100");
             
-            // Forzamos al canvas a tener dimensiones antes de sincronizar
             modalCanvas.style.width = "100%"; 
-           
             const ratio = imageData.width / imageData.height;
-            
-            // Forzamos al canvas a ser grande en el DOM
-            // El max-width y max-height del HTML evitarán que se pase de la pantalla
             modalCanvas.style.width = "90vw"; 
             modalCanvas.style.height = "auto";
             modalCanvas.style.aspectRatio = `${ratio}`;
 
-            // Dibujamos
             modalSlot.drawImageData(imageData);
-        }, 50); // Subimos a 50ms para dar tiempo al layout
+        }, 50); 
     };
 
-    // Dentro de modal.onclick
     modal.onclick = () => {
         const container = document.querySelector("#modal-container");
         
@@ -71,7 +64,6 @@ function lightBoxSetup(){
         modal.classList.remove("opacity-100");
         modal.classList.add("opacity-0", "pointer-events-none");
 
-        // EN LUGAR DE width = 0, simplemente limpiamos el contenido si querés
         setTimeout(() => {
             const ctx = modalCanvas.getContext("2d");
             ctx.clearRect(0, 0, modalCanvas.width, modalCanvas.height);
@@ -96,6 +88,7 @@ function initProcessBtn(){
 const processBtn = document.querySelector("#process-btn");
 const statusEl = document.querySelector(".text-zinc-500 span"); // El "idle" del HTML
     processBtn.addEventListener("click", () => {
+        window.fileAdmin.cleanFilteredFolder();
         const pipelineData = obtainJSONPipeline();
 
         if (!pipelineData.ok) {

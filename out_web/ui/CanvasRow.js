@@ -46,7 +46,7 @@ export class CanvasRow {
             canvas.classList.add('cursor-zoom-in');
             canvas.onclick = () => {
                 const slot = index === 0 ? this.origSlot : this.filtSlot;
-                const comment = "Tip: Click outside to quit image preview";
+                const comment = "Tip: Click to close image preview";
                 
                 window.openImageModal(slot.lastImageData, comment);
             };
