@@ -29,6 +29,7 @@ C++ image processing engine for PPM files. Main goal is to make scalable and rea
 - Find a way to display cleanly the documentation
 - Prefixes are broken. At least on display
 - All canvas display the low res image of the ppm. Gotta fix that asap
+- Processing flag has to be updated when engine fails and when engine is running.
 
 ## Engine - To do
 - Improve github actions testing and CI

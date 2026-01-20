@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="https://cdn.tailwindcss.com"></script>
-    <title>Shared scroll slots demo</title>
+    <title>Image processing engine</title>
   </head>
 
   <body class="min-h-screen bg-zinc-950 text-zinc-100">
@@ -12,7 +12,6 @@
       <div class="mx-auto flex max-w-7xl items-center justify-between px-4 py-3">
         <div class="text-sm font-semibold">Image Processing Engine</div>
         <div class="flex items-center gap-2">
-          <button class="rounded-xl border border-zinc-800 px-3 py-2 text-sm hover:bg-zinc-900">Open</button>
           <button class="rounded-xl border border-zinc-800 px-3 py-2 text-sm hover:bg-zinc-900">Presets</button>
         </div>
       </div>
@@ -123,7 +122,44 @@
     <script type="module" src="./PPM_processing/FilesAdministrator.js"></script>
     <script type="module" src="./PPM_processing/paths.js"></script>
     <script type="module" src="./ui/setupJSONEditor.js"></script>
+ <style>
+  /* --- SCROLLBAR PREMIUM PARA CHROME --- */
+  
+  /* 1. Tamaño del área del scroll */
+  ::-webkit-scrollbar {
+    width: 11px;               /* Un poco más ancho (ajuste pedido) */
+    height: 13px;              /* Para scroll horizontal */
+  }
 
+  /* 2. El Fondo (Track) */
+  ::-webkit-scrollbar-track {
+    background-color: #09090b; /* zinc-950 */
+    border-radius: 9999px;     /* Curva total */
+    /* El secreto: */
+    border: 2px solid transparent; 
+    background-clip: content-box;
+  }
+
+  /* 3. La Barra (Thumb) */
+  ::-webkit-scrollbar-thumb {
+    background-color: #27272a; /* zinc-800 */
+    border-radius: 9999px;     /* Curva total */
+    /* El secreto: */
+    border: 2px solid transparent;
+    background-clip: content-box;
+  }
+
+  /* 4. Efecto al pasar el mouse */
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: #3f3f46; /* zinc-700 */
+  }
+
+  /* Estilo para el Editor de JSON ( Emerald sutil ) */
+  #pipeline-json-textarea::-webkit-scrollbar-thumb {
+    background-color:  #3f3f46;
+    background-clip: content-box;
+  }
+</style>
     <div id="image-modal" 
         class="fixed inset-0 z-50 flex items-center justify-center bg-zinc-950/90 backdrop-blur-sm p-4 transition-all duration-300 ease-out opacity-0 pointer-events-none">
         
