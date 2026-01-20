@@ -3,6 +3,7 @@ export class CanvasSlot {
         this.canvas = canvas;
         this.ctx = canvas.getContext("2d");
         this.smoothing = opts.smoothing ?? false;
+        this.lastImageData = null;
         
         // El color de fondo para el "contain"
         this.bg = "#09090b"; 
@@ -33,6 +34,7 @@ export class CanvasSlot {
      */
     drawImageData(imageData) {
         const aspect = imageData.width / imageData.height;
+        this.lastImageData = imageData;
         this.canvas.style.aspectRatio = `${aspect}`;
         this.syncBuffer();
         const { width: cw, height: ch } = this.canvas;

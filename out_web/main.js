@@ -1,5 +1,6 @@
 import { FileAdministrator } from "./PPM_processing/FilesAdministrator.js";
 import { ALL_DIRS } from "./PPM_processing/paths.js";
+import { CanvasSlot } from "./ui/CanvasSlot.js";
 import { setupJSONEditor } from "./ui/setupJSONEditor.js";
 
 let engine;
@@ -13,11 +14,69 @@ async function runEngine(){
     secureFolders();
     loadExamplePics();
     initProcessBtn();
+    lightBoxSetup();
     setupJSONEditor();
 
     }).catch(err => {
         console.error("Error cargando el motor:", err);
     });
+}
+
+function lightBoxSetup(){
+
+    const modal = document.querySelector("#image-modal");
+    const modalCanvas = document.querySelector("#modal-canvas");
+    const modalCaption = document.querySelector("#modal-caption");
+    const modalSlot = new CanvasSlot(modalCanvas);
+    window.openImageModal = (imageData, name) => {
+        if (!imageData) return;
+
+        // 1. Preparar contenido
+        modalCaption.textContent = name;
+        
+        // 2. Mostrar la estructura base (quitar el bloqueo de clicks)
+        modal.classList.remove("pointer-events-none");
+        modal.classList.add("opacity-100");
+        
+
+        // 3. Pequeño delay para que el navegador registre el cambio y dispare la transición del contenedor
+        setTimeout(() => {
+            const container = document.querySelector("#modal-container");
+            container.classList.remove("scale-90", "opacity-0");
+            container.classList.add("scale-100", "opacity-100");
+            
+            // Forzamos al canvas a tener dimensiones antes de sincronizar
+            modalCanvas.style.width = "100%"; 
+           
+            const ratio = imageData.width / imageData.height;
+            
+            // Forzamos al canvas a ser grande en el DOM
+            // El max-width y max-height del HTML evitarán que se pase de la pantalla
+            modalCanvas.style.width = "90vw"; 
+            modalCanvas.style.height = "auto";
+            modalCanvas.style.aspectRatio = `${ratio}`;
+
+            // Dibujamos
+            modalSlot.drawImageData(imageData);
+        }, 50); // Subimos a 50ms para dar tiempo al layout
+    };
+
+    // Dentro de modal.onclick
+    modal.onclick = () => {
+        const container = document.querySelector("#modal-container");
+        
+        container.classList.remove("scale-100", "opacity-100");
+        container.classList.add("scale-90", "opacity-0");
+        
+        modal.classList.remove("opacity-100");
+        modal.classList.add("opacity-0", "pointer-events-none");
+
+        // EN LUGAR DE width = 0, simplemente limpiamos el contenido si querés
+        setTimeout(() => {
+            const ctx = modalCanvas.getContext("2d");
+            ctx.clearRect(0, 0, modalCanvas.width, modalCanvas.height);
+        }, 300);
+    };
 }
 
 function loadExamplePics(){

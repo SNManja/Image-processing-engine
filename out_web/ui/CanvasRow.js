@@ -37,9 +37,20 @@ export class CanvasRow {
 
         rowsParent.appendChild(row);
 
+        
+
         // Selección de elementos
         const canvases = row.querySelectorAll("canvas");
         
+        canvases.forEach((canvas, index) => {
+            canvas.classList.add('cursor-zoom-in');
+            canvas.onclick = () => {
+                const slot = index === 0 ? this.origSlot : this.filtSlot;
+                const comment = "Tip: Click outside to quit image preview";
+                
+                window.openImageModal(slot.lastImageData, comment);
+            };
+        });
         // Inicialización inmediata de slots
         this.origSlot = new CanvasSlot(canvases[0]);
         this.filtSlot = new CanvasSlot(canvases[1]);
