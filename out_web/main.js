@@ -4,6 +4,7 @@ import { CanvasSlot } from "./ui/CanvasSlot.js";
 import { setupJSONEditor } from "./ui/setupJSONEditor.js";
 
 let engine;
+runEngine();
 async function runEngine(){
     createEngine().then(async Module => {
     console.log("Wasm engine loaded correctly");
@@ -14,6 +15,7 @@ async function runEngine(){
     secureFolders();
     loadExamplePics();
     initProcessBtn();
+    initUploadLogic();
     lightBoxSetup();
     setupJSONEditor();
 
@@ -75,7 +77,6 @@ function loadExamplePics(){
     window.fileAdmin.addExamplePPM(["paisaje.ppm", "gato.ppm"]);
 }
 
-runEngine();
 function secureFolders(){
     // Checks if folders exist in memfs
     for (let path of ALL_DIRS){
@@ -148,6 +149,23 @@ function obtainJSONPipeline(){
     } catch (e) {
         return { ok: false, text, error: e.message };
     }
-
 }
 
+function initUploadLogic() {
+    const uploadBtn = document.querySelector("#upload-btn");
+    const ppmInput = document.querySelector("#ppm-input");
+
+    uploadBtn.addEventListener("click", () => ppmInput.click());
+    ppmInput.addEventListener("change", async (e) => {
+        const files = Array.from(e.target.files);        
+        if (files.length === 0) return;
+        for (const file of files) {
+            try {
+                await window.fileAdmin.addPPMFromUser(file);
+            } catch (err) {
+                console.error(`Error procesando ${file.name}:`, err);
+            }
+        }
+        ppmInput.value = "";
+    });
+}

@@ -21,7 +21,9 @@ C++ image processing engine for PPM files. Main goal is to make scalable and rea
 
 ## WEB - To do
 - Ensure all buttons have a clear purpose 
-- Add user ppm uploads (partially implemented, needs frontend wiring)
+- Let user download filtered results
+- Fix different suffix batches
+- Display graphs in some way
 - Clean spanglish (some comments and console logs are in spanish)
 - Add pic deletion
 - Add maximum upload capacity (memory size pre-defined so user do not exceed browsers limits)
