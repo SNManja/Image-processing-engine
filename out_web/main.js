@@ -86,28 +86,41 @@ function secureFolders(){
 }
 function initProcessBtn(){
 const processBtn = document.querySelector("#process-btn");
-const statusEl = document.querySelector(".text-zinc-500 span"); // El "idle" del HTML
+const statusEl = document.querySelector("#status-flag"); // El "idle" del HTML
     processBtn.addEventListener("click", () => {
         window.fileAdmin.cleanFilteredFolder();
         const pipelineData = obtainJSONPipeline();
 
         if (!pipelineData.ok) {
             console.error("Pipeline Error:", pipelineData.error);
-            // ! Show error status in UI
+            statusEl.textContent = "Error: " + pipelineData.error;
             return;
         }
         console.log("json file \n" + pipelineData.text);
         try {
-            //fileAdmin.cleanFilteredFolder();
-            const OUTPUT_SUFFIX = "_processed";
-            engine.ccall('run_pipeline', null, ['string'], [pipelineData.text]);
+            statusEl.textContent = "Running...";
+            processBtn.disabled = true;
 
-            console.log("Pipeline running...");
-            window.fileAdmin.updateCanvasRows(OUTPUT_SUFFIX);
+            // Usamos setTimeout para que el navegador pinte el "Running..." antes de bloquearse
+            setTimeout(() => {
+                const OUTPUT_SUFFIX = "_processed";
+                
+                // Esta llamada bloquea la UI mientras corre
+                engine.ccall('run_pipeline', null, ['string'], [pipelineData.text]);
+
+                console.log("Pipeline running...");
+                window.fileAdmin.updateCanvasRows(OUTPUT_SUFFIX);
+                
+                console.log("Pipeline executed successfully");
+                
+                statusEl.textContent = "idle";
+                processBtn.disabled = false;
+            }, 50); // 50ms es suficiente para asegurar el repaint en la mayoría de los casos
             
-            console.log("Pipeline executed successfully");
         } catch (e) {
             console.error("Runtime Error:", e);
+            statusEl.textContent = "Error";
+            processBtn.disabled = false;
         }
     });
 }

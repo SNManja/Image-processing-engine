@@ -76,14 +76,13 @@
               </div>
             </div>
 
-            <div class="flex-1 rounded-2xl border border-zinc-800 bg-zinc-950">
+            <div class="flex flex-1 flex-col rounded-2xl border border-zinc-800 bg-zinc-950">
               <div class="flex items-center justify-between border-b border-zinc-800 px-3 py-2">
                 <span class="text-xs text-zinc-400">pipeline.json</span>
-                <span class="text-[11px] text-zinc-500">Ctrl+Enter</span>
               </div>
               <textarea
                 id="pipeline-json-textarea"
-                class="h-full w-full resize-none bg-transparent p-3 font-mono text-[13px] antialiased leading-relaxed text-cyan-400 outline-none"
+                class="flex-1 w-full resize-none bg-transparent p-3 font-mono text-[13px] antialiased leading-relaxed text-cyan-400 outline-none"
                 spellcheck="false" 
                 autocorrect="off"
                 autocapitalize="off"
@@ -105,8 +104,8 @@
             </div>
 
             <div class="mt-4 flex items-center justify-between">
-              <div class="text-xs text-zinc-500">Status: <span class="text-zinc-300">idle</span></div>
-              <button id="process-btn" class="rounded-xl bg-zinc-100 px-5 py-2 text-sm font-medium text-zinc-900 hover:bg-white">
+              <div class="text-xs text-zinc-500">Status: <span class="text-zinc-300" id="status-flag">idle</span></div>
+              <button id="process-btn" class="rounded-xl bg-zinc-100 px-5 py-2 text-sm font-medium text-zinc-900 hover:bg-white disabled:bg-zinc-800 disabled:text-zinc-300 disabled:cursor-not-allowed">
                 Process
               </button>
             </div>
