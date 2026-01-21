@@ -5,14 +5,14 @@
 #include "histogram.h"
 
 FilterDescriptor getFilterDescriptor(const std::string& filterName) {
-    printf("Looking for %s\n", filterName.c_str());
     FilterRegistry registry = getRegistry();
     if (!filterName.empty()) {
         if (registry.find(filterName) != registry.end()) {
             return registry[filterName];
         }
     }
-    printf("Filter %s not found\n", filterName.c_str());
+    std::string errorMsg = "Filter not found: " + filterName;
+    fprintf(stderr, "[ENGINE ERROR] %s\n", errorMsg.c_str());
     return {};
 }
 

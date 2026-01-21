@@ -24,7 +24,7 @@ void printToPPM(const image<unsigned char>& img, const char* output_path) {
 
 image<unsigned char> read_image(const char* path) {
     FILE* f = fopen(path, "rb");
-    printf("Reading image from %s\n", path);
+    //printf("Reading image from %s\n", path);
     if (!f) {
         perror("Error opening file");
         return {};
@@ -33,12 +33,13 @@ image<unsigned char> read_image(const char* path) {
     // Read PPM header
     char format[3];
     int width, height, maxval;
-    fscanf(f, "%2s\n%d %d\n%d\n", format, &width, &height, &maxval);
+    fscanf(f, "%2s\n%d %d\n%d", format, &width, &height, &maxval);
     if (strcmp(format, "P6") != 0 || maxval != 255) {
         fprintf(stderr, "Unsupported PPM format\n");
         fclose(f);
         return {};
     }
+    fgetc(f);
 
     image<unsigned char> img;
     img.width = width;

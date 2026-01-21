@@ -1,4 +1,4 @@
-name: CompileChecking
+name: Compile and run 
 
 on:
   push:
@@ -17,3 +17,12 @@ jobs:
       - uses: mymindstorm/setup-emsdk@v14
       - run: emcc -v
       - run: make wasm
+  run-test:
+    name: "Identity tests"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run Tests
+        run: |
+          mkdir -p tests/test_output
+          make test

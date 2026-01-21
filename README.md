@@ -34,6 +34,7 @@ C++ image processing engine for PPM files. Main goal is to make scalable and rea
 - Processing flag has to be updated when engine fails and when engine is running.
 
 ## Engine - To do
+- Comments compatibility on PPM P6 
 - Improve github actions testing and CI
 - 16 bit color compatibility. Is it worth it? 
 - Check common sobel parameters and implement them

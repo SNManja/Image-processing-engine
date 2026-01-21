@@ -30,7 +30,7 @@ void pipelineViaJSON(std::string PICS_DIR, std::string OUTPUT_DIR, std::string J
     std::ifstream file(JSON_PATH);
     assert(file.is_open());
     json data = json::parse(file);
-
+    
     assert(data.contains("pipeline") && data["pipeline"].is_array());   
 
     json statsConfig = json::object();
@@ -68,9 +68,9 @@ void pipelineViaJSON(std::string PICS_DIR, std::string OUTPUT_DIR, std::string J
                     fileName = fileName.substr(0, fileName.find_last_of(".")) + outputSuffix;
                     fileName += ".ppm";
                 }
-                std::string ppmOutPath = OUTPUT_DIR + "/" + fileName;
-                printf("Processed img %d\n", numberOfImages);
-                printf("Output path: %s\n", ppmOutPath.c_str());
+                std::string ppmOutPath = OUTPUT_DIR + fileName;
+                //printf("Processed img %d\n", numberOfImages);
+                //printf("Output path: %s\n", ppmOutPath.c_str());
                 image<unsigned char> ucharRes = src;
                 calcStatistics(ucharRes, statsConfig, fileName);
                 printToPPM(ucharRes, ppmOutPath.c_str());

@@ -30,4 +30,11 @@ wasm:
 	$(EMCC) $(WASM_BRIDGE) $(CORE_SRCS) $(WASM_FLAGS) -o $(WASM_OUT)
 
 clean:
-	rm -f $(TARGET)
+	rm -f $(TARGET) $(TEST_BIN)
+
+
+TEST_BIN = run_test
+
+test: $(CORE_SRCS) tests/identity_test.cpp
+	$(CXX) $(CXXFLAGS) $^ -o $(TEST_BIN)
+	./$(TEST_BIN)

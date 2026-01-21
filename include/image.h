@@ -23,7 +23,9 @@ template <typename T> struct pixel {
 
     template <typename U>
     pixel(const pixel<U>& orig) {
-        if constexpr (std::is_same_v<T, unsigned char> && std::is_floating_point_v<U>) {
+        if constexpr (std::is_same_v<T, U>) {
+        r = orig.r; g = orig.g; b = orig.b;
+        } else if constexpr (std::is_same_v<T, unsigned char> && std::is_floating_point_v<U>) {
             r = static_cast<T>(clamp(orig.r)*255.0f);
             g = static_cast<T>(clamp(orig.g)*255.0f);
             b = static_cast<T>(clamp(orig.b)*255.0f);
@@ -32,6 +34,14 @@ template <typename T> struct pixel {
             g = static_cast<T>(orig.g/255.0f);
             b = static_cast<T>(orig.b/255.0f);
         }
+    }
+
+    bool operator==(const pixel& other) const {
+        return r == other.r && g == other.g && b == other.b;
+    }
+
+    bool operator!=(const pixel& other) const {
+        return !(*this == other);
     }
 };
 
@@ -52,6 +62,17 @@ template <typename T> struct image {
         for (const auto& p : other.data) {
             data.push_back(p); 
         }
+    }
+
+    bool operator==(const image& other) const {
+        if (width != other.width || height != other.height) {
+            return false;
+        }
+        return data == other.data; 
+    }
+
+    bool operator!=(const image& other) const {
+        return !(*this == other);
     }
 };
 
