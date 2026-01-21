@@ -1,9 +1,14 @@
-# Image-processing-engine
+# Image-processing-engine ![CI/CD Status](https://github.com/SNManja/Image-processing-engine/actions/workflows/CompileChecking.yml/badge.svg)
+
 C++ image processing engine for PPM files. Main goal is to make scalable and readable code, rather than performance (at least at the moment). 
 
 <p align="center">
   <img src="preview.png" alt="Banner" width="100%">
 </p>
+
+
+> [!TIP]
+> **Live Demo:** Explore the engine in your browser clicking [here](https://snmanja.github.io/Image-processing-engine/) **(Web interface still WIP)**
 
 ## Capabilities
 - Processing PPM files with a **flexible pipeline**, with [0,1] float representation to ensure max presition and less information loss between stages.
@@ -17,7 +22,8 @@ C++ image processing engine for PPM files. Main goal is to make scalable and rea
 - **Histogram support**: greyscale, channel (r,g,b), intensity, value and chroma. With **Graph plotting**.
 - **Filter chaining** with **JSON-based** pipeline specifications. This enables complex filter chaining with custom parameters and readable configuration. Plus being able to save configurations as templates. 
 - **Batch processing**: Process all the files in a folder at the same time
-- **WebAssembly Integration (WIP)**: Core C++ engine compiled via Emscripten for high-performance, client-side image processing without server-side dependencies
+- **WebAssembly Integration**: C++ engine compiled via Emscripten for high-performance, client-side image processing without server-side dependencies
+- **Interactive Web Interface (WIP)**: A user-friendly interface built with JavaScript and Tailwind CSS to facilitate real-time filter tuning and pipeline experimentation.
 
 ## WEB - To do
 - Improve Status flag
@@ -65,7 +71,7 @@ It's a simpler format. Does not depend on compression or complex encoding (like 
 ## How to run
 1. Clone the repo.
 2. Compile with `make` command on your terminal
-3. Add your ppm images on `./pics`
+3. Add your ppm images on `./pics` and edit `./pipeline.json` for configuration
 4. Use `./imgengine` to process your ppm images in batch 
 5. Obtain the resulting images from `./output`
 
