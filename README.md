@@ -20,6 +20,7 @@ C++ image processing engine for PPM files. Main goal is to make scalable and rea
 - **WebAssembly Integration (WIP)**: Core C++ engine compiled via Emscripten for high-performance, client-side image processing without server-side dependencies
 
 ## WEB - To do
+- Improve Status flag
 - Ensure all buttons have a clear purpose 
 - Let user download filtered results
 - Fix different suffix batches

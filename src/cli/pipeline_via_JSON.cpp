@@ -68,7 +68,7 @@ void pipelineViaJSON(std::string PICS_DIR, std::string OUTPUT_DIR, std::string J
                     fileName = fileName.substr(0, fileName.find_last_of(".")) + outputSuffix;
                     fileName += ".ppm";
                 }
-                std::string ppmOutPath = OUTPUT_DIR + fileName;
+                std::string ppmOutPath = OUTPUT_DIR + "/" + fileName;
                 //printf("Processed img %d\n", numberOfImages);
                 //printf("Output path: %s\n", ppmOutPath.c_str());
                 image<unsigned char> ucharRes = src;
