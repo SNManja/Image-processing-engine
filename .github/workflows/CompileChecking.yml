@@ -1,22 +1,36 @@
-name: Compile and run 
+name: Compile, run test and deploy
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
 
 on:
   push:
+    branches: ["main"]
   pull_request:
 
 jobs:
   build_native:
+    name: "Native Build"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - run: make
+
   build_wasm:
+    name: "WASM Build"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: mymindstorm/setup-emsdk@v14
-      - run: emcc -v
       - run: make wasm
+      - name: Upload WASM artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: wasm-binaries
+          path: out_web/
+
   run-test:
     name: "Identity tests"
     runs-on: ubuntu-latest
@@ -26,3 +40,32 @@ jobs:
         run: |
           mkdir -p tests/test_output
           make test
+
+  deploy:
+    name: "Deploy to Pages"
+    needs: [build_wasm, run-test] 
+    if: github.ref == 'refs/heads/main' 
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Download WASM artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: wasm-binaries
+          path: out_web/
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      - name: Upload artifact to Pages
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: './out_web' 
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
