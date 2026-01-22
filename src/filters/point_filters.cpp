@@ -145,12 +145,14 @@ void linearAdjustment(const image<float>& src, image<float>& dst, const filterCo
     float offset = 0;
     float scale = 1.0f;
     if (ctx.data.contains("params") && ctx.data["params"].contains("offset")) {
-        offset = ((float)ctx.data["params"]["offset"])/MAX_PIXEL_VALUE;
+        offset = ((float)ctx.data["params"]["offset"]);
     }
     if (ctx.data.contains("params") && ctx.data["params"].contains("scale")) {
         scale = ctx.data["params"]["scale"];
     }
-
+    // Fix offset so it's relative to max value
+    offset /= ((float)MAX_COLOR_CHAR);
+    //printf("offset value %f\nscale value %f\n",offset,scale);
     resizeToMatchSrc(src, dst);
     applyPointTransform(src, dst, [offset, scale](const image<float>& src, image<float>& dst, int x, int y){
 

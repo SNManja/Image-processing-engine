@@ -1,0 +1,33 @@
+{
+  "name": "pencil-sketch",
+  "pipeline": [
+    {
+      "filter": "sobel",
+      "params": {
+        "greyscale": true      
+      }
+    },
+    {
+      "filter": "linearAdjustment",
+      "params": {
+        "scale": 2.0,
+        "offset": -40
+      }
+    },
+    {
+      "filter": "invert"
+    },
+    {
+      "filter": "blur",
+      "params": {
+        "size": 5
+      }
+    }
+  ],
+  "statistics": {
+    "histograms": {
+      "greyscale": false
+    }
+  },
+  "output_suffix": "_processed"
+}

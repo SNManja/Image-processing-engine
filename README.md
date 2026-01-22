@@ -26,6 +26,8 @@ C++ image processing engine for PPM files. Main goal is to make scalable and rea
 - **Interactive Web Interface (WIP)**: A user-friendly interface built with JavaScript and Tailwind CSS to facilitate real-time filter tuning and pipeline experimentation.
 
 ## WEB - To do
+- ASAP! Strange bitshift with `motion-blur.json` and `paisaje.ppm`, only on WEB interface, output from engine is OK. Needs fix
+- Wire pipeline examples from the back to the presets button.
 - Improve Status flag
 - Ensure all buttons have a clear purpose 
 - Display graphs in some way
@@ -57,8 +59,6 @@ C++ image processing engine for PPM files. Main goal is to make scalable and rea
 ## Potential goals for the future
 - Applying this engine to computer vision
 - Performance optimizations
-- Make a simpler and better user interface or cli tool
-- Add user interface
 
 ## Why ppm?
 It's a simpler format. Does not depend on compression or complex encoding (like jpeg or png). At the time it's what i will be using. The goal of the project (as any other project of mine) is to implement things and understand them thoroughly. So im interested in implementing the conversion of formats by myself in the future when the project grows in size.

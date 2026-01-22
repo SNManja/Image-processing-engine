@@ -5,6 +5,7 @@
 #include <cstdio>
 
 constexpr float MAX_PIXEL_VALUE = 1.0f;
+constexpr unsigned char MAX_COLOR_CHAR = 255;
 
 inline float clamp(float value) {
     if (value > MAX_PIXEL_VALUE) return MAX_PIXEL_VALUE;

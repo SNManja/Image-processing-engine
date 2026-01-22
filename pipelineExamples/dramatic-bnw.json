@@ -1,0 +1,27 @@
+{
+  "name": "dramatic_motion",
+  "pipeline": [
+    {
+      "filter": "motionblur",
+      "params": {
+        "scale": 1.3,
+        "border": "clamp"
+      }
+    },
+    {
+      "filter": "linearAdjustment",
+      "params": {
+        "scale": 1.3,
+        "offset": -255
+      }
+    },
+    {
+      "filter": "bnw",
+      "params": {}
+    }
+  ],
+  "statistics": {
+    "histograms": { "greyscale": true }
+  },
+  "output_suffix": "_processed"
+}

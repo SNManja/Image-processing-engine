@@ -1,0 +1,23 @@
+{
+  "name": "Cool green-ish look",
+  "pipeline": [
+    
+    {
+      "filter": "bnw",
+      "params": { "offset": 0, "scale": 1.0 }
+    },
+    {
+      "filter":"alphaBlending",
+      "params": {
+        
+        "alpha":[0.5,0.5,1.0]}
+    }
+    
+  ],
+  "statistics": {
+    "histograms": {
+      "greyscale": false
+    }
+  },
+  "output_suffix": "_processed"
+}

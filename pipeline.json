@@ -1,16 +1,36 @@
 {
-  "name": "example_pipeline",
+  "name": "dramatic_motion_color",
   "pipeline": [
-    
+    {
+      "filter": "motionblur",
+      "params": {
+        "scale": 1.2,
+        "offset": 0,
+        "stride": 1,
+        "border": "clamp"
+      }
+    },
     {
       "filter": "linearAdjustment",
-      "params": { "offset": 0, "scale": 1.0 }
+      "params": {
+        "scale": 1.25,
+        "offset": -35
+      }
+    },
+    {
+      "filter": "sharpen",
+      "params": {
+        "amount": 0.7,
+        "scale": 1.0,
+        "offset": 0,
+        "stride": 1,
+        "border": "clamp"
+      }
     }
-    
   ],
   "statistics": {
     "histograms": {
-      "greyscale": false
+      "channel": true
     }
   },
   "output_suffix": "_processed"
