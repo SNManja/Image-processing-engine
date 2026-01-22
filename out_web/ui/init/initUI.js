@@ -1,58 +1,17 @@
 import { CanvasSlot } from "../CanvasSlot.js";
-
-
+import { downloadButtonSetup } from "./downloadButtonSetup.js";
+import { helpWindowSetup } from "./helpWindowSetup.js";
 let engine;
 export function initUI(currEngine){
     engine = currEngine;
     initProcessBtn();
     initUploadLogic();
     imageDisplaySetup();
-    helpWindowSetup();
+    helpWindowSetup(engine);
     presetsSetup();
+    downloadButtonSetup(engine);
 }
 
-
-function helpWindowSetup(){
-    const helpModal = document.getElementById('json-help-modal');
-    const helpBtn = document.getElementById('json-help-button');
-    const closeBtn = document.getElementById('close-help-modal');
-
-    const tabFiltersBtn = document.getElementById('btn-tab-filters');
-    const tabSchemaBtn = document.getElementById('btn-tab-schema');
-
-    const contentFilters = document.getElementById('content-tab-filters');
-    const contentSchema = document.getElementById('content-tab-schema');
-
-    helpBtn.addEventListener('click', () => {
-        helpModal.classList.remove('hidden');
-    });
-
-    closeBtn.addEventListener('click', () => helpModal.classList.add('hidden'));
-
-    helpModal.addEventListener('click', (e) => {
-        if (e.target === helpModal) helpModal.classList.add('hidden');
-    });
-
-    function setTab(active) {
-        const isFilters = active === 'filters';
-        
-        contentFilters.classList.toggle('hidden', !isFilters);
-        contentSchema.classList.toggle('hidden', isFilters);
-
-        const activeStyle = "flex-1 py-2 px-4 rounded-xl font-semibold transition-colors bg-zinc-100 text-zinc-950 antialiased";
-        const inactiveStyle = "flex-1 py-2 px-4 rounded-xl font-semibold transition-colors text-zinc-400 hover:bg-zinc-800/50 antialiased";
-        if (isFilters) {
-            tabFiltersBtn.className = activeStyle;
-            tabSchemaBtn.className = inactiveStyle;
-        } else {
-            tabFiltersBtn.className = inactiveStyle;
-            tabSchemaBtn.className = activeStyle;
-        }
-    }
-
-    tabFiltersBtn.addEventListener('click', () => setTab('filters'));
-    tabSchemaBtn.addEventListener('click', () => setTab('schema'));    
-}
 
 function presetsSetup() {
     const presetsModal = document.getElementById('presets-modal');

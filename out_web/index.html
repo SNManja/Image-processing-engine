@@ -4,13 +4,13 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="https://cdn.tailwindcss.com"></script>
-    <title>Image processing engine</title>
+    <title>PPM P6 Image processing engine</title>
   </head>
 
   <body class="min-h-screen bg-zinc-950 text-zinc-100">
     <header class="sticky top-0 z-10 border-b border-zinc-800 bg-zinc-950/80 backdrop-blur">
       <div class="mx-auto flex max-w-7xl items-center justify-between px-4 py-3">
-        <div class="text-sm font-semibold">Image Processing Engine</div>
+        <div class="text-sm font-semibold">PPM P6 Image Processing Engine</div>
         <div class="flex items-center gap-2">
           <button id="presets-button" class="rounded-xl border border-zinc-800 px-3 py-2 text-sm hover:bg-zinc-900">Presets</button>
         </div>
@@ -139,6 +139,7 @@
     <script type="module" src="./PPM_processing/FilesAdministrator.js"></script>
     <script type="module" src="./PPM_processing/paths.js"></script>
     <script type="module" src="./ui/setupJSONEditor.js"></script>
+    <script src="./vendor/jszip.min.js"></script>
  <style>
   /* --- SCROLLBAR PREMIUM PARA CHROME --- */
   
@@ -202,7 +203,7 @@
                 <div id="content-tab-filters" class="space-y-6">
                     <div class="flex items-center gap-3 text-zinc-500 animate-pulse">
                         <div class="h-2 w-2 rounded-full bg-zinc-700"></div>
-                        <span class="font-mono text-xs text-zinc-500">Sorry. Not implemented yet :(...</span>
+                        <span class="font-mono text-xs text-zinc-500">Loading...</span>
                     </div>
                 </div>
 

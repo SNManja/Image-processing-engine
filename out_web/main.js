@@ -14,7 +14,7 @@ async function runEngine(){
     await engine.ready;
     window.fileAdmin = new FileAdministrator(engine);
     console.log("memfs initialized:", Module.FS);
-    secureFolders();
+    ensureFolders();
     loadExamplePics();
     initUI(engine);
 
@@ -27,17 +27,26 @@ function loadExamplePics(){
     window.fileAdmin.addExamplePPM(["paisaje.ppm", "gato.ppm"]);
 }
 
-function secureFolders(){
-    // Checks if folders exist in memfs
-    for (let path of ALL_DIRS){
-        if(engine.FS.analyzePath(path).exists === false){
-            engine.FS.mkdir(path);
+function ensureFolders() {
+    for (let path of ALL_DIRS) {
+        const cleanPath = path.startsWith('./') ? path.substring(2) : path;
+        const parts = cleanPath.split('/');
+        let currentPath = '';
+
+        for (const part of parts) {
+            currentPath += (currentPath ? '/' : '') + part;
+            try {
+                if (!engine.FS.analyzePath(currentPath).exists) {
+                    engine.FS.mkdir(currentPath);
+                    console.log(`Folder created in MEMFS: ${currentPath}`);
+                }
+            } catch (e) {}
         }
     }
 }
 
 function runPipeline(){
-    secureFolders();
+    ensureFolders();
     const json_pipeline = obtainJSONPipeline();
     engine.ccall('run_pipeline', null, ['string'], [json_pipeline]);
 
