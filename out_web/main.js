@@ -1,6 +1,7 @@
 import { FileAdministrator } from "./PPM_processing/FilesAdministrator.js";
 import { ALL_DIRS } from "./PPM_processing/paths.js";
 import { initUI } from "./ui/init/initUI.js";
+import { setupJSONEditor } from "./ui/setupJSONEditor.js";
 
 
 
@@ -16,6 +17,7 @@ async function runEngine(){
     console.log("memfs initialized:", Module.FS);
     ensureFolders();
     loadExamplePics();
+    setupJSONEditor();
     initUI(engine);
 
     }).catch(err => {
@@ -45,13 +47,6 @@ function ensureFolders() {
     }
 }
 
-function runPipeline(){
-    ensureFolders();
-    const json_pipeline = obtainJSONPipeline();
-    engine.ccall('run_pipeline', null, ['string'], [json_pipeline]);
-
-    // updateCanvasRows(); TODO not yet implemented
-}
 
 
 

@@ -41,7 +41,22 @@
                 <button class="grid h-10 w-10 place-items-center rounded-xl border border-zinc-800 bg-zinc-950/50 text-lg hover:bg-zinc-900">−</button>
                 <button class="grid h-10 w-10 place-items-center rounded-xl border border-zinc-800 bg-zinc-950/50 text-lg hover:bg-zinc-900" id="upload-btn">+</button>
                 <div class="mt-2 h-px w-8 bg-zinc-800"></div>
-                <button id="download-button" class="grid h-10 w-10 place-items-center rounded-xl border border-zinc-800 bg-zinc-950/50 text-sm hover:bg-zinc-900">⬇</button>
+                <button id="download-button" class="grid h-10 w-10 place-items-center rounded-xl border border-zinc-800 bg-zinc-950/50 hover:bg-zinc-900 transition-colors" title="Download ZIP">
+                  <svg xmlns="http://www.w3.org/2000/svg" 
+                      width="14" 
+                      height="14" 
+                      viewBox="0 0 24 24" 
+                      fill="none" 
+                      stroke="currentColor" 
+                      stroke-width="2.5" 
+                      stroke-linecap="round" 
+                      stroke-linejoin="round" 
+                      class="text-zinc-100">
+                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                      <polyline points="7 10 12 15 17 10"></polyline>
+                      <line x1="12" x2="12" y1="15" y2="3"></line>
+                  </svg>
+              </button>
               </div>
 
               <!-- SHARED scroll container for rows -->
@@ -78,47 +93,10 @@
               <div class="flex items-center justify-between border-b border-zinc-800 px-3 py-2">
                 <span class="text-xs text-zinc-400">pipeline.json</span>
               </div>
-              <textarea
-                id="pipeline-json-textarea"
-                class="flex-1 w-full resize-none bg-transparent p-3 font-mono text-[13px] antialiased leading-relaxed text-cyan-400 outline-none placeholder:text-zinc-700"
-                spellcheck="false" 
-                autocorrect="off"
-                placeholder='{
-  "pipeline": [
-    {
-      "filter": "filter1_name",
-      "params": {
-        "param1": "value1",
-        "param2": "value2",
-            .
-            .
-            .
-      }
-    },
-            .
-            .
-            .
-  ],
-  "output_suffix": (string)
-}               
-                '
-                
-                autocapitalize="off"
-              >{
-  "name": "example_pipeline",
-  "pipeline": [
-    {
-        "filter": "blur" , 
-        "params": { "size":21 }
-    }
-  ],
-  "statistics": {
-    "histograms": {
-      "greyscale": false
-    }
-  },
-  "output_suffix": "_processed"
-}</textarea>
+              <div 
+                id="json-editor-container" 
+                class="flex-1 w-full min-h-[450px] border border-zinc-800 bg-zinc-950/50 rounded-xl overflow-hidden font-mono text-[13px] antialiased"
+              ></div>
             </div>
 
             <div class="mt-4 flex items-center justify-between">
@@ -141,9 +119,6 @@
     <script type="module" src="./ui/setupJSONEditor.js"></script>
     <script src="./vendor/jszip.min.js"></script>
  <style>
-  /* --- SCROLLBAR PREMIUM PARA CHROME --- */
-  
-  /* 1. Tamaño del área del scroll */
   ::-webkit-scrollbar {
     width: 11px;               /* Un poco más ancho (ajuste pedido) */
     height: 13px;              /* Para scroll horizontal */

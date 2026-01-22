@@ -1,4 +1,5 @@
 import { CanvasSlot } from "../CanvasSlot.js";
+import { getJSONContent } from "../setupJSONEditor.js";
 import { downloadButtonSetup } from "./downloadButtonSetup.js";
 import { helpWindowSetup } from "./helpWindowSetup.js";
 let engine;
@@ -134,11 +135,13 @@ function initUploadLogic() {
     });
 }
 
-function getJSONPipeline(){
-    const el = document.querySelector("#pipeline-json-textarea");
-    const text = el?.value ?? "";
+function getJSONPipeline() {
+    // Ya no buscamos en el DOM, le pedimos el string directamente al editor
+    const text = getJSONContent();
 
     try {
+        if (!text.trim()) throw new Error("El editor está vacío");
+        
         const obj = JSON.parse(text);
         if (!obj || typeof obj !== "object") throw new Error("JSON root must be an object");
         if (!Array.isArray(obj.pipeline)) throw new Error('Missing "pipeline": expected an array');

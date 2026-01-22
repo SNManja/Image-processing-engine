@@ -28,17 +28,12 @@ C++ image processing engine for PPM files. Main goal is to make scalable and rea
 ## WEB - To do
 - Improve Status flag
 - Ensure all buttons have a clear purpose 
-- Let user download filtered results
-- Fix different suffix batches
 - Display graphs in some way
 - Clean spanglish (some comments and console logs are in spanish)
 - Add pic deletion
 - Add maximum upload capacity (memory size pre-defined so user do not exceed browsers limits)
 - Add JSON presets and examples
-- Find a way to display cleanly the documentation
-- Prefixes are broken. At least on display
-- All canvas display the low res image of the ppm. Gotta fix that asap
-- Processing flag has to be updated when engine fails and when engine is running.
+- Suffixes are broken. At least on display
 
 ## Engine - To do
 - Comments compatibility on PPM P6 
@@ -83,3 +78,5 @@ It's a simpler format. Does not depend on compression or complex encoding (like 
 The whole point of this project is to make things from scratch. So i will be explicit in which external libraries i use. From the time being, the only one is **nlohmann/json** which is already **included** in the repository to ensure a zero-dependency setup and avoid installation headaches. 
 
 To be clear. This implicates no use of ffmpeg, matplotlib or any other library. At least at the moment. Everything is made from scratch.
+
+The web frontend is the exception. To ensure a great user experience i decided to use libraries for the code editor (CodeMirror 6) and .zip download of the batch results (JSZip)
