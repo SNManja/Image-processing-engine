@@ -25,7 +25,7 @@ void printHelp();
 void printHistograms();
 
 void pipelineViaJSON(std::string PICS_DIR, std::string OUTPUT_DIR, std::string JSON_PATH);
-void calcStatistics(const image<unsigned char>& img, const json& statsConfig, std::string outPath);
+void calcStatistics(const image<unsigned char>& img, const json& statsConfig, std::string outPath, std::string name);
 void clearFolder(std::string path);
 
 template<typename T>

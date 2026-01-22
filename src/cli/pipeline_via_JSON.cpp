@@ -5,9 +5,13 @@
 #include <fstream>
 #include <dirent.h>
 #include "histogram.h"
+#include <iostream>
+#include <filesystem>
+
 
 
 using json = nlohmann::json;
+namespace fs = std::filesystem;
 
 void clearFolder(std::string path){
     DIR* directory = opendir(path.c_str());
@@ -26,6 +30,18 @@ void clearFolder(std::string path){
     }
 }
 
+void ensureFolder(const std::string& ruta) {
+    try {
+        // create_directories no lanza error si la carpeta ya existe, 
+        // simplemente devuelve false.
+        if (fs::create_directories(ruta)) {
+            std::cout << "Folder made: " << ruta << std::endl;
+        }
+    } catch (const fs::filesystem_error& e) {
+        std::cerr << "Error al crear la carpeta: " << e.what() << std::endl;
+    }
+}
+
 void pipelineViaJSON(std::string PICS_DIR, std::string OUTPUT_DIR, std::string JSON_PATH) {
     std::ifstream file(JSON_PATH);
     assert(file.is_open());
@@ -40,6 +56,12 @@ void pipelineViaJSON(std::string PICS_DIR, std::string OUTPUT_DIR, std::string J
 
     DIR* directory = opendir(PICS_DIR.c_str());
     assert(directory); // Directory opened successfully
+
+
+    std::string histogramPath = OUTPUT_DIR + "/stats/";
+    ensureFolder(histogramPath);
+    clearFolder(histogramPath);
+    
 
     struct dirent* dirEntry;
     int numberOfImages = 0;
@@ -72,7 +94,7 @@ void pipelineViaJSON(std::string PICS_DIR, std::string OUTPUT_DIR, std::string J
                 //printf("Processed img %d\n", numberOfImages);
                 //printf("Output path: %s\n", ppmOutPath.c_str());
                 image<unsigned char> ucharRes = src;
-                calcStatistics(ucharRes, statsConfig, fileName);
+                calcStatistics(ucharRes, statsConfig, histogramPath, fileName);
                 printToPPM(ucharRes, ppmOutPath.c_str());
                 numberOfImages++;
             }
@@ -90,8 +112,8 @@ void saveJson(const json& j, const std::string& path) {
     out << j.dump(4); // 4 = indent bonito
 }
 
-void calcStatistics(const image<unsigned char>& img, const json& statsConfig, std::string fileName) {
-    std::string STAT_PATH = "./output/stats/" + fileName.substr(0, fileName.find_last_of(".")) + "_stats.json";
+void calcStatistics(const image<unsigned char>& img, const json& statsConfig, std::string OUT_PATH, std::string fileName) {
+    std::string STAT_PATH = OUT_PATH + fileName.substr(0, fileName.find_last_of(".")) + "_stats.json";
     json histogramsJson = json::object();
     HistogramRegistry histogramsReg = getHistogramRegistry();
     if(statsConfig.contains("histograms")){
@@ -105,4 +127,6 @@ void calcStatistics(const image<unsigned char>& img, const json& statsConfig, st
     }
     saveJson(histogramsJson, STAT_PATH);
 }
+
+
 
