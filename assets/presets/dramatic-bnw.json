@@ -1,5 +1,5 @@
 {
-  "name": "dramatic_motion",
+  "name": "Dramatic black and white",
   "pipeline": [
     {
       "filter": "motionblur",

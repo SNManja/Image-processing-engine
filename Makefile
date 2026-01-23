@@ -12,13 +12,14 @@ WASM_OUT_DIR = out_web
 WASM_OUT = $(WASM_OUT_DIR)/engine.js
 WASM_BRIDGE = web/wasm_bridge.cpp
 
+
 WASM_FLAGS = -std=c++17 -O3 -Iinclude \
 			-s MODULARIZE=1 \
 			-s EXPORT_NAME='createEngine' \
 			-s ALLOW_MEMORY_GROWTH=1 \
 			-s EXPORTED_RUNTIME_METHODS='["cwrap", "ccall", "FS"]' \
-			--bind
-
+			--bind \
+			--preload-file assets/presets@/presets
 
 all: $(TARGET)
 

@@ -1,8 +1,7 @@
 import { FileAdministrator } from "./PPM_processing/FilesAdministrator.js";
 import { ALL_DIRS } from "./PPM_processing/paths.js";
 import { initUI } from "./ui/init/initUI.js";
-import { setupJSONEditor } from "./ui/setupJSONEditor.js";
-
+import { setupJSONPipelineEditor } from "./ui/setupJSONPipelineEditor.js";
 
 
 let engine;
@@ -17,8 +16,9 @@ async function runEngine(){
     console.log("memfs initialized:", Module.FS);
     ensureFolders();
     loadExamplePics();
-    setupJSONEditor();
+    setupJSONPipelineEditor();
     initUI(engine);
+    //debugMEMFSTree(engine);
 
     }).catch(err => {
         console.error("Error cargando el motor:", err);

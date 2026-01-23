@@ -2,10 +2,35 @@ import { history, redo, undo } from "https://esm.sh/@codemirror/commands@6"; // 
 import { json } from "https://esm.sh/@codemirror/lang-json@6";
 import { HighlightStyle, syntaxHighlighting } from "https://esm.sh/@codemirror/language@6";
 import { EditorState } from "https://esm.sh/@codemirror/state@6";
-import { drawSelection, EditorView, keymap, lineNumbers } from "https://esm.sh/@codemirror/view@6";
+import { drawSelection, EditorView, keymap, lineNumbers, placeholder } from "https://esm.sh/@codemirror/view@6";
 import { tags as t } from "https://esm.sh/@lezer/highlight@1";
 
 let editorView;
+
+const placeholderText =`{
+  "pipeline": [
+    {
+      "filter": "filter_name",
+      "params": {
+        "param1": "value1",
+        "param2": "value2",
+            .
+            .
+            .
+      }
+    }
+  ],
+  "statistics": {
+    "histograms": {
+      "histogramType1": (bool),
+      "histogramType2": (bool),
+            .
+            .
+            .
+    }
+  },
+  "output_suffix": (string)
+}`
 
 const initialValue = `{
   "name": "example_pipeline",
@@ -49,7 +74,7 @@ const plainTab = {
     }
 };
 
-export function setupJSONEditor() {
+export function setupJSONPipelineEditor() {
     const container = document.getElementById("json-editor-container");
     if (!container) return;
 
@@ -61,7 +86,8 @@ export function setupJSONEditor() {
             extensions: [
                 lineNumbers(),
                 drawSelection(),        
-                history(),              
+                history(),        
+                placeholder(placeholderText),     
                 syntaxHighlighting(myHighlightStyle),
                 myTheme,
                 json(),
@@ -77,6 +103,19 @@ export function setupJSONEditor() {
     });
 }
 
-export function getJSONContent() {
+export function getJSONPipelineContent() {
     return editorView ? editorView.state.doc.toString() : "";
+}
+
+export function setJSONPipelineContent(text) {
+    if (!editorView) return;
+
+    editorView.dispatch({
+        changes: {
+            from: 0,
+            to: editorView.state.doc.length,
+            insert: text
+        },
+        selection: { anchor: 0 }
+    });
 }

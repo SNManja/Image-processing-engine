@@ -1,7 +1,10 @@
 import { CanvasSlot } from "../CanvasSlot.js";
-import { getJSONContent } from "../setupJSONEditor.js";
+import { getJSONPipelineContent } from "../setupJSONPipelineEditor.js";
 import { downloadButtonSetup } from "./downloadButtonSetup.js";
 import { helpWindowSetup } from "./helpWindowSetup.js";
+import { presetsSetup } from "./presetsSetup.js";
+
+
 let engine;
 export function initUI(currEngine){
     engine = currEngine;
@@ -9,27 +12,11 @@ export function initUI(currEngine){
     initUploadLogic();
     imageDisplaySetup();
     helpWindowSetup(engine);
-    presetsSetup();
+    presetsSetup(engine);
     downloadButtonSetup(engine);
 }
 
 
-function presetsSetup() {
-    const presetsModal = document.getElementById('presets-modal');
-    const presetsBtn = document.getElementById('presets-button') || document.querySelectorAll('button')[0]; // Ajustá el selector según tu header
-    const closeBtn = document.getElementById('close-presets');
-
-    if (!presetsModal) return;
-
-    const toggle = (show) => presetsModal.classList.toggle('hidden', !show);
-
-    presetsBtn.addEventListener('click', () => toggle(true));
-    closeBtn.onclick = () => toggle(false);
-
-    presetsModal.onclick = (e) => {
-        if (e.target === presetsModal) toggle(false);
-    };
-}
 
 function imageDisplaySetup(){
     const modal = document.querySelector("#image-modal");
@@ -137,7 +124,7 @@ function initUploadLogic() {
 
 function getJSONPipeline() {
     // Ya no buscamos en el DOM, le pedimos el string directamente al editor
-    const text = getJSONContent();
+    const text = getJSONPipelineContent();
 
     try {
         if (!text.trim()) throw new Error("El editor está vacío");
