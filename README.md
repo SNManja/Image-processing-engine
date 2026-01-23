@@ -27,14 +27,10 @@ C++ image processing engine for PPM files. Main goal is to make scalable and rea
 
 ## WEB - To do
 - ASAP! Strange bitshift with `motion-blur.json` and `paisaje.ppm`, only on WEB interface, output from engine is OK. Needs fix
-- Wire pipeline examples from the back to the presets button.
 - Improve Status flag
-- Ensure all buttons have a clear purpose 
 - Display graphs in some way
 - Clean spanglish (some comments and console logs are in spanish)
-- Add pic deletion
 - Add maximum upload capacity (memory size pre-defined so user do not exceed browsers limits)
-- Add JSON presets and examples
 - Suffixes are broken. At least on display
 
 ## Engine - To do

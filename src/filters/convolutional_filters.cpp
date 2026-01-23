@@ -55,7 +55,7 @@ GetPixelFunc getPixelFunction(const std::string& borderStrategy) {
 void genericConvolution(const image<float>& src, image<float>& dst, const Kernel& kernel, const convolutionConfig& config){
 
     float scale = config.scale;
-    float offset = config.offset;
+    float offset = config.offset / ((float)MAX_COLOR_CHAR);
     int stride = config.stride;
     GetPixelFunc getPixStrat = getPixelFunction(config.borderStrategy);
 
@@ -174,7 +174,7 @@ void laplacianOfGaussianFilter(const image<float>& src, image<float>& dst, const
     Kernel k = kernel(5, {
         {0, 0, -1, 0, 0},
         {0, -1, -2, -1, 0},
-        {-1, -2, 16, -2, -1},
+        {-1, -2, 12, -2, -1},
         {0, -1, -2, -1, 0},
         {0, 0, -1, 0, 0}
     });

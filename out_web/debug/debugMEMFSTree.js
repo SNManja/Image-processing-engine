@@ -1,7 +1,7 @@
 export function debugMEMFSTree(engine, path = "/", indent = "") {
     try {
         // Leemos el contenido del nivel actual
-        const files = engine.FS.readdir(path).filter(f => f !== "." && f !== "..");
+        const files = engine.FS.readdir(path).filter(f => f !== "." && f !== ".." && f !== "proc");
         
         files.forEach(name => {
             const fullPath = path === "/" ? `/${name}` : `${path}/${name}`;

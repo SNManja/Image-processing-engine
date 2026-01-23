@@ -87,7 +87,7 @@ FilterRegistry getRegistry(){
             }
         },
         {
-            "lof", {
+            "lofg", {
                 laplacianOfGaussianFilter,  
                 "Laplacian of Gaussian filter. Edge detection.",
                 "Convolutional",

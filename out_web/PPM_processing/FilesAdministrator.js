@@ -2,6 +2,7 @@ import { CanvasRow } from "../ui/CanvasRow.js";
 import { PATHS } from "./paths.js";
 import PPMImage from "./PPMImage.js";
 
+
 export class FileAdministrator {
     // This class responsabilities
     /*
@@ -81,6 +82,7 @@ export class FileAdministrator {
         
         canvasRow.drawOriginal(img.toImageData());
         this.entries.set(img.name, { inputPath, img, canvasRow });
+        //debugMEMFSTree(this.engine);
     }
 
     cleanFilteredFolder() {
@@ -113,8 +115,22 @@ export class FileAdministrator {
         }
     }
 
-    deleteFile(file) {
-        // Logic to delete file
+    deleteRow(filename) {
+        const FS = this.engine.FS;
+        const entry = this.entries.get(filename);
+        if (!entry) {
+            console.log("Filename " + filename + " wasnt fount in entries. Skip deletion")
+            return;
+        }
+        try {
+            entry.canvasRow.destroy();
+            if (FS.analyzePath(entry.inputPath).exists) {
+                FS.unlink(entry.inputPath);
+            }
+            this.entries.delete(filename);
+        } catch (e) {
+            console.log("Failed file deletion: " + e.message);
+        }
     }
 
 }

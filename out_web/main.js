@@ -5,28 +5,28 @@ import { setupJSONPipelineEditor } from "./ui/setupJSONPipelineEditor.js";
 
 
 let engine;
-runEngine();
+await runEngine();
 async function runEngine(){
-    createEngine().then(async Module => {
-    console.log("Wasm engine loaded correctly");
-    window.engineModule = Module;
-    engine = window.engineModule;
-    await engine.ready;
-    window.fileAdmin = new FileAdministrator(engine);
-    console.log("memfs initialized:", Module.FS);
-    ensureFolders();
-    loadExamplePics();
-    setupJSONPipelineEditor();
-    initUI(engine);
-    //debugMEMFSTree(engine);
-
-    }).catch(err => {
-        console.error("Error cargando el motor:", err);
-    });
+    try{
+        window.engineModule = await createEngine();
+        engine = window.engineModule;
+        await engine.ready;
+        console.log("Wasm engine loaded correctly");
+        window.fileAdmin = new FileAdministrator(engine);
+        console.log("memfs initialized:", engine.FS);
+        ensureFolders();
+        await loadExamplePics();
+        setupJSONPipelineEditor();
+        initUI(engine);
+    }
+    catch(e){
+        console.log("Failed on setup " + e.message);
+    }
 }
 
-function loadExamplePics(){
-    window.fileAdmin.addExamplePPM(["paisaje.ppm", "gato.ppm"]);
+
+async function loadExamplePics(){
+    await window.fileAdmin.addExamplePPM(["paisaje.ppm", "gato.ppm"]);
 }
 
 function ensureFolders() {
