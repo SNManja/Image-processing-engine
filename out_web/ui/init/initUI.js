@@ -68,22 +68,23 @@ function initProcessBtn(){
     const statusEl = document.querySelector("#status-flag"); // El "idle" del HTML
     processBtn.addEventListener("click", () => {
         window.fileAdmin.cleanFilteredFolder();
-        const pipelineData = getJSONPipeline();
+        const pipelineRaw = getJSONPipeline();
 
-        if (!pipelineData.ok) {
-            console.error("Pipeline Error:", pipelineData.error);
-            statusEl.textContent = "Error: " + pipelineData.error;
+        if (!pipelineRaw.ok) {
+            console.error("Pipeline Error:", pipelineRaw.error);
+            statusEl.textContent = "Error: " + pipelineRaw.error;
             return;
         }
-        console.log("json file \n" + pipelineData.text);
+        console.log("json file \n" + pipelineRaw.text);
         try {
             statusEl.textContent = "Running...";
             processBtn.disabled = true;
 
             setTimeout(() => {
-                const OUTPUT_SUFFIX = "_processed";
+                const pipelineData = JSON.parse(pipelineRaw.text);
+                const OUTPUT_SUFFIX = pipelineData.output_suffix ? pipelineData.output_suffix : "_processed";
                 
-                engine.ccall('run_pipeline', null, ['string'], [pipelineData.text]);
+                engine.ccall('run_pipeline', null, ['string'], [pipelineRaw.text]);
 
                 console.log("Pipeline running...");
                 window.fileAdmin.updateCanvasRows(OUTPUT_SUFFIX);
@@ -123,7 +124,6 @@ function initUploadLogic() {
 }
 
 function getJSONPipeline() {
-    // Ya no buscamos en el DOM, le pedimos el string directamente al editor
     const text = getJSONPipelineContent();
 
     try {

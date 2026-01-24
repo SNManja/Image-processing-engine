@@ -26,12 +26,10 @@ C++ image processing engine for PPM files. Main goal is to make scalable and rea
 - **Interactive Web Interface (WIP)**: A user-friendly interface built with JavaScript and Tailwind CSS to facilitate real-time filter tuning and pipeline experimentation.
 
 ## WEB - To do
-- ASAP! Strange bitshift with `motion-blur.json` and `paisaje.ppm`, only on WEB interface, output from engine is OK. Needs fix
 - Improve Status flag
 - Display graphs in some way
 - Clean spanglish (some comments and console logs are in spanish)
 - Add maximum upload capacity (memory size pre-defined so user do not exceed browsers limits)
-- Suffixes are broken. At least on display
 
 ## Engine - To do
 - Comments compatibility on PPM P6 

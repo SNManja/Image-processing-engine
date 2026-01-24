@@ -55,7 +55,7 @@ GetPixelFunc getPixelFunction(const std::string& borderStrategy) {
 void genericConvolution(const image<float>& src, image<float>& dst, const Kernel& kernel, const convolutionConfig& config){
 
     float scale = config.scale;
-    float offset = config.offset / ((float)MAX_COLOR_CHAR);
+    float offset = config.offset;
     int stride = config.stride;
     GetPixelFunc getPixStrat = getPixelFunction(config.borderStrategy);
 

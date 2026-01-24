@@ -17,6 +17,7 @@ export class FileAdministrator {
         this.engine = engine;
         this.entries = new Map(); // id -> entry
         this.counter = 0;
+        this.reloadPicsFolder();
     }
 
     updateCanvasRows(output_suffix) { // Updates the canvas rows after processing
@@ -130,6 +131,51 @@ export class FileAdministrator {
             this.entries.delete(filename);
         } catch (e) {
             console.log("Failed file deletion: " + e.message);
+        }
+    }
+
+    reloadPicsFolder() {
+        const FS = this.engine.FS;
+        const dirPath = PATHS.picsDir;
+
+        // 1. Limpiar todas las filas actuales de la UI y el Map
+        for (let [name, entry] of this.entries) {
+            entry.canvasRow.destroy();
+        }
+        this.entries.clear();
+        this.counter = 0; // Reiniciamos el contador de pasos para los ejemplos
+
+        // 2. Verificar si la carpeta existe en el sistema de archivos virtual
+        if (!FS.analyzePath(dirPath).exists) {
+            console.warn(`La carpeta ${dirPath} no existe en MEMFS.`);
+            return;
+        }
+
+        try {
+            const files = FS.readdir(dirPath);
+
+            for (const name of files) {
+                if (name === "." || name === ".." || !name.endsWith(".ppm")) continue;
+
+                const inputPath = `${dirPath}/${name}`;
+                
+                const img = PPMImage.FromPath(inputPath);
+                const rowsParent = document.querySelector("#slot-rows-parent");
+
+                const canvasRow = new CanvasRow({ 
+                    aspect: `${img.width}/${img.height}`,
+                    step: this.counter++, 
+                    originalName: img.name
+                }).mount(rowsParent);
+                
+                canvasRow.drawOriginal(img.toImageData());
+
+                this.entries.set(img.name, { inputPath, img, canvasRow });
+            }
+            
+            console.log(`Sincronización completa: ${this.entries.size} imágenes cargadas desde ${dirPath}.`);
+        } catch (e) {
+            console.error("Error al recargar la carpeta de imágenes:", e);
         }
     }
 

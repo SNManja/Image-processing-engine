@@ -54,24 +54,39 @@ void blackAndWhiteFilter(const image<float>& src, image<float>& dst, const filte
 }
 
 void thresholdingFilter(const image<float>& src, image<float>& dst, const filterContext& ctx){
-
+    float maxVal = lookingForParamInCtx(ctx, "maxVal", MAX_PIXEL_VALUE) ;
+    float minVal = lookingForParamInCtx(ctx, "minVal", MIN_PIXEL_VALUE);
+    float threshold = lookingForParamInCtx(ctx, "threshold",(float)(MAX_PIXEL_VALUE/2));
+    std::string mode = lookingForParamInCtx<std::string>(ctx, "mode", std::string("absolute")); // Absolute, magnitude
+    assert(mode == "absolute" || mode == "magnitude");
+    const bool isMagnitude = (mode == "magnitude");
+    const float center = lookingForParamInCtx(ctx, "center", 0.5f);
     resizeToMatchSrc(src, dst);
-    applyPointTransform(src, dst, [ctx](const image<float>& src, image<float>& dst, int x, int y){
-        setPixel(dst, x, y, getPixelConstant(src, x, y));
-        pixel<float>* p = pixel_ptr(dst, x, y);
-        if (p) {
-            float formula = 0.299 * (p->r) + 0.587 * (p->g) + 0.114 * (p->b);
-            if (formula > (MAX_PIXEL_VALUE*0.5f)) {
-                p->r = MAX_PIXEL_VALUE;
-                p->g = MAX_PIXEL_VALUE;
-                p->b = MAX_PIXEL_VALUE;
+    if (!isMagnitude){
+        applyPointTransform(src, dst, [minVal, maxVal, threshold, ctx](const image<float>& src, image<float>& dst, int x, int y){
+            setPixel(dst, x, y, getPixelConstant(src, x, y));
+            pixel<float>* p = pixel_ptr(dst, x, y);
+            if (!p) return;
+            float luma = 0.299 * (p->r) + 0.587 * (p->g) + 0.114 * (p->b);
+            if (luma > (MAX_PIXEL_VALUE*threshold)) {
+                p->r = maxVal; p->g = maxVal; p->b = maxVal;
             } else {
-                p->r = 0;
-                p->g = 0;
-                p->b = 0;
-            }
-        }
-    });
+                p->r = minVal; p->g = minVal; p->b = minVal;
+            } 
+        });
+    } else {
+        applyPointTransform(src, dst, [minVal, maxVal, threshold, center, ctx](const image<float>& src, image<float>& dst, int x, int y){
+            setPixel(dst, x, y, getPixelConstant(src, x, y));
+            pixel<float>* p = pixel_ptr(dst, x, y);
+            if (!p) return;
+            float luma = 0.299 * (p->r) + 0.587 * (p->g) + 0.114 * (p->b);
+            if (std::fabs(luma - center)> (MAX_PIXEL_VALUE*threshold)) {
+                p->r = maxVal; p->g = maxVal; p->b = maxVal;
+            } else {
+                p->r = minVal; p->g = minVal; p->b = minVal;
+            } 
+        });
+    }
 }
 
 void sepiaFilter(const image<float>& src, image<float>& dst, const filterContext& ctx){
@@ -110,12 +125,12 @@ void mirrorFilter(const image<float>& src, image<float>& dst, const filterContex
 void alphaBlending(const image<float>& src, image<float>& dst, const filterContext& ctx){
 
     resizeToMatchSrc(src, dst);
-    std::vector<float> alpha = {1.0f, 1.0f, 1.0f}; 
-    json data = ctx.data;
+   
     const image<float>& base = ctx.base;
-    if (data.contains("params") && data["params"].contains("alpha")) {
-        alpha = data["params"]["alpha"].get<std::vector<float>>();
-    }
+    assert(base.width == src.width && base.height == src.height);
+
+    std::vector<float> alpha =
+        lookingForParamInCtx<std::vector<float>>(ctx, "alpha", std::vector<float>{1.0f, 1.0f, 1.0f});
 
     assert(alpha.size() == 3);
     assert(alpha[0] >= 0.0f && alpha[0] <= 1.0f);   
@@ -142,16 +157,9 @@ void alphaBlending(const image<float>& src, image<float>& dst, const filterConte
 
 void linearAdjustment(const image<float>& src, image<float>& dst, const filterContext& ctx){
 
-    float offset = 0;
-    float scale = 1.0f;
-    if (ctx.data.contains("params") && ctx.data["params"].contains("offset")) {
-        offset = ((float)ctx.data["params"]["offset"]);
-    }
-    if (ctx.data.contains("params") && ctx.data["params"].contains("scale")) {
-        scale = ctx.data["params"]["scale"];
-    }
-    // Fix offset so it's relative to max value
-    offset /= ((float)MAX_COLOR_CHAR);
+    float offset = lookingForParamInCtx(ctx, "offset", 0.0f)  ; // Fix offset so it's relative to max value
+    float scale = lookingForParamInCtx(ctx, "scale", 1.0f);
+    
     //printf("offset value %f\nscale value %f\n",offset,scale);
     resizeToMatchSrc(src, dst);
     applyPointTransform(src, dst, [offset, scale](const image<float>& src, image<float>& dst, int x, int y){

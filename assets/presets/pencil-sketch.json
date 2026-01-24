@@ -4,14 +4,14 @@
     {
       "filter": "sobel",
       "params": {
-        "greyscale": true      
+        "greyscale": true
       }
     },
     {
       "filter": "linearAdjustment",
       "params": {
-        "scale": 2.0,
-        "offset": -40
+        "scale": 2,
+        "offset": -0.155
       }
     },
     {

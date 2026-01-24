@@ -58,7 +58,13 @@ void applyConvolution(const image<float>& src, image<float>& dst, const Kernel& 
 void applyPointTransform(const image<float>& src, image<float>& dst, coordinateFunction f);
 convolutionConfig readConvolutionConfig(const json& data);
 
-
+template <typename T> T lookingForParamInCtx(const filterContext& ctx, std::string paramName, T defaultValue){
+    nlohmann::json data = ctx.data;
+    if (data.contains("params") && data["params"].contains(paramName)) {
+        return data["params"][paramName].get<T>();
+    }
+    return defaultValue;
+}
 
 
 #endif

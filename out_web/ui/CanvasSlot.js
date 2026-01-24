@@ -5,7 +5,6 @@ export class CanvasSlot {
         this.smoothing = opts.smoothing ?? false;
         this.lastImageData = null;
         
-        // El color de fondo para el "contain"
         this.bg = "#09090b"; 
     }
 
@@ -29,9 +28,6 @@ export class CanvasSlot {
         this.ctx.imageSmoothingEnabled = this.smoothing;
     }
 
-    /**
-     * Dibuja ImageData aplicando "contain" (encajar sin deformar).
-     */
     drawImageData(imageData) {
         const aspect = imageData.width / imageData.height;
         this.lastImageData = imageData;
@@ -39,17 +35,14 @@ export class CanvasSlot {
         this.syncBuffer();
         const { width: cw, height: ch } = this.canvas;
 
-        // 1. Limpiar con el fondo
         this.ctx.fillStyle = this.bg;
         this.ctx.fillRect(0, 0, cw, ch);
 
-        // 2. Crear buffer temporal para escalar (ImageData no se puede escalar directo)
         const tempCanvas = document.createElement('canvas');
         tempCanvas.width = imageData.width;
         tempCanvas.height = imageData.height;
         tempCanvas.getContext('2d').putImageData(imageData, 0, 0);
 
-        // 3. Calcular proporciones (Logic: Contain)
         const scale = Math.min(cw / imageData.width, ch / imageData.height);
         const x = (cw / 2) - (imageData.width / 2) * scale;
         const y = (ch / 2) - (imageData.height / 2) * scale;
@@ -61,9 +54,6 @@ export class CanvasSlot {
         );
     }
 
-    /**
-     * Estado inicial o error.
-     */
     clear(text = "") {
         this.syncBuffer();
         this.ctx.fillStyle = this.bg;

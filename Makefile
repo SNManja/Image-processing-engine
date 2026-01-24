@@ -19,7 +19,9 @@ WASM_FLAGS = -std=c++17 -O3 -Iinclude \
 			-s ALLOW_MEMORY_GROWTH=1 \
 			-s EXPORTED_RUNTIME_METHODS='["cwrap", "ccall", "FS"]' \
 			--bind \
-			--preload-file assets/presets@/presets
+			--preload-file assets/presets@/presets \
+			--preload-file assets/pics@/pics
+
 
 all: $(TARGET)
 

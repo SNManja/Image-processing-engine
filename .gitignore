@@ -1,0 +1,32 @@
+# --- User-defined image directories ---
+pics/
+output/
+
+# --- C++/Wasm Build Artifacts ---
+# --- User directories ---
+pics/
+output/
+
+# --- Specific Wasm artifacts (Don't ignore the whole folder!) ---
+out_web/engine.wasm
+out_web/engine.data
+out_web/engine.js.mem
+out_web/engine.js
+
+# --- System & Misc ---
+.DS_Store
+*.o
+# --- Dependencies and Environment ---
+node_modules/
+.env
+
+# --- OS and IDE specific files ---
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+
+# --- Logs ---
+*.log
+npm-debug.log*

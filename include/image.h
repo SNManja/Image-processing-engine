@@ -3,9 +3,13 @@
 
 #include <vector>
 #include <cstdio>
+#include <type_traits>
+
 
 constexpr float MAX_PIXEL_VALUE = 1.0f;
-constexpr unsigned char MAX_COLOR_CHAR = 255;
+constexpr float MIN_PIXEL_VALUE = 0.0f;
+constexpr unsigned char MAX_COLOR_VALUE = 255;
+constexpr float MAX_COLOR_VALUE_FLOAT = 255.0f;
 
 inline float clamp(float value) {
     if (value > MAX_PIXEL_VALUE) return MAX_PIXEL_VALUE;
@@ -23,17 +27,24 @@ template <typename T> struct pixel {
     pixel(T r, T g, T b) : r(r), g(g), b(b) {}
 
     template <typename U>
-    pixel(const pixel<U>& orig) {
-        if constexpr (std::is_same_v<T, U>) {
-        r = orig.r; g = orig.g; b = orig.b;
-        } else if constexpr (std::is_same_v<T, unsigned char> && std::is_floating_point_v<U>) {
-            r = static_cast<T>(clamp(orig.r)*255.0f);
-            g = static_cast<T>(clamp(orig.g)*255.0f);
-            b = static_cast<T>(clamp(orig.b)*255.0f);
-        } else {
-            r = static_cast<T>(orig.r/255.0f);
-            g = static_cast<T>(orig.g/255.0f);
-            b = static_cast<T>(orig.b/255.0f);
+        pixel(const pixel<U>& orig) {
+            if constexpr (std::is_same_v<T, U>) {
+            r = orig.r; g = orig.g; b = orig.b;
+        }
+        else if constexpr (std::is_floating_point_v<T> && std::is_integral_v<U>) {
+            r = static_cast<T>(orig.r) / MAX_COLOR_VALUE_FLOAT;
+            g = static_cast<T>(orig.g) / MAX_COLOR_VALUE_FLOAT;
+            b = static_cast<T>(orig.b) / MAX_COLOR_VALUE_FLOAT;
+        }
+        else if constexpr (std::is_integral_v<T> && std::is_floating_point_v<U>) {
+            r = static_cast<T>(clamp(static_cast<float>(orig.r)) * MAX_COLOR_VALUE_FLOAT);
+            g = static_cast<T>(clamp(static_cast<float>(orig.g)) * MAX_COLOR_VALUE_FLOAT);
+            b = static_cast<T>(clamp(static_cast<float>(orig.b)) * MAX_COLOR_VALUE_FLOAT);
+        }
+        else { // integral -> integral, float -> float (distintos), etc.
+            r = static_cast<T>(orig.r);
+            g = static_cast<T>(orig.g);
+            b = static_cast<T>(orig.b);
         }
     }
 

@@ -15,7 +15,6 @@ async function runEngine(){
         window.fileAdmin = new FileAdministrator(engine);
         console.log("memfs initialized:", engine.FS);
         ensureFolders();
-        await loadExamplePics();
         setupJSONPipelineEditor();
         initUI(engine);
     }
