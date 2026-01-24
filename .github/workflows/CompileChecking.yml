@@ -6,9 +6,21 @@ permissions:
   id-token: write
 
 on:
+  pull_request:
+    paths-ignore:
+      - "**/*.md"
+      - "docs/**"
+      - ".github/**"
   push:
     branches: ["main"]
-  pull_request:
+    paths-ignore:
+      - "**/*.md"
+      - "docs/**"
+      - ".github/**"
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   build_native:
@@ -43,15 +55,15 @@ jobs:
 
   deploy:
     name: "Deploy to Pages"
-    needs: [build_wasm, run-test] 
-    if: github.ref == 'refs/heads/main' 
+    needs: [build_wasm, run-test]
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Download WASM artifact
         uses: actions/download-artifact@v4
         with:
@@ -64,7 +76,7 @@ jobs:
       - name: Upload artifact to Pages
         uses: actions/upload-pages-artifact@v3
         with:
-          path: './out_web' 
+          path: "./out_web"
 
       - name: Deploy to GitHub Pages
         id: deployment

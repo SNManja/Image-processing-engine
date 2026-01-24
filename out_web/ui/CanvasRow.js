@@ -1,22 +1,22 @@
 import { CanvasSlot } from "./CanvasSlot.js";
 
 export class CanvasRow {
-    constructor(opts) {
-        this.step = opts.step;
-        this.originalName = opts.originalName ?? "—";
-        this.filteredName = opts.filteredName ?? "pending";
-        this.aspect = opts.aspect ?? "16/9";
+	constructor(opts) {
+		this.step = opts.step;
+		this.originalName = opts.originalName ?? "—";
+		this.filteredName = opts.filteredName ?? "pending";
+		this.aspect = opts.aspect ?? "16/9";
 
-        this.rootEl = null;
-        this.origSlot = null;
-        this.filtSlot = null;
-    }
+		this.rootEl = null;
+		this.origSlot = null;
+		this.filtSlot = null;
+	}
 
-    mount(rowsParent) {
-        const row = document.createElement("div");
-        row.className = "grid gap-4 md:grid-cols-2 canvas-row mb-8";
-        
-        row.innerHTML = `
+	mount(rowsParent) {
+		const row = document.createElement("div");
+		row.className = "grid gap-4 md:grid-cols-2 canvas-row mb-8";
+
+		row.innerHTML = `
             <div class="relative group rounded-2xl border border-zinc-800 bg-zinc-950/40 p-3 transition-all hover:border-zinc-700">
                 
                 <button class="delete-btn absolute top-5 right-5 z-10 
@@ -47,55 +47,57 @@ export class CanvasRow {
             </div>
         `;
 
-        rowsParent.appendChild(row);
+		rowsParent.appendChild(row);
 
-        const deleteBtn = row.querySelector(".delete-btn");
-        deleteBtn.onclick = (e) => {
-            e.stopPropagation();
-            window.fileAdmin.deleteRow(this.originalName);
-        };
+		const deleteBtn = row.querySelector(".delete-btn");
+		deleteBtn.onclick = (e) => {
+			e.stopPropagation();
+			window.fileAdmin.deleteRow(this.originalName);
+		};
 
-        // Selección de elementos para Slots y Modal
-        const canvases = row.querySelectorAll("canvas");
-        canvases.forEach((canvas, index) => {
-            canvas.classList.add('cursor-zoom-in');
-            canvas.onclick = () => {
-                const slot = index === 0 ? this.origSlot : this.filtSlot;
-                window.openImageModal(slot.lastImageData, "Tip: Click to close image preview");
-            };
-        });
+		// Selección de elementos para Slots y Modal
+		const canvases = row.querySelectorAll("canvas");
+		canvases.forEach((canvas, index) => {
+			canvas.classList.add("cursor-zoom-in");
+			canvas.onclick = () => {
+				const slot = index === 0 ? this.origSlot : this.filtSlot;
+				window.openImageModal(
+					slot.lastImageData,
+					"Tip: Click to close image preview",
+				);
+			};
+		});
 
-        this.origSlot = new CanvasSlot(canvases[0]);
-        this.filtSlot = new CanvasSlot(canvases[1]);
-        this.rootEl = row;
-        this.origNameEl = row.querySelector('[data-role="orig-name"]');
-        this.filtNameEl = row.querySelector('[data-role="filt-name"]');
+		this.origSlot = new CanvasSlot(canvases[0]);
+		this.filtSlot = new CanvasSlot(canvases[1]);
+		this.rootEl = row;
+		this.origNameEl = row.querySelector('[data-role="orig-name"]');
+		this.filtNameEl = row.querySelector('[data-role="filt-name"]');
 
-        return this;
-    }
+		return this;
+	}
 
-    // Métodos limpios para que el FileAdministrator los llame
-    drawOriginal(imageData) {
-        this.origSlot.drawImageData(imageData);
-    }
+	// Métodos limpios para que el FileAdministrator los llame
+	drawOriginal(imageData) {
+		this.origSlot.drawImageData(imageData);
+	}
 
-    drawFiltered(imageData) {
-        this.filtSlot.drawImageData(imageData);
-    }
+	drawFiltered(imageData) {
+		this.filtSlot.drawImageData(imageData);
+	}
 
-    setFilteredName(name) {
-        this.filtNameEl.textContent = name;
-    }
+	setFilteredName(name) {
+		this.filtNameEl.textContent = name;
+	}
 
+	destroy() {
+		if (this.rootEl) {
+			this.rootEl.remove();
+		}
 
-    destroy() {
-        if (this.rootEl) {
-            this.rootEl.remove();
-        }
-        
-        // Limpieza de referencias
-        this.origSlot = null;
-        this.filtSlot = null;
-        this.rootEl = null;
-    }
+		// Limpieza de referencias
+		this.origSlot = null;
+		this.filtSlot = null;
+		this.rootEl = null;
+	}
 }

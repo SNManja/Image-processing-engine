@@ -1,1 +1,2 @@
 src/include/json.hpp linguist-vendored
+out_web/vendor/jszip.min.js linguist-vendored

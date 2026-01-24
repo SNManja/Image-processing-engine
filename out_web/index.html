@@ -1,193 +1,302 @@
 <!doctype html>
 <html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script src="https://cdn.tailwindcss.com"></script>
-    <title>PPM P6 Image processing engine</title>
-  </head>
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<script src="https://cdn.tailwindcss.com"></script>
+		<title>Image processing engine</title>
+	</head>
 
-  <body class="min-h-screen bg-zinc-950 text-zinc-100">
-    <header class="sticky top-0 z-10 border-b border-zinc-800 bg-zinc-950/80 backdrop-blur">
-      <div class="mx-auto flex max-w-7xl items-center justify-between px-4 py-3">
-        <div class="text-sm font-semibold">PPM P6 Image Processing Engine</div>
-        <div class="flex items-center gap-2">
-          <button id="presets-button" class="rounded-xl border border-zinc-800 px-3 py-2 text-sm hover:bg-zinc-900">Presets</button>
-        </div>
-      </div>
-    </header>
+	<body class="min-h-screen bg-zinc-950 text-zinc-100">
+		<header
+			class="sticky top-0 z-10 border-b border-zinc-800 bg-zinc-950/80 backdrop-blur"
+		>
+			<div
+				class="mx-auto flex max-w-7xl items-center justify-between px-4 py-3"
+			>
+				<div class="text-sm font-semibold">Image Processing Engine</div>
+				<div class="flex items-center gap-2">
+					<button
+						id="presets-button"
+						class="rounded-xl border border-zinc-800 px-3 py-2 text-sm hover:bg-zinc-900"
+					>
+						Presets
+					</button>
+				</div>
+			</div>
+		</header>
 
-    <main class="mx-auto max-w-7xl px-4 py-6">
-      <div class="grid gap-6 lg:grid-cols-12">
-        <!-- LEFT: Preview -->
-        <section class="lg:col-span-7">
-          <div class="rounded-2xl border border-zinc-800 bg-zinc-900/30 p-4">
-            <!-- top row -->
-            <div class="mb-3 flex items-center justify-between">
-              <div class="text-sm font-semibold text-zinc-200">Preview</div>
-              
-            </div>
+		<main class="mx-auto max-w-7xl px-4 py-6">
+			<div class="grid gap-6 lg:grid-cols-12">
+				<!-- LEFT: Preview -->
+				<section class="lg:col-span-7">
+					<div
+						class="rounded-2xl border border-zinc-800 bg-zinc-900/30 p-4"
+					>
+						<!-- top row -->
+						<div class="mb-3 flex items-center justify-between">
+							<div class="text-sm font-semibold text-zinc-200">
+								Preview
+							</div>
+						</div>
 
-            <!-- titles aligned with rail -->
-            <div class="mb-3 grid grid-cols-[52px_1fr_1fr] items-center gap-4">
-              <div></div>
-              <h2 class="text-sm font-semibold text-zinc-200">Original</h2>
-              <h2 class="text-sm font-semibold text-zinc-200">Filtered</h2>
-            </div>
+						<!-- titles aligned with rail -->
+						<div
+							class="mb-3 grid grid-cols-[52px_1fr_1fr] items-center gap-4"
+						>
+							<div></div>
+							<h2 class="text-sm font-semibold text-zinc-200">
+								Original
+							</h2>
+							<h2 class="text-sm font-semibold text-zinc-200">
+								Filtered
+							</h2>
+						</div>
 
-            <div class="grid grid-cols-[52px_1fr] gap-4">
-              <!-- rail -->
-              <div class="flex flex-col items-center gap-3 pt-1">
-                <button class="grid h-10 w-10 place-items-center rounded-xl border border-zinc-800 bg-zinc-950/50 text-lg hover:bg-zinc-900" id="upload-btn">+</button>
-                <div class="mt-2 h-px w-8 bg-zinc-800"></div>
-                <button id="download-button" class="grid h-10 w-10 place-items-center rounded-xl border border-zinc-800 bg-zinc-950/50 hover:bg-zinc-900 transition-colors" title="Download ZIP">
-                  <svg xmlns="http://www.w3.org/2000/svg" 
-                      width="14" 
-                      height="14" 
-                      viewBox="0 0 24 24" 
-                      fill="none" 
-                      stroke="currentColor" 
-                      stroke-width="2.5" 
-                      stroke-linecap="round" 
-                      stroke-linejoin="round" 
-                      class="text-zinc-100">
-                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                      <polyline points="7 10 12 15 17 10"></polyline>
-                      <line x1="12" x2="12" y1="15" y2="3"></line>
-                  </svg>
-              </button>
-              </div>
+						<div class="grid grid-cols-[52px_1fr] gap-4">
+							<!-- rail -->
+							<div class="flex flex-col items-center gap-3 pt-1">
+								<button
+									class="grid h-10 w-10 place-items-center rounded-xl border border-zinc-800 bg-zinc-950/50 text-lg hover:bg-zinc-900"
+									id="upload-btn"
+								>
+									+
+								</button>
+								<div class="mt-2 h-px w-8 bg-zinc-800"></div>
+								<button
+									id="download-button"
+									class="grid h-10 w-10 place-items-center rounded-xl border border-zinc-800 bg-zinc-950/50 hover:bg-zinc-900 transition-colors"
+									title="Download ZIP"
+								>
+									<svg
+										xmlns="http://www.w3.org/2000/svg"
+										width="14"
+										height="14"
+										viewBox="0 0 24 24"
+										fill="none"
+										stroke="currentColor"
+										stroke-width="2.5"
+										stroke-linecap="round"
+										stroke-linejoin="round"
+										class="text-zinc-100"
+									>
+										<path
+											d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"
+										></path>
+										<polyline
+											points="7 10 12 15 17 10"
+										></polyline>
+										<line
+											x1="12"
+											x2="12"
+											y1="15"
+											y2="3"
+										></line>
+									</svg>
+								</button>
+							</div>
 
-              <!-- SHARED scroll container for rows -->
-              <div class="h-[560px] overflow-y-auto pr-2">
-                <div class="space-y-3" id="slot-rows-parent">
-                  
+							<!-- SHARED scroll container for rows -->
+							<div class="h-[560px] overflow-y-auto pr-2">
+								<div
+									class="space-y-3"
+									id="slot-rows-parent"
+								></div>
+							</div>
+						</div>
 
-                </div>
-              </div>
-            </div>
+						<div class="mt-3 text-xs text-zinc-500">
+							Tip: Press ? for help
+						</div>
+					</div>
+				</section>
 
-            <div class="mt-3 text-xs text-zinc-500">
-              Tip: Press ? for help
-            </div>
-          </div>
-        </section>
+				<!-- Divider -->
+				<div class="hidden lg:block lg:col-span-1">
+					<div class="mx-auto h-full w-px bg-zinc-800"></div>
+				</div>
 
-        <!-- Divider -->
-        <div class="hidden lg:block lg:col-span-1">
-          <div class="mx-auto h-full w-px bg-zinc-800"></div>
-        </div>
+				<!-- Right: Console -->
+				<aside class="lg:col-span-4">
+					<div
+						class="flex h-full flex-col rounded-2xl border border-zinc-800 bg-zinc-900/30 p-4"
+					>
+						<div class="mb-3 flex items-center justify-between">
+							<div class="text-sm font-semibold text-zinc-200">
+								Pipeline
+							</div>
+							<div class="flex items-center gap-2">
+								<button
+									class="grid h-10 w-10 place-items-center rounded-xl border border-zinc-800 hover:bg-zinc-900"
+									id="json-help-button"
+								>
+									?
+								</button>
+							</div>
+						</div>
 
-        <!-- Right: Console -->
-        <aside class="lg:col-span-4">
-          <div class="flex h-full flex-col rounded-2xl border border-zinc-800 bg-zinc-900/30 p-4">
-            <div class="mb-3 flex items-center justify-between">
-              <div class="text-sm font-semibold text-zinc-200">Pipeline</div>
-              <div class="flex items-center gap-2">
-                <button class="grid h-10 w-10 place-items-center rounded-xl border border-zinc-800 hover:bg-zinc-900" id="json-help-button">?</button>
-              </div>
-            </div>
+						<div
+							class="flex flex-1 flex-col rounded-2xl border border-zinc-800 bg-zinc-950"
+						>
+							<div
+								class="flex items-center justify-between border-b border-zinc-800 px-3 py-2"
+							>
+								<span class="text-xs text-zinc-400"
+									>pipeline.json</span
+								>
+							</div>
+							<div
+								id="json-editor-container"
+								class="flex-1 w-full min-h-[450px] border border-zinc-800 bg-zinc-950/50 rounded-xl overflow-hidden font-mono text-[13px] antialiased"
+							></div>
+						</div>
 
-            <div class="flex flex-1 flex-col rounded-2xl border border-zinc-800 bg-zinc-950">
-              <div class="flex items-center justify-between border-b border-zinc-800 px-3 py-2">
-                <span class="text-xs text-zinc-400">pipeline.json</span>
-              </div>
-              <div 
-                id="json-editor-container" 
-                class="flex-1 w-full min-h-[450px] border border-zinc-800 bg-zinc-950/50 rounded-xl overflow-hidden font-mono text-[13px] antialiased"
-              ></div>
-            </div>
+						<div class="mt-4 flex items-center justify-between">
+							<div class="text-xs text-zinc-500">
+								Status:
+								<span class="text-zinc-300" id="status-flag"
+									>idle</span
+								>
+							</div>
+							<button
+								id="process-btn"
+								class="rounded-xl bg-zinc-100 px-5 py-2 text-sm font-medium text-zinc-900 hover:bg-white disabled:bg-zinc-800 disabled:text-zinc-300 disabled:cursor-not-allowed"
+							>
+								Process
+							</button>
+						</div>
+					</div>
+				</aside>
+			</div>
+		</main>
+		<script src="engine.js"></script>
+		<script
+			type="module"
+			src="./file-processing/image-classes/PPMImage.js"
+		></script>
+		<script type="module" src="./ui/CanvasRow.js"></script>
+		<script type="module" src="./main.js"></script>
+		<script type="module" src="./ui/CanvasSlot.js"></script>
+		<script
+			type="module"
+			src="./file-processing/FilesAdministrator.js"
+		></script>
+		<script type="module" src="./file-processing/paths.js"></script>
+		<script type="module" src="./ui/setupJSONPipelineEditor.js"></script>
+		<script src="./vendor/jszip.min.js"></script>
+		<style>
+			::-webkit-scrollbar {
+				width: 11px; /* Un poco más ancho (ajuste pedido) */
+				height: 13px; /* Para scroll horizontal */
+			}
 
-            <div class="mt-4 flex items-center justify-between">
-              <div class="text-xs text-zinc-500">Status: <span class="text-zinc-300" id="status-flag">idle</span></div>
-              <button id="process-btn" class="rounded-xl bg-zinc-100 px-5 py-2 text-sm font-medium text-zinc-900 hover:bg-white disabled:bg-zinc-800 disabled:text-zinc-300 disabled:cursor-not-allowed">
-                Process
-              </button>
-            </div>
-          </div>
-        </aside>
-      </div>
-    </main>
-    <script src="engine.js"></script>
-    <script type="module" src="./PPM_processing/PPMImage.js"></script>
-    <script type="module" src="./ui/CanvasRow.js"></script>
-    <script type="module" src="./main.js"></script>
-    <script type="module" src="./ui/CanvasSlot.js"></script>
-    <script type="module" src="./PPM_processing/FilesAdministrator.js"></script>
-    <script type="module" src="./PPM_processing/paths.js"></script>
-    <script type="module" src="./ui/setupJSONPipelineEditor.js"></script>
-    <script src="./vendor/jszip.min.js"></script>
- <style>
-  ::-webkit-scrollbar {
-    width: 11px;               /* Un poco más ancho (ajuste pedido) */
-    height: 13px;              /* Para scroll horizontal */
-  }
+			/* 2. El Fondo (Track) */
+			::-webkit-scrollbar-track {
+				background-color: #09090b; /* zinc-950 */
+				border-radius: 9999px; /* Curva total */
+				/* El secreto: */
+				border: 2px solid transparent;
+				background-clip: content-box;
+			}
 
-  /* 2. El Fondo (Track) */
-  ::-webkit-scrollbar-track {
-    background-color: #09090b; /* zinc-950 */
-    border-radius: 9999px;     /* Curva total */
-    /* El secreto: */
-    border: 2px solid transparent; 
-    background-clip: content-box;
-  }
+			/* 3. La Barra (Thumb) */
+			::-webkit-scrollbar-thumb {
+				background-color: #27272a; /* zinc-800 */
+				border-radius: 9999px; /* Curva total */
+				/* El secreto: */
+				border: 2px solid transparent;
+				background-clip: content-box;
+			}
 
-  /* 3. La Barra (Thumb) */
-  ::-webkit-scrollbar-thumb {
-    background-color: #27272a; /* zinc-800 */
-    border-radius: 9999px;     /* Curva total */
-    /* El secreto: */
-    border: 2px solid transparent;
-    background-clip: content-box;
-  }
+			/* 4. Efecto al pasar el mouse */
+			::-webkit-scrollbar-thumb:hover {
+				background-color: #3f3f46; /* zinc-700 */
+			}
 
-  /* 4. Efecto al pasar el mouse */
-  ::-webkit-scrollbar-thumb:hover {
-    background-color: #3f3f46; /* zinc-700 */
-  }
+			/* Estilo para el Editor de JSON ( Emerald sutil ) */
+			#pipeline-json-textarea::-webkit-scrollbar-thumb {
+				background-color: #3f3f46;
+				background-clip: content-box;
+			}
+		</style>
+		<div
+			id="image-modal"
+			class="fixed inset-0 z-50 flex items-center justify-center bg-zinc-950/90 backdrop-blur-sm p-4 transition-all duration-300 ease-out opacity-0 pointer-events-none"
+		>
+			<div
+				id="modal-container"
+				class="relative transform transition-all duration-300 scale-90 opacity-0"
+			>
+				<canvas
+					id="modal-canvas"
+					class="max-w-full max-h-[85vh] shadow-2xl rounded-lg image-render-pixelated"
+				></canvas>
+				<div
+					id="modal-caption"
+					class="mt-4 text-center text-zinc-400 text-sm font-mono italic"
+				></div>
+			</div>
+		</div>
+		<div
+			id="json-help-modal"
+			class="hidden fixed inset-0 bg-zinc-950/90 backdrop-blur-sm z-50 flex items-center justify-center p-4 transition-all duration-200"
+		>
+			<div
+				class="bg-zinc-950 border border-zinc-800 w-[640px] h-[640px] rounded-2xl flex flex-col shadow-2xl overflow-hidden"
+			>
+				<div
+					class="flex border-b border-zinc-800 p-2 gap-2 bg-zinc-900/50 rounded-t-2xl"
+				>
+					<button
+						id="btn-tab-filters"
+						class="flex-1 py-2 px-4 rounded-xl font-semibold transition-colors bg-zinc-100 text-zinc-950 antialiased"
+					>
+						Filter Reference
+					</button>
+					<button
+						id="btn-tab-schema"
+						class="flex-1 py-2 px-4 rounded-xl font-semibold transition-colors text-zinc-400 hover:bg-zinc-800/50 antialiased"
+					>
+						JSON Schema
+					</button>
+					<button
+						id="close-help-modal"
+						class="px-4 text-zinc-500 hover:text-zinc-100 transition-colors focus:outline-none"
+					>
+						✕
+					</button>
+				</div>
 
-  /* Estilo para el Editor de JSON ( Emerald sutil ) */
-  #pipeline-json-textarea::-webkit-scrollbar-thumb {
-    background-color:  #3f3f46;
-    background-clip: content-box;
-  }
-</style>
-    <div id="image-modal" 
-        class="fixed inset-0 z-50 flex items-center justify-center bg-zinc-950/90 backdrop-blur-sm p-4 transition-all duration-300 ease-out opacity-0 pointer-events-none">
-        
-        <div id="modal-container" class="relative transform transition-all duration-300 scale-90 opacity-0">
-            <canvas id="modal-canvas" class="max-w-full max-h-[85vh] shadow-2xl rounded-lg image-render-pixelated"></canvas>
-            <div id="modal-caption" class="mt-4 text-center text-zinc-400 text-sm font-mono italic"></div>
-        </div>
-    </div>
-    <div id="json-help-modal" class="hidden fixed inset-0 bg-zinc-950/90 backdrop-blur-sm z-50 flex items-center justify-center p-4 transition-all duration-200">
-        <div class="bg-zinc-950 border border-zinc-800 w-[640px] h-[640px] rounded-2xl flex flex-col shadow-2xl overflow-hidden">
-            
-            <div class="flex border-b border-zinc-800 p-2 gap-2 bg-zinc-900/50 rounded-t-2xl">
-                <button id="btn-tab-filters" class="flex-1 py-2 px-4 rounded-xl font-semibold transition-colors bg-zinc-100 text-zinc-950 antialiased">
-                    Filter Reference
-                </button>
-                <button id="btn-tab-schema" class="flex-1 py-2 px-4 rounded-xl font-semibold transition-colors text-zinc-400 hover:bg-zinc-800/50 antialiased">
-                    JSON Schema
-                </button>
-                <button id="close-help-modal" class="px-4 text-zinc-500 hover:text-zinc-100 transition-colors focus:outline-none">✕</button>
-            </div>
+				<div
+					class="p-6 overflow-y-auto custom-scrollbar flex-1 text-[13px] leading-relaxed"
+					style="scrollbar-gutter: stable"
+				>
+					<div id="content-tab-filters" class="space-y-6">
+						<div
+							class="flex items-center gap-3 text-zinc-500 animate-pulse"
+						>
+							<div class="h-2 w-2 rounded-full bg-zinc-700"></div>
+							<span class="font-mono text-xs text-zinc-500"
+								>Loading...</span
+							>
+						</div>
+					</div>
 
-            <div class="p-6 overflow-y-auto custom-scrollbar flex-1 text-[13px] leading-relaxed" style="scrollbar-gutter: stable;">
-                <div id="content-tab-filters" class="space-y-6">
-                    <div class="flex items-center gap-3 text-zinc-500 animate-pulse">
-                        <div class="h-2 w-2 rounded-full bg-zinc-700"></div>
-                        <span class="font-mono text-xs text-zinc-500">Loading...</span>
-                    </div>
-                </div>
-
-                <div id="content-tab-schema" class="hidden space-y-5">
-                    <div class="rounded-xl border border-zinc-800 bg-zinc-900/20 p-4">
-                        <h4 class="text-zinc-200 font-semibold mb-2 flex items-center gap-2">
-                            <span class="h-1 w-3 bg-cyan-500 rounded-full"></span>
-                            Pipeline Structure
-                        </h4>
-                        <pre class="font-mono text-cyan-400 leading-tight overflow-x-auto p-2">
+					<div id="content-tab-schema" class="hidden space-y-5">
+						<div
+							class="rounded-xl border border-zinc-800 bg-zinc-900/20 p-4"
+						>
+							<h4
+								class="text-zinc-200 font-semibold mb-2 flex items-center gap-2"
+							>
+								<span
+									class="h-1 w-3 bg-cyan-500 rounded-full"
+								></span>
+								Pipeline Structure
+							</h4>
+							<pre
+								class="font-mono text-cyan-400 leading-tight overflow-x-auto p-2"
+							>
 {
   "pipeline": [
     {
@@ -212,45 +321,55 @@
   },
   "output_suffix": (string)
 }
-    </pre>
-                    </div>
-                    <p class="text-zinc-500 text-xs px-1 italic">
-                        Note: Visual histogram rendering is not supported in the web version. If enabled, raw statistical data will be included in JSON format within the processed output.
-                    </p>
-                </div>
-            </div>
-        </div>
-    </div>
-    <input type="file" id="ppm-input" accept=".ppm" multiple class="hidden" />
-    <div id="presets-modal" class="hidden fixed inset-0 bg-zinc-950/90 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-    <div class="bg-zinc-950 border border-zinc-800 w-[650px] h-[550px] rounded-2xl flex flex-col shadow-2xl overflow-hidden">
-        
-        <div class="flex items-center justify-between border-b border-zinc-800 p-4 bg-zinc-900/30">
-            <h3 class="text-xs font-bold text-zinc-100 uppercase tracking-widest">Pipeline Presets</h3>
-            <button id="close-presets" class="text-zinc-500 hover:text-zinc-100 transition-colors">✕</button>
-        </div>
+    </pre
+							>
+						</div>
+						<p class="text-zinc-500 text-xs px-1 italic">
+							Note: Visual histogram rendering is not supported in
+							the web version. If enabled, raw statistical data
+							will be included in JSON format within the processed
+							output.
+						</p>
+					</div>
+				</div>
+			</div>
+		</div>
+		<input
+			type="file"
+			id="image-input"
+			accept=".ppm, .jpg, .jpeg, .png, image/jpeg, image/png"
+			multiple
+			class="hidden"
+		/>
+		<div
+			id="presets-modal"
+			class="hidden fixed inset-0 bg-zinc-950/90 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+		>
+			<div
+				class="bg-zinc-950 border border-zinc-800 w-[650px] h-[550px] rounded-2xl flex flex-col shadow-2xl overflow-hidden"
+			>
+				<div
+					class="flex items-center justify-between border-b border-zinc-800 p-4 bg-zinc-900/30"
+				>
+					<h3
+						class="text-xs font-bold text-zinc-100 uppercase tracking-widest"
+					>
+						Pipeline Presets
+					</h3>
+					<button
+						id="close-presets"
+						class="text-zinc-500 hover:text-zinc-100 transition-colors"
+					>
+						✕
+					</button>
+				</div>
 
-        <div class="flex-1 overflow-y-auto p-4 space-y-2 custom-scrollbar" style="scrollbar-gutter: stable;" id="preset-container">
-            
-            <div class="group flex items-center justify-between gap-6 rounded-xl border border-zinc-800 bg-zinc-900/10 p-4 hover:bg-zinc-900/40 transition-all">
-                
-                <div class="flex flex-col flex-1 min-w-0">
-                    <span class="text-[13px] font-bold text-zinc-100 truncate">Example</span>
-                    <p class="text-xs text-zinc-500 mt-0.5 line-clamp-1">To be implemented.</p>
-                </div>
-                
-                <div class="flex items-center gap-2 shrink-0">
-                    <button class="rounded-lg bg-zinc-100 px-4 py-1.5 text-[11px] font-bold text-zinc-950 hover:bg-white transition-colors">
-                        Apply
-                    </button>
-                    <button class="rounded-lg border border-zinc-800 px-3 py-1.5 text-[11px] font-medium text-zinc-400 hover:bg-zinc-800 hover:text-zinc-100 transition-colors">
-                        Copy JSON
-                    </button>
-                </div>
-            </div>
-
-            </div>
-    </div>
-</div>
-  </body>
+				<div
+					class="flex-1 overflow-y-auto p-4 space-y-2 custom-scrollbar"
+					style="scrollbar-gutter: stable"
+					id="preset-container"
+				></div>
+			</div>
+		</div>
+	</body>
 </html>
