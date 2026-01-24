@@ -20,7 +20,7 @@ WASM_FLAGS = -std=c++17 -O3 -Iinclude \
 			-s EXPORTED_RUNTIME_METHODS='["cwrap", "ccall", "FS"]' \
 			--bind \
 			--preload-file assets/presets@/presets \
-			--preload-file assets/pics@/pics
+			--preload-file assets/exportedPics@/pics
 
 
 all: $(TARGET)
