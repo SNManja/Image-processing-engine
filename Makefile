@@ -18,7 +18,7 @@ WASM_FLAGS = -std=c++17 -O3 -Iinclude \
             -s MODULARIZE=1 \
             -s EXPORT_NAME='createEngine' \
             -s EXPORTED_RUNTIME_METHODS='["cwrap", "ccall", "FS"]' \
-            -s TEXTDECODER=0 \
+            -s TEXTDECODER=1 \
             -s ASSERTIONS=1 \
             --bind \
             --preload-file assets/presets@/presets \
