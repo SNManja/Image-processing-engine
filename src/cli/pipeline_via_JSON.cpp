@@ -7,7 +7,8 @@
 #include "histogram.h"
 #include <iostream>
 #include <filesystem>
-
+#include <thread>
+#include <mutex>
 
 
 using json = nlohmann::json;
@@ -42,7 +43,8 @@ void ensureFolder(const std::string& ruta) {
     }
 }
 
-void pipelineViaJSON(std::string PICS_DIR, std::string OUTPUT_DIR, std::string JSON_PATH) {
+void batchPipelineViaJson(std::string PICS_DIR, std::string OUTPUT_DIR, std::string JSON_PATH) {
+    
     std::ifstream file(JSON_PATH);
     assert(file.is_open());
     json data = json::parse(file);
@@ -62,47 +64,82 @@ void pipelineViaJSON(std::string PICS_DIR, std::string OUTPUT_DIR, std::string J
     ensureFolder(histogramPath);
     clearFolder(histogramPath);
     
+    std::vector<std::string> imgQueue;
+    int threadNum = std::thread::hardware_concurrency();
+    std::vector<std::thread> threads;
+    std::mutex queueMutex;
+    if (threadNum == 0) threadNum = 2; // Fallback
+    
 
     struct dirent* dirEntry;
-    int numberOfImages = 0;
     clearFolder(OUTPUT_DIR + "/stats/");
     while ((dirEntry = readdir(directory)) != NULL) {
         if (dirEntry->d_type == DT_REG) {
             std::string fileName = dirEntry->d_name;
             std::string ext = fileName.substr(fileName.find_last_of(".") + 1);
+            // processSingleImage(ext, fileName, PICS_DIR, OUTPUT_DIR, data);
             if (ext == "ppm" || ext == "jpg" || ext == "jpeg" || ext == "png") {
-                image<float> src = read_image(PICS_DIR + "/" + fileName);
-                image<float> original = src; // Keep a copy of the original image
-                for(const auto& step : data["pipeline"]){
-                    if (step.contains("filter")) {
-                        image<float> dst;
-                        std::string filterName = step.at("filter");
-                        FilterDescriptor fdesc = getFilterDescriptor(filterName);
-                        if (fdesc.func == nullptr) {
-                            printf("Skipping unknown filter %s\n", filterName.c_str());
-                            continue;
-                        }
-                        fdesc.func(src, dst, { step, original });
-                        std::swap(src, dst);
-                    }
-                }
-                if(data.contains("output_suffix")) {
-                    std::string outputSuffix = data["output_suffix"];
-                    fileName = fileName.substr(0, fileName.find_last_of(".")) + outputSuffix;
-                    fileName += ".";
-                    fileName += ext;
-                }
-                std::string outPath = OUTPUT_DIR + "/" + fileName;
-                //printf("Processed img %d\n", numberOfImages);
-                //printf("Output path: %s\n", outPath.c_str());
-                // calcStatistics(ucharRes, statsConfig, histogramPath, fileName);
-                write_image(src, outPath.c_str());
-                numberOfImages++;
+                imgQueue.push_back(fileName);
             }
         }
-                
     }
     closedir(directory);
+
+    for (int i = 0; i < threadNum; ++i) {
+        threads.emplace_back([&,i]{
+            std::string fileName;
+            int threadNum = i;
+            while (true) {
+                {
+                    std::lock_guard<std::mutex> lock(queueMutex);
+                    if (imgQueue.empty()) { 
+                        return;
+                    }
+                    printf("Thread num %d took image %s\n", threadNum, imgQueue.back().c_str());
+                    fileName = imgQueue.back();
+                    imgQueue.pop_back();
+                }    
+                processSingleImage(fileName, PICS_DIR, OUTPUT_DIR, data);
+                printf("Thread num %d finished image %s\n", threadNum, fileName.c_str());
+            }
+            
+        });
+    }
+    for (auto& t : threads) {
+        if (t.joinable()) t.join();
+    }
+
+}
+
+void processSingleImage(std::string fileName, std::string PICS_DIR, std::string OUTPUT_DIR, json data){
+    std::string ext = fileName.substr(fileName.find_last_of(".") + 1);
+    if (ext == "ppm" || ext == "jpg" || ext == "jpeg" || ext == "png") {
+        image<float> src = read_image(PICS_DIR + "/" + fileName);
+        image<float> original = src; // Keep a copy of the original image
+        for(const auto& step : data["pipeline"]){
+            if (step.contains("filter")) {
+                image<float> dst;
+                std::string filterName = step.at("filter");
+                FilterDescriptor fdesc = getFilterDescriptor(filterName);
+                if (fdesc.func == nullptr) {
+                    printf("Skipping unknown filter %s\n", filterName.c_str());
+                    continue;
+                }
+                fdesc.func(src, dst, { step, original });
+                std::swap(src, dst);
+            }
+        }
+        if(data.contains("output_suffix")) {
+            std::string outputSuffix = data["output_suffix"];
+            fileName = fileName.substr(0, fileName.find_last_of(".")) + outputSuffix;
+            fileName += ".";
+            fileName += ext;
+        }
+        std::string outPath = OUTPUT_DIR + "/" + fileName;
+        // calcStatistics(ucharRes, statsConfig, histogramPath, fileName);
+        write_image(src, outPath.c_str());
+                
+    }
 }
 
 void saveJson(const json& j, const std::string& path) {

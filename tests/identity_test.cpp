@@ -12,7 +12,7 @@ int main(){
     for (const std::string& ppmname : PPM_TO_TEST){
         std::string ppmInPath = PICS_DIR + ppmname + ".ppm";
         image<unsigned char> src = read_image(ppmInPath);
-        pipelineViaJSON(PICS_DIR, OUTPUT_DIR, JSON_PATH);
+        batchPipelineViaJson(PICS_DIR, OUTPUT_DIR, JSON_PATH);
         std::string ppmOutPath = OUTPUT_DIR + ppmname + "_identity.ppm";
         image<unsigned char> dst = read_image(ppmOutPath);
 

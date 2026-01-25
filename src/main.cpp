@@ -17,7 +17,7 @@ int main(const int argc, const char* argv[])
     
     if(argc == 1){
         // Defaults to json config
-        pipelineViaJSON(PICS_DIR, OUTPUT_DIR, JSON_PATH);
+        batchPipelineViaJson(PICS_DIR, OUTPUT_DIR, JSON_PATH);
         return 0;
     }
 

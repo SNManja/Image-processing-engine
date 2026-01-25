@@ -1,7 +1,16 @@
 import { FileAdministrator } from "./file-processing/FilesAdministrator.js";
 import { ALL_DIRS } from "./file-processing/paths.js";
 import { initUI } from "./ui/init/initUI.js";
+import { processButtonUIOff } from "./ui/init/processButton.js";
 import { setupJSONPipelineEditor } from "./ui/setupJSONPipelineEditor.js";
+
+if (crossOriginIsolated) {
+	console.log("✅ Entorno aislado: Los hilos de C++ funcionarán.");
+} else {
+	console.warn(
+		"❌ Entorno NO aislado: SharedArrayBuffer no está disponible.",
+	);
+}
 
 let engine;
 await runEngine();
@@ -20,6 +29,14 @@ async function runEngine() {
 		console.log("Failed on setup " + e.message);
 	}
 }
+
+window.onEngineFinished = function () {
+	console.log("Engine finished processing batch");
+	window.engineRunning = false;
+	processButtonUIOff();
+
+	window.fileAdmin.updateCanvasRows(window.currSuffix);
+};
 
 async function loadExamplePics() {
 	await window.fileAdmin.addExamplePPM(["paisaje.ppm", "gato.ppm"]);

@@ -3,7 +3,7 @@
 #include <iostream>
 #include "cli_helpers.h"      
 #include <fstream> 
-
+#include <thread>
 
 
 extern "C" {
@@ -24,7 +24,16 @@ extern "C" {
         }
 
         try {
-            pipelineViaJSON(PICS_DIR, OUTPUT_DIR, JSON_PATH);
+            std::thread([=](){
+                batchPipelineViaJson(PICS_DIR, OUTPUT_DIR, JSON_PATH);
+
+                MAIN_THREAD_EM_ASM({
+                    if (window.onEngineFinished) {
+                        window.onEngineFinished();
+                    }
+                });
+
+            }).detach();
         } catch (const std::exception& e) {
             std::cerr << "Error: " << e.what() << std::endl;
         }

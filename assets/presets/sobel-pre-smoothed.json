@@ -1,0 +1,33 @@
+{
+	"name": "Sobel Edge Detection (Pre-smoothed)",
+	"pipeline": [
+		{
+			"filter": "blur",
+			"params": {
+				"size": 3,
+				"stride": 1,
+				"scale": 1.0,
+				"offset": 0.0,
+				"border": "clamp"
+			}
+		},
+		{
+			"filter": "sobel",
+			"params": {
+				"greyscale": true,
+				"scharr": false,
+				"stride": 1,
+				"scale": 1.0,
+				"offset": 0.0,
+				"border": "clamp"
+			}
+		}
+	],
+	"statistics": {
+		"histograms": {
+			"greyscale": true
+		}
+	},
+	"output_suffix": "_processed",
+	"tags": ["cv", "utility"]
+}

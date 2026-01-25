@@ -2,3 +2,4 @@ src/include/json.hpp linguist-vendored
 out_web/vendor/jszip.min.js linguist-vendored
 src/include/stb_image.h linguist-vendored
 stc/include/stb_image_write.h linguist-vendored
+out_web/coi-serviceworker.js linguist-vendored

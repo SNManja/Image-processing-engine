@@ -24,7 +24,8 @@ void filterList();
 void printHelp();
 void printHistograms();
 
-void pipelineViaJSON(std::string PICS_DIR, std::string OUTPUT_DIR, std::string JSON_PATH);
+void batchPipelineViaJson(std::string PICS_DIR, std::string OUTPUT_DIR, std::string JSON_PATH);
+void processSingleImage(std::string fileName, std::string PICS_DIR, std::string OUTPUT_DIR, json data);
 void calcStatistics(const image<unsigned char>& img, const json& statsConfig, std::string outPath, std::string name);
 void clearFolder(std::string path);
 

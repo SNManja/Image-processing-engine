@@ -1,33 +1,34 @@
 {
-  "name": "Pencil sketch",
-  "pipeline": [
-    {
-      "filter": "sobel",
-      "params": {
-        "greyscale": true
-      }
-    },
-    {
-      "filter": "linearAdjustment",
-      "params": {
-        "scale": 2,
-        "offset": -0.155
-      }
-    },
-    {
-      "filter": "invert"
-    },
-    {
-      "filter": "blur",
-      "params": {
-        "size": 5
-      }
-    }
-  ],
-  "statistics": {
-    "histograms": {
-      "greyscale": false
-    }
-  },
-  "output_suffix": "_processed"
+	"name": "Pencil sketch",
+	"pipeline": [
+		{
+			"filter": "sobel",
+			"params": {
+				"greyscale": true
+			}
+		},
+		{
+			"filter": "linearAdjustment",
+			"params": {
+				"scale": 2,
+				"offset": -0.155
+			}
+		},
+		{
+			"filter": "invert"
+		},
+		{
+			"filter": "blur",
+			"params": {
+				"size": 5
+			}
+		}
+	],
+	"statistics": {
+		"histograms": {
+			"greyscale": false
+		}
+	},
+	"output_suffix": "_processed",
+	"tags": ["art"]
 }

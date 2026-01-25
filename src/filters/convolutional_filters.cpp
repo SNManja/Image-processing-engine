@@ -33,7 +33,7 @@ SplitKernel splitKernel(int n, std::vector<float> rowValues, std::vector<float> 
 
 using GetPixelFunc = pixel<float> (*)(const image<float>&, int, int);
 GetPixelFunc getPixelFunction(const std::string& borderStrategy) {
-    printf("Using strategy: %s (if valid)\n", borderStrategy.c_str());
+    //printf("Using strategy: %s (if valid)\n", borderStrategy.c_str());
     if (borderStrategy == "clamp") {
         return getPixelClamped;
     }
@@ -149,7 +149,7 @@ void sharpenFilter(const image<float>& src, image<float>& dst, const filterConte
     if(ctx.data.contains("params") && ctx.data["params"].contains("amount")) {
         amountValue = ctx.data["params"]["amount"];
     }
-    printf("Sharpening with amount: %f\n", amountValue);
+    //printf("Sharpening with amount: %f\n", amountValue);
 
     Kernel k = kernel(3, {
         {0, -amountValue, 0},

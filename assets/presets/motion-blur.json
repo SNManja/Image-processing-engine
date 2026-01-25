@@ -1,33 +1,34 @@
 {
-  "name": "Motion blur and sharpen",
-  "pipeline": [
-    {
-      "filter": "motionblur",
-      "params": {
-        "scale": 1.2
-      }
-    },
-    {
-      "filter": "linearAdjustment",
-      "params": {
-        "scale": 1.25,
-        "offset": -0.37
-      }
-    },
-    {
-      "filter": "sharpen",
-      "params": {
-        "amount": 0.7,
-        "border": "clamp"
-      }
-    }
-  ],
-  "statistics": {
-    "histograms": {
-      "blueChannel": false,
-      "greenChannel": false,
-      "redChannel": false
-    }
-  },
-  "output_suffix": "_processed"
+	"name": "Motion blur and sharpen",
+	"pipeline": [
+		{
+			"filter": "motionblur",
+			"params": {
+				"scale": 1.2
+			}
+		},
+		{
+			"filter": "linearAdjustment",
+			"params": {
+				"scale": 1.25,
+				"offset": -0.37
+			}
+		},
+		{
+			"filter": "sharpen",
+			"params": {
+				"amount": 0.7,
+				"border": "clamp"
+			}
+		}
+	],
+	"statistics": {
+		"histograms": {
+			"blueChannel": false,
+			"greenChannel": false,
+			"redChannel": false
+		}
+	},
+	"output_suffix": "_processed",
+	"tags": ["art"]
 }

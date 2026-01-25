@@ -25,5 +25,6 @@
 			"greyscale": true
 		}
 	},
-	"output_suffix": "_processed"
+	"output_suffix": "_processed",
+	"tags": ["art"]
 }

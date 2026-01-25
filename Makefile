@@ -12,15 +12,22 @@ WASM_OUT_DIR = out_web
 WASM_OUT = $(WASM_OUT_DIR)/engine.js
 WASM_BRIDGE = web/wasm_bridge.cpp
 
-
 WASM_FLAGS = -std=c++17 -O3 -Iinclude \
-			-s MODULARIZE=1 \
-			-s EXPORT_NAME='createEngine' \
-			-s ALLOW_MEMORY_GROWTH=1 \
-			-s EXPORTED_RUNTIME_METHODS='["cwrap", "ccall", "FS"]' \
-			--bind \
-			--preload-file assets/presets@/presets \
-			--preload-file assets/exportedPics@/pics
+            -pthread \
+            -s PTHREAD_POOL_SIZE=9 \
+            -s MODULARIZE=1 \
+            -s EXPORT_NAME='createEngine' \
+            -s EXPORTED_RUNTIME_METHODS='["cwrap", "ccall", "FS"]' \
+            -s TEXTDECODER=0 \
+            -s ASSERTIONS=1 \
+            --bind \
+            --preload-file assets/presets@/presets \
+            --preload-file assets/exportedPics@/pics
+
+# Asigna 512MB o 1GB de entrada para evitar pausar los hilos
+WASM_FLAGS += -s INITIAL_MEMORY=512MB
+WASM_FLAGS += -s ALLOW_MEMORY_GROWTH=1 # Dejalo en 1 por ahora para evitar crashes, pero subí el inicial
+WASM_FLAGS += -s MAXIMUM_MEMORY=1GB     # Poné un tope claro
 
 
 all: $(TARGET)
