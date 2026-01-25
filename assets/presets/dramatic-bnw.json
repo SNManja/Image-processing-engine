@@ -1,27 +1,29 @@
 {
-  "name": "Dramatic black and white",
-  "pipeline": [
-    {
-      "filter": "motionblur",
-      "params": {
-        "scale": 1.3,
-        "border": "clamp"
-      }
-    },
-    {
-      "filter": "linearAdjustment",
-      "params": {
-        "scale": 1.3,
-        "offset": -1.0
-      }
-    },
-    {
-      "filter": "bnw",
-      "params": {}
-    }
-  ],
-  "statistics": {
-    "histograms": { "greyscale": true }
-  },
-  "output_suffix": "_processed"
+	"name": "Dramatic black and white",
+	"pipeline": [
+		{
+			"filter": "motionblur",
+			"params": {
+				"scale": 1.0,
+				"border": "clamp"
+			}
+		},
+		{
+			"filter": "linearAdjustment",
+			"params": {
+				"scale": 1.6,
+				"offset": -0.7
+			}
+		},
+		{
+			"filter": "bnw",
+			"params": {}
+		}
+	],
+	"statistics": {
+		"histograms": {
+			"greyscale": true
+		}
+	},
+	"output_suffix": "_processed"
 }

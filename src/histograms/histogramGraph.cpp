@@ -48,5 +48,7 @@ void graphicHistogram(histogram& hist, std::string name){
         }
     }
     std::string histPath = "./output/stats/" + name + ".ppm";
-    printToPPM(img, histPath.c_str());
+    // ! GOTTA FIX THIS
+    image<float> floatImg = img;
+    write_image(floatImg, histPath.c_str());
 }

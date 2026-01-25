@@ -16,7 +16,13 @@ export class FileAdministrator {
 		this.engine = engine;
 		this.entries = new Map(); // id -> entry
 		this.counter = 0;
-		this.reloadPicsFolder();
+		if (this.engine.calledRun) {
+			this.reloadPicsFolder();
+		} else {
+			this.engine.onRuntimeInitialized = () => {
+				this.reloadPicsFolder();
+			};
+		}
 	}
 
 	async updateCanvasRows(output_suffix) {

@@ -69,8 +69,9 @@ void pipelineViaJSON(std::string PICS_DIR, std::string OUTPUT_DIR, std::string J
     while ((dirEntry = readdir(directory)) != NULL) {
         if (dirEntry->d_type == DT_REG) {
             std::string fileName = dirEntry->d_name;
-            if (fileName.substr(fileName.find_last_of(".") + 1) == "ppm") {
-                image<float> src = read_image((PICS_DIR + "/" + fileName).c_str());
+            std::string ext = fileName.substr(fileName.find_last_of(".") + 1);
+            if (ext == "ppm" || ext == "jpg" || ext == "jpeg" || ext == "png") {
+                image<float> src = read_image(PICS_DIR + "/" + fileName);
                 image<float> original = src; // Keep a copy of the original image
                 for(const auto& step : data["pipeline"]){
                     if (step.contains("filter")) {
@@ -88,14 +89,14 @@ void pipelineViaJSON(std::string PICS_DIR, std::string OUTPUT_DIR, std::string J
                 if(data.contains("output_suffix")) {
                     std::string outputSuffix = data["output_suffix"];
                     fileName = fileName.substr(0, fileName.find_last_of(".")) + outputSuffix;
-                    fileName += ".ppm";
+                    fileName += ".";
+                    fileName += ext;
                 }
-                std::string ppmOutPath = OUTPUT_DIR + "/" + fileName;
+                std::string outPath = OUTPUT_DIR + "/" + fileName;
                 //printf("Processed img %d\n", numberOfImages);
-                //printf("Output path: %s\n", ppmOutPath.c_str());
-                image<unsigned char> ucharRes = src;
-                calcStatistics(ucharRes, statsConfig, histogramPath, fileName);
-                printToPPM(ucharRes, ppmOutPath.c_str());
+                //printf("Output path: %s\n", outPath.c_str());
+                // calcStatistics(ucharRes, statsConfig, histogramPath, fileName);
+                write_image(src, outPath.c_str());
                 numberOfImages++;
             }
         }

@@ -3,57 +3,67 @@
 #include <string.h>
 #include <dirent.h>
 #include "image.h"
+#include <string>
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
 
+#define STB_IMAGE_WRITE_IMPLEMENTATION
+#include "stb_image_write.h"
 
-void printToPPM(const image<unsigned char>& img, const char* output_path) {
-    FILE* f = fopen(output_path, "wb");
+void write_image(image<float>& img, std::string output_path) {
+    FILE* f = fopen(output_path.c_str(), "wb");
     if (!f) {
         perror("Error opening output file");
         return;
     }
 
-    // Write PPM header
+    size_t dotPos = output_path.find_last_of(".");
+    if (dotPos == std::string::npos) return;
+    std::string ext = output_path.substr(dotPos + 1);
+
     int width = img.width;
     int height = img.height;
-    fprintf(f, "P6\n%d %d\n255\n", width, height);
-    fwrite(img.data.data(), sizeof(pixel<unsigned char>), width * height, f);
-    fclose(f);
+    int channels = 3; 
+    normalizeGammaForOutput(img);
+    clampImage(img);
+    image<unsigned char> ucharImg = img;
+    if (ext == "ppm") {
+        FILE* f = fopen(output_path.c_str(), "wb");
+        if (f) {
+            image<unsigned char> ucharImg = img;
+            fprintf(f, "P6\n%d %d\n255\n", width, height);
+            fwrite(ucharImg.data.data(), sizeof(pixel<unsigned char>), width * height, f);
+            fclose(f);
+        }
+    } 
+
+    else if (ext == "jpg" || ext == "jpeg") {
+        stbi_write_jpg(output_path.c_str(), width, height, channels, ucharImg.data.data(), 90);
+    } 
+    else if (ext == "png") {
+        stbi_write_png(output_path.c_str(), width, height, channels, ucharImg.data.data(), width * channels);
+    } 
+    else {
+        fprintf(stderr, "Formato no soportado: %s\n", ext.c_str());
+    }
+    
 }
 
 
+image<float> read_image(std::string input_path) {
+    int w, h, c;
+    float* raw = stbi_loadf(input_path.c_str(), &w, &h, &c, 3);
 
-image<unsigned char> read_image(const char* path) {
-    FILE* f = fopen(path, "rb");
-    //printf("Reading image from %s\n", path);
-    if (!f) {
-        perror("Error opening file");
+    if (!raw) {
+        fprintf(stderr, "Error STB: %s\n", stbi_failure_reason());
         return {};
     }
 
-    // Read PPM header
-    char format[3];
-    int width, height, maxval;
-    fscanf(f, "%2s\n%d %d\n%d", format, &width, &height, &maxval);
-    if (strcmp(format, "P6") != 0 || maxval != 255) {
-        fprintf(stderr, "Unsupported PPM format\n");
-        fclose(f);
-        return {};
-    }
-    fgetc(f);
+    image<float> img;
+    img.width = w;
+    img.height = h;
+    img.data.assign((pixel<float>*)raw, (pixel<float>*)raw + (w * h));
 
-    image<unsigned char> img;
-    img.width = width;
-    img.height = height;
-    img.data.resize(width * height);
-    fread(img.data.data(), sizeof(pixel<unsigned char>), width * height, f);
-    fclose(f);
+    stbi_image_free(raw);
     return img;
-}
-
-image<unsigned char> copyImage(const image<unsigned char>& img) {
-    image<unsigned char> newImg;
-    newImg.width = img.width;
-    newImg.height = img.height;
-    newImg.data = img.data; // Copy pixel data
-    return newImg;
 }

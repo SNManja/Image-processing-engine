@@ -6,7 +6,6 @@ using json = nlohmann::json;
 
 
 void applyPointTransform(const image<float>& src, image<float>& dst, coordinateFunction f){
-
     if (src.height != dst.height || src.width != dst.width) {
         throw std::invalid_argument("Source and destination images must have the same dimensions");
     }
@@ -60,7 +59,7 @@ void thresholdingFilter(const image<float>& src, image<float>& dst, const filter
     std::string mode = lookingForParamInCtx<std::string>(ctx, "mode", std::string("absolute")); // Absolute, magnitude
     assert(mode == "absolute" || mode == "magnitude");
     const bool isMagnitude = (mode == "magnitude");
-    const float center = lookingForParamInCtx(ctx, "center", 0.5f);
+    const float center = lookingForParamInCtx(ctx, "center", pow(0.5f, 1.0f/2.2f));
     resizeToMatchSrc(src, dst);
     if (!isMagnitude){
         applyPointTransform(src, dst, [minVal, maxVal, threshold, ctx](const image<float>& src, image<float>& dst, int x, int y){

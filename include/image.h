@@ -4,6 +4,8 @@
 #include <vector>
 #include <cstdio>
 #include <type_traits>
+#include <cmath>
+#include <string>
 
 
 constexpr float MAX_PIXEL_VALUE = 1.0f;
@@ -57,6 +59,10 @@ template <typename T> struct pixel {
     }
 };
 
+
+
+
+
 template <typename T> struct image {
     int width = 0;
     int height = 0;
@@ -89,6 +95,29 @@ template <typename T> struct image {
 };
 
 
+inline void clampPixel(pixel<float>& p) {
+    // Usamos std::clamp (C++17) que es más limpio y evita valores negativos
+    p.r = clamp(p.r);
+    p.g = clamp(p.g);
+    p.b = clamp(p.b);
+}
+
+inline void clampImage(image<float>& i) {
+    // Pasamos por referencia para consistencia
+    for (pixel<float>& p : i.data) {
+        clampPixel(p);
+    }
+}
+
+inline void normalizeGammaForOutput(image<float>& img) {
+    for (pixel<float>& p : img.data) {
+        // Elevamos a 1/2.2 para el "revelado" sRGB
+        p.r = std::pow(p.r, (1.0f / 2.2f));
+        p.g = std::pow(p.g, (1.0f / 2.2f));
+        p.b = std::pow(p.b, (1.0f / 2.2f));
+    }
+}
+
 template <typename T> pixel<T>* pixel_ptr(image<T>& img, int x, int y);
 template <typename T> pixel<T> getPixelClamped(const image<T>& img, int x, int y);
 template <typename T> pixel<T> getPixelConstant(const image<T>& img, int x, int y);
@@ -97,10 +126,9 @@ template <typename T> pixel<T> getPixelMirrored(const image<T>& img, int x, int 
 
 template <typename T> void setPixel(image<T>& img, int x, int y, pixel<T> p);
 
-void printToPPM(const image<unsigned char>& img, const char* output_path);
 
-image<unsigned char> read_image(const char* path);
-
+void write_image(image<float>& img, std::string output_path);
+image<float> read_image(std::string input_path);
 #include "pixel_operations.tpp"
 
 #endif

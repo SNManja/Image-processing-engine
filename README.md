@@ -1,6 +1,6 @@
 # Image-processing-engine ![CI/CD Status](https://github.com/SNManja/Image-processing-engine/actions/workflows/CompileChecking.yml/badge.svg)
 
-C++ image processing engine for PPM files (More formats soon)
+C++ image processing engine
 
 <p align="center">
   <img src="preview.png" alt="Banner" width="100%">
@@ -11,13 +11,14 @@ C++ image processing engine for PPM files (More formats soon)
 
 ## Capabilities
 
-- Processing PPM files with a **flexible pipeline**, with [0,1] float representation to ensure max presition and less information loss between stages.
+- **Multiformat:** Support for PPM, JPEG, and PNG files
+- **Full Linear Pipeline**: Processes images using a Linear Space [0,1] float representation. This ensures physically-accurate filter mathematics and maximum precision between stages, preventing the common "darkening" or color shifting issues of standard 8-bit pipelines.
 - **Convolutional filters**: Gaussian blur, Sharpen, Emboss, Laplacian of Gaussian (LoG)
 - **Point filters**: Black and white, Sepia, Thresholding, Alpha blending, Linear Adjustment
 - **Geometric filters**: Mirror
 - **Gradients**: Sobel operator
 - Basic CLI implementation with `--help` flag to use as documentation
-- Supports "Same" padding strategy to maintain spacial correspondence, with configurable stride.
+- Supports "Same" padding strategy to maintain spatial correspondence, with configurable stride.
 - Custom border strategy for convolutional filters (Clamping, Wrap, Mirror, Constant)
 - **Histogram support**: greyscale, channel (r,g,b), intensity, value and chroma. With **Graph plotting**.
 - **Filter chaining** with **JSON-based** pipeline specifications. This enables complex filter chaining with custom parameters and readable configuration. Plus being able to save configurations as templates.
@@ -34,9 +35,10 @@ C++ image processing engine for PPM files (More formats soon)
 
 ## Engine - To do
 
-- Compatibility with jpeg and png
+- Update documentation
+- Add 16 bit color compatibility for PNG
+- Fix statistics so it takes [0,1] float range
 - Concurrent pipeline processing for different files
-- Comments compatibility on PPM P6
 - Improve github actions testing and CI
 - Check common sobel parameters and implement them
 - Split rank 1 kernels so convolutions are O(2k) per pixel rather than O(k^2)
@@ -45,6 +47,7 @@ C++ image processing engine for PPM files (More formats soon)
 - Add common postprocessing parameters (white balance, gain, gamma, normalization, clamping, etc)
 - Add custom parameters to already implemented filters
 - Median filter
+- Add HDR compatibility
 - Output info, like histograms calculated, filters applied, settings used would be cool to implement.
 - Check easy performance improvements
 - Implement "Valid" padding strategy
@@ -57,27 +60,27 @@ C++ image processing engine for PPM files (More formats soon)
 - Applying this engine to computer vision
 - Performance optimizations
 
-## Why ppm?
-
-It's a simpler format. Does not depend on compression or complex encoding (like jpeg or png). At the time it's what i will be using. The goal of the project (as any other project of mine) is to implement things and understand them thoroughly. So im interested in implementing the conversion of formats by myself in the future when the project grows in size.
-
 ## How to run
 
 1. Clone the repo.
 2. Compile with `make` command on your terminal
-3. Add your ppm images on `./pics` and edit `./pipeline.json` for configuration
-4. Use `./imgengine` to process your ppm images in batch
+3. Add your images (png, jpeg, ppm) on `./pics` and edit `./pipeline.json` for configuration
+4. Use `./imgengine` to process your images in batch
 5. Obtain the resulting images from `./output`
 
 # Documentation
 
 - `--help` for capabilities, commands and JSON format
 - `--list` for list of filters, parameters and descriptions
+- `--histograms` for list of histograms supported
 
 # Dependencies
 
-The whole point of this project is to make things from scratch. So i will be explicit in which external libraries i use. From the time being, the only one is **nlohmann/json** which is already **included** in the repository to ensure a zero-dependency setup and avoid installation headaches.
+The whole point of this project is to make an usable consumer grade image editing pipeline, with artistic and technical uses with a solid API to ensure deep control for the user. I used libraries for parsing JSON and decoding image files for the backend. At the time being even the graphics of histograms is made by me. I am **NOT** using OpenCV or any other filter library, every stage of the pipeline is implemented from scratch.
 
-To be clear. This implicates no use of ffmpeg, matplotlib or any other library. At least at the moment. Everything is made from scratch.
+So i will be explicit in which libraries i use, just to make it clear what is made by me and whats not:
 
-The web frontend is the exception. To ensure a great user experience i decided to use libraries for the code editor (CodeMirror 6) and .zip download of the batch results (JSZip)
+- JZip: For compression of batch download (web frontend)
+- CodeMirror 6: Better IDE for json pipeline (web frontend)
+- nlohmann json: Modern JSON parsing (backend).
+- stb_image and stb_image_write: PNG and JPEG decoding and encoding (backend).
