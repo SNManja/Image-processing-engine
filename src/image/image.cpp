@@ -24,7 +24,7 @@ void write_image(image<float>& img, std::string output_path) {
     int width = img.width;
     int height = img.height;
     int channels = 3; 
-    normalizeGammaForOutput(img);
+    normalizeGamma(img);
     clampImage(img);
     image<unsigned char> ucharImg = img;
     if (ext == "ppm") {

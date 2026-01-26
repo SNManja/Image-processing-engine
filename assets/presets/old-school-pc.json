@@ -6,10 +6,19 @@
 		},
 		{
 			"filter": "blur",
-			"params": { "size": 5, "stride": 5 }
+			"params": {
+				"size": 10,
+				"stride": 10
+			}
 		},
 		{
-			"filter": "dithering"
+			"filter": "FSDithering",
+			"params": {
+				"levels": 8,
+				"amount": 1,
+				"perceptual": true,
+				"noise": 0.2
+			}
 		}
 	],
 	"output_suffix": "_processed",

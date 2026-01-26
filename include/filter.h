@@ -42,7 +42,7 @@ void sobelOperatorFilter(const image<float>& src, image<float>& dst,const filter
 
 
 //
-void ditheringFilter(const image<float>& src, image<float>& dst, const filterContext& ctx);
+void floydSteinbergFilter(const image<float>& src, image<float>& dst, const filterContext& ctx);
 
 
 struct Kernel {

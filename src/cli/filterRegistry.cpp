@@ -6,10 +6,10 @@
 
 std::vector<std::string> getConvolutionalParamsList() {
     return {
-        "stride (int): Takes an integer for the stride, which modifies the step size of the filter. Changes image size when different to 1",
+        "stride (int): Takes an integer for the stride, which modifies the step size of the filter. Changes image size when different to 1. Defaults to 1",
         "scale (float): Takes a float for the scaling factor applied to the filter output. Defaults to 1.0",
         "offset (float): Takes a float for the offset added to the filter output. Defaults to 0.0",
-        "border (string): Takes a string for the border strategy (clamp, wrap, mirror, constant)."
+        "border (string): Takes a string for the border strategy (clamp, wrap, mirror, constant). Defaults to 'clamp'"
     };
 };
 const std::string convolutionalCategory = "Convolutional";
@@ -145,11 +145,16 @@ FilterRegistry getRegistry(){
             }
         }, 
         {
-            "dithering",{
-                ditheringFilter,
-                "Dithering filter. Reduces color depth by passing error values to neighboring pixels. Common in old computers and retro art styles. Highly recommend using it after black and white filter and convolutions with stride to lower image size.",
+            "FSDithering",{
+                floydSteinbergFilter,
+                "Floyd Steinberg dithering filter. Reduces color depth by passing error values to neighboring pixels. Common in retro image processing when operating with limited color palettes, generates more unpredictable patterns than other Bayer's algorithm. Really bad for video, good for static images. Highly recommend using it after black and white filter and convolutions with stride to lower image size.",
                 errorDiffusionCategory,
-                {}
+                {
+                    "levels (int): Number of levels to reduce the color depth to. Defaults to 2.",
+                    "perceptual (bool): Whether to use perceptual quantization as this is a normalized pipeline. Defaults to false.",
+                    "amount (float): Amount of neighbor error diffusion, operates in [0,1] range. Defaults to 1.0.",
+                    "noise (float): Amount of noise to add to the error diffusion. Sometimes it improves repetitive patterns. Defaults to 0.0."
+                }
             }
         }
     };

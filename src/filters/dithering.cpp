@@ -5,24 +5,35 @@
 #include <thread>
 #include <mutex>
 #include <algorithm>
-#include "paths.h"
+#include <cstdlib>
+
 using json = nlohmann::json;
 
 
-void ditheringFilter(const image<float>& src, image<float>& dst, const filterContext& ctx) {
+void floydSteinbergFilter(const image<float>& src, image<float>& dst, const filterContext& ctx) {
 	resizeToMatchSrc(src, dst);
     dst=src;
 	int h = src.height;
 	int w = src.width;
 
+	bool perceptual = lookingForParamInCtx(ctx, "perceptual", false);
+	float errorAmount = lookingForParamInCtx(ctx, "amount", 1.0f);
+    int levels = lookingForParamInCtx(ctx, "levels", 2);
+	float noiseAmount = lookingForParamInCtx(ctx, "noise", 0.0f);
+
+	float randFactor = 1.0f + ((float)rand() / (float)RAND_MAX * 2.0f - 1.0f) * noiseAmount;
+
+	if (perceptual){
+		normalizeGamma(dst);
+	}
 	for (int y = 0; y < h; y++) {
 		for (int x = 0; x < w; x++) {
 			pixel<float>* p = pixel_ptr(dst, x, y);
 			if (!p) continue;
 
-			float newPixelR = (p->r > 0.5f) ? 1.0f : 0.0f;
-			float newPixelG = (p->g > 0.5f) ? 1.0f : 0.0f;
-			float newPixelB = (p->b > 0.5f) ? 1.0f : 0.0f;
+			float newPixelR = round(p->r * (levels - 1)) / (levels - 1);
+			float newPixelG = round(p->g * (levels - 1)) / (levels - 1);
+			float newPixelB = round(p->b * (levels - 1)) / (levels - 1);
 
 
 			float rError = p->r - newPixelR;
@@ -34,20 +45,23 @@ void ditheringFilter(const image<float>& src, image<float>& dst, const filterCon
 
 			if (x + 1 < w) {
 				pixel<float>* pRight = pixel_ptr(dst, x + 1, y);
-				if (pRight) *pRight += errorPixel * (7.0f / 16.0f);
+				if (pRight) *pRight += errorPixel * (errorAmount * randFactor * 7.0f / 16.0f);
 			}
 			if (x - 1 >= 0 && y + 1 < h) {
 				pixel<float>* pBottomLeft = pixel_ptr(dst, x - 1, y + 1);
-				if (pBottomLeft) *pBottomLeft += errorPixel * (3.0f / 16.0f);
+				if (pBottomLeft) *pBottomLeft += errorPixel * (errorAmount * randFactor *3.0f / 16.0f);
 			}
 			if (y + 1 < h) {
 				pixel<float>* pBottom = pixel_ptr(dst, x, y + 1);
-				if (pBottom) *pBottom += errorPixel * (5.0f / 16.0f);
+				if (pBottom) *pBottom += errorPixel * (errorAmount * randFactor *5.0f / 16.0f);
 			}
 			if (x + 1 < w && y + 1 < h) {
 				pixel<float>* pBottomRight = pixel_ptr(dst, x + 1, y + 1);
-				if (pBottomRight) *pBottomRight += errorPixel * (1.0f / 16.0f);
+				if (pBottomRight) *pBottomRight += errorPixel * (errorAmount * randFactor * 1.0f / 16.0f);
 			}
 		}
+	}
+	if(perceptual){
+		linearizeGamma(dst);
 	}
 }
