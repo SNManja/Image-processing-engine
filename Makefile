@@ -14,7 +14,7 @@ WASM_BRIDGE = web/wasm_bridge.cpp
 
 WASM_FLAGS = -std=c++17 -O3 -Iinclude \
             -pthread \
-            -s PTHREAD_POOL_SIZE=9 \
+            -s PTHREAD_POOL_SIZE=8 \
             -s MODULARIZE=1 \
             -s EXPORT_NAME='createEngine' \
             -s EXPORTED_RUNTIME_METHODS='["cwrap", "ccall", "FS"]' \

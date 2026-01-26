@@ -2,6 +2,8 @@
 #include "image.h"
 #include "json.hpp"
 #include <stdexcept>
+#include <thread>
+#include <mutex>
 using json = nlohmann::json;
 
 
@@ -9,11 +11,31 @@ void applyPointTransform(const image<float>& src, image<float>& dst, coordinateF
     if (src.height != dst.height || src.width != dst.width) {
         throw std::invalid_argument("Source and destination images must have the same dimensions");
     }
-    for (int y = 0; y < src.height; y++) {
-        for (int x = 0; x < src.width; x++) {
-            f(src, dst, x, y);
+
+    // Instance threads
+    int threadCount = std::thread::hardware_concurrency();
+    std::vector<std::thread> threads;
+    std::mutex queueMutex;
+    if (threadCount == 0) threadCount = 2; // Fallback
+    
+    int chunkSize = src.height / threadCount;
+    for (int i = 0; i < threadCount; ++i){
+        int ty = i * chunkSize;
+        int tx = 0;
+
+        int topChunkY = ty+chunkSize;
+        int topChunkX = src.width;
+
+        if (i == threadCount - 1) {
+            topChunkY = src.height;
+        }
+        for (int y = ty; y < topChunkY; y++) {
+            for (int x = tx; x < topChunkX; x++) {
+                f(src, dst, x, y);
+            }
         }
     }
+        
 }
 
 
