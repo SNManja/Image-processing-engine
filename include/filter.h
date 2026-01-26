@@ -40,6 +40,11 @@ void embossFilter(const image<float>& src, image<float>& dst, const filterContex
 // Gradient
 void sobelOperatorFilter(const image<float>& src, image<float>& dst,const filterContext& cfg);
 
+
+//
+void ditheringFilter(const image<float>& src, image<float>& dst, const filterContext& ctx);
+
+
 struct Kernel {
     unsigned char size;
     std::vector<std::vector<float>> values;
@@ -64,6 +69,13 @@ template <typename T> T lookingForParamInCtx(const filterContext& ctx, std::stri
         return data["params"][paramName].get<T>();
     }
     return defaultValue;
+}
+
+
+inline void resizeToMatchSrc(const image<float>& src, image<float>& dst) {
+    dst.width = src.width;
+    dst.height = src.height;
+    dst.data.resize(src.width * src.height);
 }
 
 

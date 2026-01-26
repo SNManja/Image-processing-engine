@@ -69,6 +69,17 @@ template <typename T> struct pixel {
     bool operator!=(const pixel& other) const {
         return !(*this == other);
     }
+
+    pixel<T> operator*(T s) const {
+        return {r * s, g * s, b * s};
+    }
+
+    pixel<T>& operator+=(const pixel<T>& other) {
+        r += other.r;
+        g += other.g;
+        b += other.b;
+        return *this;
+    }
 };
 
 

@@ -15,6 +15,7 @@ std::vector<std::string> getConvolutionalParamsList() {
 const std::string convolutionalCategory = "Convolutional";
 const std::string pointCategory = "Point";
 const std::string gradientCategory = "Gradient";
+const std::string errorDiffusionCategory = "Error Diffusion";
 
 
 
@@ -141,6 +142,14 @@ FilterRegistry getRegistry(){
                     "greyscale (bool): A flag indicating whether to convert the image to greyscale before applying the filter. Defaults to true.",
                     "scharr (bool): A flag indicating whether to use the Scharr operator instead of the Sobel operator. Defaults to false."
                 }
+            }
+        }, 
+        {
+            "dithering",{
+                ditheringFilter,
+                "Dithering filter. Reduces color depth by passing error values to neighboring pixels. Common in old computers and retro art styles. Highly recommend using it after black and white filter and convolutions with stride to lower image size.",
+                errorDiffusionCategory,
+                {}
             }
         }
     };

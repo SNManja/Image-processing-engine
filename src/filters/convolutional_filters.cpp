@@ -78,7 +78,7 @@ void genericConvolution(const image<float>& src, image<float>& dst, const Kernel
     std::vector<std::thread> threads;
     if (threadCount == 0) threadCount = 2; // Fallback
 
-    int chunkSize = src.height / threadCount;
+    int chunkSize = dst.height / threadCount;
 
     for (int t = 0; t < threadCount; ++t){
         int ty = t * chunkSize;
@@ -96,7 +96,7 @@ void genericConvolution(const image<float>& src, image<float>& dst, const Kernel
                     float newValueR = 0, newValueB = 0, newValueG = 0;
                     for (int i=0; i < k; i++){
                         for (int j=0; j < k; j++){
-                            // !This function call without inlining will have a lot of performance loss
+                            // !This function call without inlining may have performance loss
                             pixel<float> neigh = getPixStrat(src,inX+i-kernelCenter,inY+j-kernelCenter);
                             newValueR += (neigh.r) * kernel.values[i][j];
                             newValueG += (neigh.g) * kernel.values[i][j];

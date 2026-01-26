@@ -50,11 +50,6 @@ void applyPointTransform(const image<float>& src, image<float>& dst, coordinateF
 
 
 
-void resizeToMatchSrc(const image<float>& src, image<float>& dst) {
-    dst.width = src.width;
-    dst.height = src.height;
-    dst.data.resize(src.width * src.height);
-}
 
 
 
