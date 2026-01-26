@@ -4,6 +4,8 @@
 #include <stdexcept>
 #include <thread>
 #include <mutex>
+#include <algorithm>
+#include "paths.h"
 using json = nlohmann::json;
 
 
@@ -47,10 +49,35 @@ void applyPointTransform(const image<float>& src, image<float>& dst, coordinateF
 }
 
 
+
 void resizeToMatchSrc(const image<float>& src, image<float>& dst) {
     dst.width = src.width;
     dst.height = src.height;
     dst.data.resize(src.width * src.height);
+}
+
+
+
+// Not added rn bc needs testing. Currently not usable
+void LookUpTable1DFilter(const image<float>& src, image<float>& dst, const filterContext& ctx){
+    resizeToMatchSrc(src, dst);
+    
+    std::string lut_name = lookingForParamInCtx<std::string>(ctx, "filename","heat.png");
+    std::string LUTPath = LUT_Path + lut_name;
+    image<float> LUT = read_image(LUTPath);
+    const int LUT_width = LUT.width;
+    assert(LUT.height == 1);
+    applyPointTransform(src, dst, [ctx, &LUT, &LUT_width](const image<float> src, image<float> dst, int x, int y){
+        const pixel<float> p = getPixelClamped(src, x, y);
+        float intensity = pow(0.2126f * p.r + 0.7152f * p.g + 0.0722f * p.b, (1.0/2.2)) * (LUT_width - 1);
+        int i0 = floor(intensity);
+        int i1 = std::min(i0 + 1, LUT_width - 1);
+        float t = intensity - i0;
+        pixel<float> c0 = LUT.data[i0];
+        pixel<float> c1 = LUT.data[i1];
+
+        setPixel(dst, x, y, (1.0f - t) * c0 + t * c1);
+    });
 }
 
 void invertFilter(const image<float>& src, image<float>& dst, const filterContext& ctx) {

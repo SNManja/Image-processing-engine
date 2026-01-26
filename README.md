@@ -57,6 +57,7 @@ C++ image processing engine
 - Evaluate if even kernels have any utility, and make them usable check how to handle them well.
 - Make a template driven applyConvolution so it generates different versions of the function in compile time. The main goal of this would be performance optimization (Less function calls with inlining).
 - Simple pipeline support via cli using stdin stdout, supporting pipes in posix systems
+- Implement LUTs 1D (filter is done needs testing), gradient maker and maybe LUTs 3D
 
 ## Potential goals for the future
 

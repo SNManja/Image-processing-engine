@@ -50,6 +50,18 @@ template <typename T> struct pixel {
         }
     }
 
+    friend pixel<T> operator*(T s, const pixel<T>& p) {
+        return {p.r * s, p.g * s, p.b * s};
+    }
+
+    pixel<T> operator+(const pixel<T>& other) const {
+        return {r + other.r, g + other.g, b + other.b};
+    }
+
+    pixel<T> operator-(const pixel<T>& other) const {
+        return {r - other.r, g - other.g, b - other.b};
+    }
+
     bool operator==(const pixel& other) const {
         return r == other.r && g == other.g && b == other.b;
     }
