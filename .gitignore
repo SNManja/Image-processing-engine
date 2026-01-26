@@ -1,12 +1,4 @@
-# --- User-defined image directories ---
-pics/
 output/
-
-# --- C++/Wasm Build Artifacts ---
-# --- User directories ---
-pics/
-output/
-
 # --- Specific Wasm artifacts (Don't ignore the whole folder!) ---
 out_web/engine.wasm
 out_web/engine.data

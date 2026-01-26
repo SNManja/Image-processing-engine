@@ -25,6 +25,7 @@ C++ image processing engine
 - **Batch processing**: Process all the files in a folder at the same time
 - **WebAssembly Integration**: C++ engine compiled via Emscripten for high-performance, client-side image processing without server-side dependencies
 - **Interactive Web Interface (WIP)**: A user-friendly interface built with JavaScript and Tailwind CSS to facilitate real-time filter tuning and pipeline experimentation.
+- **Multi thread parallelism**: Convolution and point filters are parallelized across multiple threads within a single image for improved performance.
 
 ## WEB - To do
 
@@ -35,10 +36,12 @@ C++ image processing engine
 
 ## Engine - To do
 
+- Add dithering for gameboy-ish filters :]
 - Update documentation
 - Add 16 bit color compatibility for PNG
 - Fix statistics so it takes [0,1] float range
-- Concurrent pipeline processing for different files
+- Adding thread pool to improve efficiency (creating and joining threads hits hard on the performance of web implementation)
+- Lower cache misses in filter threads by applying a tyling strategy
 - Improve github actions testing and CI
 - Check common sobel parameters and implement them
 - Split rank 1 kernels so convolutions are O(2k) per pixel rather than O(k^2)

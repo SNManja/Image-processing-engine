@@ -24,10 +24,9 @@ WASM_FLAGS = -std=c++17 -O3 -Iinclude \
             --preload-file assets/presets@/presets \
             --preload-file assets/exportedPics@/pics
 
-# Asigna 512MB o 1GB de entrada para evitar pausar los hilos
-WASM_FLAGS += -s INITIAL_MEMORY=512MB
-WASM_FLAGS += -s ALLOW_MEMORY_GROWTH=1 # Dejalo en 1 por ahora para evitar crashes, pero subí el inicial
-WASM_FLAGS += -s MAXIMUM_MEMORY=1GB     # Poné un tope claro
+WASM_FLAGS += -s INITIAL_MEMORY=1024MB
+WASM_FLAGS += -s ALLOW_MEMORY_GROWTH=1
+WASM_FLAGS += -s MAXIMUM_MEMORY=2048MB
 
 
 all: $(TARGET)

@@ -94,14 +94,14 @@ void batchPipelineViaJson(std::string PICS_DIR, std::string OUTPUT_DIR, std::str
             imgQueue.pop_back();
         }    
         processSingleImage(fileName, PICS_DIR, OUTPUT_DIR, data);
-        printf("Processing image %s\n", fileName.c_str());
+        printf("Finished image %s\n", fileName.c_str());
     }
             
    
 
 }
 
-void processSingleImage(std::string fileName, std::string PICS_DIR, std::string OUTPUT_DIR, json data){
+void processSingleImage(std::string fileName, std::string PICS_DIR, std::string OUTPUT_DIR,const json& data){
     std::string ext = fileName.substr(fileName.find_last_of(".") + 1);
     if (ext == "ppm" || ext == "jpg" || ext == "jpeg" || ext == "png") {
         image<float> src = read_image(PICS_DIR + "/" + fileName);

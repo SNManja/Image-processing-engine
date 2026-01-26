@@ -22,10 +22,11 @@ void sobelOperatorFilter(const image<float>& src, image<float>& dst,const filter
     bool greyscale = getJSONParam(cfg, "greyscale", true);
     bool scharr = getJSONParam(cfg, "scharr", false);
     if(greyscale){
-        blackAndWhiteFilter(src, prep, cfg);
-    }else {
-        prep = src;
+        blackAndWhiteFilter(src, prep, cfg);   
     }
+    std::swap(dst, prep);
+    prep.data.clear(); // Current fix for limits of browser memory. Needs a better one tbh
+    prep.data.shrink_to_fit();
     convolutionConfig convConfig = readConvolutionConfig(cfg.data);
     image<float> Gx, Gy;
     
@@ -53,9 +54,10 @@ void sobelOperatorFilter(const image<float>& src, image<float>& dst,const filter
              {1,2,1}}
         );
     }
-    applyConvolution(prep, Gx, sobelKernelX, convConfig);
-    applyConvolution(prep, Gy, sobelKernelY, convConfig);
-
+    applyConvolution(dst, Gx, sobelKernelX, convConfig);
+    applyConvolution(dst, Gy, sobelKernelY, convConfig);
+    dst.data.clear(); // Current fix for limits of browser memory. Needs a better one tbh
+    dst.data.shrink_to_fit();
     dst = operateBetween(Gx,Gy, [](const pixel<float>& p1, const pixel<float>& p2)->pixel<float>{
         return {
             (float)sqrt((p1.r*p1.r)+(p2.r*p2.r)),
