@@ -15,7 +15,7 @@ void insertError(pixel<float>& p, pixel<float> errorPixel, float errorAmount, fl
 
 
 void floydSteinbergFilter(const image<float>& src, image<float>& dst, const filterContext& ctx) {
-	resizeToMatchSrc(src, dst);
+	
     dst=src;
 	int h = src.height;
 	int w = src.width;
@@ -25,20 +25,24 @@ void floydSteinbergFilter(const image<float>& src, image<float>& dst, const filt
     int depth = lookingForParamInCtx(ctx, "depth", 2);
 	float noiseAmount = lookingForParamInCtx(ctx, "noise", 0.0f);
 	bool serpentine = lookingForParamInCtx(ctx, "serpentine", true);
-
+	std::string domain = lookingForParamInCtx<std::string>(ctx, "domain", "clamp");
+	
 	if (depth < 2){
 		throw std::invalid_argument("Dither depth must be at least 2");
 	}
 
 	float randFactor = 1.0f;
+	if(strcmp(domain.c_str(), "clamp") == 0){
+		clampImage(dst);
+	} 
 	if (perceptual){
-		normalizeGamma(dst);
+		perceptualGamma(dst);
 	}
 	for (int y = 0; y < h; y++) {
-		if (noiseAmount > 0.0f) randFactor = 1.0f + ((float)rand() / (float)RAND_MAX * 2.0f - 1.0f) * noiseAmount;
 		bool reverse = (y % 2 != 0) && serpentine; // Filas impares van al revés
     	int dir = reverse ? -1 : 1;
 		for (int i = 0; i < w; i++) {
+			if (noiseAmount > 0.0f) randFactor = 1.0f + ((float)rand() / (float)RAND_MAX * 2.0f - 1.0f) * noiseAmount;
 			int x = reverse ? (w - 1 - i) : i;
 			pixel<float>* p = pixel_ptr(dst, x, y);
 			if (!p) continue;
@@ -83,6 +87,9 @@ void floydSteinbergFilter(const image<float>& src, image<float>& dst, const filt
 	if(perceptual){
 		linearizeGamma(dst);
 	}
+	if(strcmp(domain.c_str(), "clamp") == 0){
+		clampImage(dst);
+	} 
 }
 
 
@@ -140,15 +147,20 @@ void bayerDitheringFilter(const image<float>& src, image<float>& dst, const filt
 	const int depth = lookingForParamInCtx(ctx, "depth", 2);
 	const int levels = lookingForParamInCtx(ctx, "levels", 2);
 	bool perceptual = lookingForParamInCtx(ctx, "perceptual", true);
+	std::string domain = lookingForParamInCtx<std::string>(ctx, "domain", "clamp");
 
 	if (depth < 2){
 		throw std::invalid_argument("Dither depth must be at least 2");
 	}
 	
+	if (strcmp(domain.c_str(), "clamp") == 0){
+		clampImage(original);
+	}
+	
 	const std::vector<std::vector<float>> bayerMatrix = getBayerMatrix(levels);
 	int bayerSize = pow(2,levels);
 	if (perceptual){
-		normalizeGamma(original);
+		perceptualGamma(original);
 	}
 
 	applyPointTransform(original, dst, [&bayerMatrix, depth, bayerSize](const image<float>& original, image<float>& dst, int x, int y){
@@ -172,6 +184,9 @@ void bayerDitheringFilter(const image<float>& src, image<float>& dst, const filt
 
 	if(perceptual){
 		linearizeGamma(dst);
+	}
+	if(strcmp(domain.c_str(), "clamp") == 0){
+		clampImage(dst);
 	}
 }
 

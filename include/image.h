@@ -126,7 +126,6 @@ inline void clampPixel(pixel<float>& p) {
 }
 
 inline void clampImage(image<float>& i) {
-    // Pasamos por referencia para consistencia
     for (pixel<float>& p : i.data) {
         clampPixel(p);
     }
@@ -134,16 +133,14 @@ inline void clampImage(image<float>& i) {
 
 inline void linearizeGamma(image<float>& img) {
     for (pixel<float>& p : img.data) {
-        // Elevamos a 2.2 para volver al espacio lineal
         p.r = std::pow(p.r, 2.2f);
         p.g = std::pow(p.g, 2.2f);
         p.b = std::pow(p.b, 2.2f);
     }
 }
 
-inline void normalizeGamma(image<float>& img) {
+inline void perceptualGamma(image<float>& img) {
     for (pixel<float>& p : img.data) {
-        // Elevamos a 1/2.2 para el "revelado" sRGB
         p.r = std::pow(p.r, (1.0f / 2.2f));
         p.g = std::pow(p.g, (1.0f / 2.2f));
         p.b = std::pow(p.b, (1.0f / 2.2f));

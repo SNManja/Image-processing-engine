@@ -45,7 +45,7 @@ void printHelp() {
 
 How it works:
 -------------
-1. Move your PPM images to ./src
+1. Move your images to ./src
 2. Modify pipeline.json with the pipeline of your liking
 3. Run the engine with: ./imgengine
 4. Results will be written to ./output
@@ -83,8 +83,7 @@ Notes:
 ------
 - Filters are applied sequentially in the order they appear in the pipeline.
 - The JSON pipeline is the only supported external API.
-- All images are processed as 8-bit RGB.
-- Intermediate results are treated as floats to ensure precision.
+- All images are processed as [0,1] linearized HDR pipeline.
 - Histogram support. Calculated at the end of the pipeline before output.
 - Blending not working after applying stride in previous filter (differs base image size with src image size)
 

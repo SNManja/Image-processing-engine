@@ -36,7 +36,6 @@ C++ image processing engine
 
 ## Engine - To do
 
-- Add dithering for gameboy-ish filters :]
 - Update documentation
 - Add 16 bit color compatibility for PNG
 - Fix statistics so it takes [0,1] float range

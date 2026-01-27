@@ -109,6 +109,7 @@ void thresholdingFilter(const image<float>& src, image<float>& dst, const filter
     float minVal = lookingForParamInCtx(ctx, "minVal", MIN_PIXEL_VALUE);
     float threshold = lookingForParamInCtx(ctx, "threshold",(float)(MAX_PIXEL_VALUE/2));
     std::string mode = lookingForParamInCtx<std::string>(ctx, "mode", std::string("absolute")); // Absolute, magnitude
+    
     assert(mode == "absolute" || mode == "magnitude");
     const bool isMagnitude = (mode == "magnitude");
     const float center = lookingForParamInCtx(ctx, "center", pow(0.5f, 1.0f/2.2f));

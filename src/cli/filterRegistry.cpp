@@ -153,7 +153,9 @@ FilterRegistry getRegistry(){
                     "depth (int): Number of levels to reduce the color depth to. Defaults to 2.",
                     "perceptual (bool): Whether to use perceptual quantization as this is a normalized pipeline. Defaults to true.",
                     "amount (float): Amount of neighbor error diffusion, operates in [0,1] range. Defaults to 1.0.",
-                    "noise (float): Amount of noise to add to the error diffusion. Sometimes it improves repetitive patterns. Defaults to 0.0."
+                    "noise (float): Amount of noise to add to the error diffusion. Sometimes it improves repetitive patterns. Defaults to 0.0.",
+                    "serpentine (bool): Whether to use serpentine scanning for the dithering process. Defaults to true.",
+                    "domain (string): How to map HDR/intermediate values before quantization. 'clamp' maps values to [0,1] before dithering; 'raw' applies dithering on the unbounded signal (can be useful for non-display pipelines but may amplify patterns). Defaults to 'clamp'."    
                 }
             }
         },
@@ -164,8 +166,9 @@ FilterRegistry getRegistry(){
                 errorDiffusionCategory,
                 {
                     "depth (int): Number of levels to reduce the color depth to. Defaults to 2.",
-                    "levels (int): Size of the Bayer matrix to use (e.g., 2, 4, 8). Defaults to 4.",
-                    "perceptual (bool): Whether to use perceptual quantization as this is a normalized pipeline. Defaults to true."
+                    "perceptual (bool): Whether to use perceptual quantization as this is a normalized pipeline. Defaults to true.",
+                    "levels (int): Size of the Bayer matrix to use (2^levels). Defaults to 4 (that's a ((2^4) * (2^4)) matrix).",
+                    "domain (string): How to map HDR/intermediate values before quantization. 'clamp' maps values to [0,1] before dithering. 'raw' applies dithering on the unbounded signal (can be useful for non-display pipelines but may amplify patterns). Defaults to 'clamp'."
                 }
             }
         }
