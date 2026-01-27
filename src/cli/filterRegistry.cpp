@@ -150,10 +150,22 @@ FilterRegistry getRegistry(){
                 "Floyd Steinberg dithering filter. Reduces color depth by passing error values to neighboring pixels. Common in retro image processing when operating with limited color palettes, generates more unpredictable patterns than other Bayer's algorithm. Really bad for video, good for static images. Highly recommend using it after black and white filter and convolutions with stride to lower image size.",
                 errorDiffusionCategory,
                 {
-                    "levels (int): Number of levels to reduce the color depth to. Defaults to 2.",
-                    "perceptual (bool): Whether to use perceptual quantization as this is a normalized pipeline. Defaults to false.",
+                    "depth (int): Number of levels to reduce the color depth to. Defaults to 2.",
+                    "perceptual (bool): Whether to use perceptual quantization as this is a normalized pipeline. Defaults to true.",
                     "amount (float): Amount of neighbor error diffusion, operates in [0,1] range. Defaults to 1.0.",
                     "noise (float): Amount of noise to add to the error diffusion. Sometimes it improves repetitive patterns. Defaults to 0.0."
+                }
+            }
+        },
+        {
+            "bayerDithering",{
+                bayerDitheringFilter,
+                "Bayer dithering filter. Reduces color depth using ordered dithering with a Bayer matrix. Good for images with gradients and smooth color transitions. Less noisy than Floyd Steinberg dithering, but can produce noticeable patterns in some cases.",
+                errorDiffusionCategory,
+                {
+                    "depth (int): Number of levels to reduce the color depth to. Defaults to 2.",
+                    "levels (int): Size of the Bayer matrix to use (e.g., 2, 4, 8). Defaults to 4.",
+                    "perceptual (bool): Whether to use perceptual quantization as this is a normalized pipeline. Defaults to true."
                 }
             }
         }

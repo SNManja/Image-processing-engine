@@ -1,0 +1,48 @@
+{
+	"name": "Cool sobel + dither",
+	"pipeline": [
+		{
+			"filter": "sobel",
+			"params": {
+				"greyscale": true,
+				"scharr": false,
+				"border": "clamp",
+				"scale": 0.3,
+				"offset": 0.0,
+				"stride": 1
+			}
+		},
+		{
+			"filter": "linearAdjustment",
+			"params": {
+				"offset": -0.005,
+				"scale": 1.2
+			}
+		},
+		{
+			"filter": "alphaBlending",
+			"params": {
+				"alpha": [0.7, 0.7, 0.7]
+			}
+		},
+		{ "filter": "sepia" },
+		{
+			"filter": "blur",
+			"params": {
+				"size": 1,
+				"stride": 1
+			}
+		},
+		{
+			"filter": "bayerDithering",
+			"params": {
+				"depth": 8,
+				"levels": 4,
+				"perceptual": true
+			}
+		}
+	],
+	"statistics": { "histograms": { "greyscale": false } },
+	"output_suffix": "_processed",
+	"Recommendations for this filter": "Modify stride and scale of the blur for a more retro vibe"
+}

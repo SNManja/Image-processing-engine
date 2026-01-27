@@ -1,0 +1,31 @@
+{
+	"name": "Obra Dinn-ish",
+	"pipeline": [
+		{ "filter": "bnw" },
+		{
+			"filter": "linearAdjustment",
+			"params": { "scale": 1.6, "offset": -0.12 }
+		},
+
+		{
+			"filter": "blur",
+			"params": {
+				"stride": 1,
+				"size": 1
+			}
+		},
+		{
+			"filter": "bayerDithering",
+			"params": { "depth": 2, "levels": 10, "perceptual": true }
+		},
+		{
+			"filter": "linearAdjustment",
+			"params": {
+				"offset": 0.02,
+				"scale": 1.04
+			}
+		}
+	],
+	"output_suffix": "_processed",
+	"Recommendations for this filter": "As any other dithering preset, config stride and size in odd numbers to adjust to image size. Bigger images wont look retro without a bigger stride."
+}

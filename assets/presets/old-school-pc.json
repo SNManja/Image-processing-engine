@@ -14,7 +14,7 @@
 		{
 			"filter": "FSDithering",
 			"params": {
-				"levels": 8,
+				"depth": 8,
 				"amount": 1,
 				"perceptual": true,
 				"noise": 0.2
