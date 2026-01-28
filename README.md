@@ -1,6 +1,6 @@
 # Image-processing-engine ![CI/CD Status](https://github.com/SNManja/Image-processing-engine/actions/workflows/compile-test-deploy.yml/badge.svg)
 
-C++ image processing engine
+Batch C++ image processing engine focused on highly configurable, multithreaded float pipelines for technical and artistic workflows, operable in any web browser.
 
 <p align="center">
   <img src="preview.png" alt="Banner" width="100%">
@@ -13,50 +13,13 @@ C++ image processing engine
 
 - **Multiformat:** Support for PPM, JPEG, and PNG files
 - **Full Linear Pipeline**: Processes images using a Linear Space [0,1] float representation. This ensures physically-accurate filter mathematics and maximum precision between stages, preventing the common "darkening" or color shifting issues of standard 8-bit pipelines.
-- **Convolutional filters**: Gaussian blur, Sharpen, Emboss, Laplacian of Gaussian (LoG)
-- **Point filters**: Black and white, Sepia, Thresholding, Alpha blending, Linear Adjustment
-- **Geometric filters**: Mirror
-- **Gradients**: Sobel operator
-- Basic CLI implementation with `--help` flag to use as documentation
+- **Broad spectrum of filters**: Convolutional, Point, Geometric, Gradients and Dithering filters with a broad range of parameters to maximize user's control over the pipeline.
 - Supports "Same" padding strategy to maintain spatial correspondence, with configurable stride.
-- Custom border strategy for convolutional filters (Clamping, Wrap, Mirror, Constant)
 - **Histogram support**: greyscale, channel (r,g,b), intensity, value and chroma. With **Graph plotting**.
 - **Filter chaining** with **JSON-based** pipeline specifications. This enables complex filter chaining with custom parameters and readable configuration. Plus being able to save configurations as templates.
-- **Batch processing**: Process all the files in a folder at the same time
 - **WebAssembly Integration**: C++ engine compiled via Emscripten for high-performance, client-side image processing without server-side dependencies
-- **Interactive Web Interface (WIP)**: A user-friendly interface built with JavaScript and Tailwind CSS to facilitate real-time filter tuning and pipeline experimentation.
-- **Multi thread parallelism**: Convolution and point filters are parallelized across multiple threads within a single image for improved performance.
-
-## WEB - To do
-
-- Improve Status flag
-- Display graphs in some way
-- Clean spanglish (some comments and console logs are in spanish)
-- Add maximum upload capacity (memory size pre-defined so user do not exceed browsers limits)
-
-## Engine - To do
-
-- Update documentation
-- Add 16 bit color compatibility for PNG
-- Fix statistics so it takes [0,1] float range
-- Adding thread pool to improve efficiency (creating and joining threads hits hard on the performance of web implementation)
-- Lower cache misses in filter threads by applying a tyling strategy
-- Improve github actions testing and CI
-- Check common sobel parameters and implement them
-- Split rank 1 kernels so convolutions are O(2k) per pixel rather than O(k^2)
-- Improve histogram (provide some kind of guide on values). And document them better
-- Add dilation parameter to convolution.
-- Add common postprocessing parameters (white balance, gain, gamma, normalization, clamping, etc)
-- Add custom parameters to already implemented filters
-- Median filter
-- Add HDR compatibility
-- Output info, like histograms calculated, filters applied, settings used would be cool to implement.
-- Check easy performance improvements
-- Implement "Valid" padding strategy
-- Evaluate if even kernels have any utility, and make them usable check how to handle them well.
-- Make a template driven applyConvolution so it generates different versions of the function in compile time. The main goal of this would be performance optimization (Less function calls with inlining).
-- Simple pipeline support via cli using stdin stdout, supporting pipes in posix systems
-- Implement LUTs 1D (filter is done needs testing), gradient maker and maybe LUTs 3D
+- **Interactive Web Interface**: A user-friendly interface built with JavaScript and Tailwind CSS to facilitate real-time filter tuning and pipeline experimentation.
+- **Multithreading**: Convolution and point filters are parallelized across multiple threads within a single image for improved performance (up to +50% speedup in convolution-heavy pipelines).
 
 ## Potential goals for the future
 
@@ -73,18 +36,52 @@ C++ image processing engine
 
 # Documentation
 
+For the web version, documentation is available via the in-app help button.
+
+For the native version of the engine, documentation is accessed through the CLI, executing the engine with these flags:
+
 - `--help` for capabilities, commands and JSON format
 - `--list` for list of filters, parameters and descriptions
 - `--histograms` for list of histograms supported
 
 # Dependencies
 
-The whole point of this project is to make an usable consumer grade image editing pipeline, with artistic and technical uses with a solid API to ensure deep control for the user. I used libraries for parsing JSON and decoding image files for the backend. At the time being even the graphics of histograms is made by me. I am **NOT** using OpenCV or any other filter library, every stage of the pipeline is implemented from scratch.
-
-So i will be explicit in which libraries i use, just to make it clear what is made by me and whats not:
+This project avoids external computer vision libraries (like OpenCV), the main goal is making a powerful pipeline from scratch. All filters and processing stages are implemented from scratch.
+External libraries are used only for I/O and auxiliary tooling:
 
 - JZip: For compression of batch download (web frontend)
 - CodeMirror 6: Better IDE for json pipeline (web frontend)
 - nlohmann json: Modern JSON parsing (backend).
 - stb_image and stb_image_write: PNG and JPEG decoding and encoding (backend).
 - Catch2: For building a robust and scalable test suite for the C++ main engine.
+
+## WEB - To do
+
+- Improve Status flag
+- Display graphs in some way
+- Clean spanglish (some comments and console logs are in spanish)
+- Add maximum upload capacity (memory size pre-defined so user do not exceed browsers limits)
+
+## Engine - To do
+
+- Update documentation
+- Add 16 bit color compatibility for PNG
+- Fix statistics so it takes [0,1] float range
+- Adding thread pool to improve efficiency (creating and joining threads hits hard on the performance of web implementation)
+- Lower cache misses in filter threads by applying a tiling strategy
+- Improve github actions testing and CI
+- Check common sobel parameters and implement them
+- Split rank 1 kernels so convolutions are O(2k) per pixel rather than O(k^2)
+- Improve histogram (provide some kind of guide on values). And document them better
+- Add dilation parameter to convolution.
+- Add common postprocessing parameters (white balance, gain, gamma, normalization, clamping, etc)
+- Add custom parameters to already implemented filters
+- Median filter
+- Add HDR compatibility
+- Output info, like histograms calculated, filters applied, settings used would be cool to implement.
+- Check easy performance improvements
+- Implement "Valid" padding strategy
+- Evaluate if even kernels have any utility, and make them usable check how to handle them well.
+- Make a template driven applyConvolution so it generates different versions of the function in compile time. The main goal of this would be performance optimization (Less function calls with inlining).
+- Simple pipeline support via cli using stdin stdout, supporting pipes in posix systems
+- Implement LUTs 1D (filter is done needs testing), gradient maker and maybe LUTs 3D
