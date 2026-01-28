@@ -1,26 +1,30 @@
 # ---- CMake wrapper (native + tests) ----
 BUILD_DIR ?= build
 BUILD_TYPE ?= Release
-CMAKE := /usr/bin/cmake
+
+# encuentra cmake/ctest en PATH (portable a GitHub Actions y tu PC)
+CMAKE  ?= $(shell command -v cmake  2>/dev/null)
+CTEST  ?= $(shell command -v ctest  2>/dev/null)
 
 .PHONY: all configure build test run clean cmake_clean wasm
 
 all: build
 
 configure:
+	@test -n "$(CMAKE)" || (echo "ERROR: cmake not found in PATH" && exit 127)
 	$(CMAKE) -S . -B $(BUILD_DIR) -DCMAKE_BUILD_TYPE=$(BUILD_TYPE)
 
 build: configure
 	$(CMAKE) --build $(BUILD_DIR) -j
 
 test: build
-	ctest --test-dir $(BUILD_DIR) --output-on-failure
+	@test -n "$(CTEST)" || (echo "ERROR: ctest not found in PATH (install CMake/CTest)" && exit 127)
+	$(CTEST) --test-dir $(BUILD_DIR) --output-on-failure
 
 run: build
 	./$(BUILD_DIR)/imgengine
 
 clean: cmake_clean
-
 cmake_clean:
 	rm -rf $(BUILD_DIR)
 
@@ -45,6 +49,7 @@ WASM_FLAGS = -std=c++17 -O3 -Iinclude \
             -s ASSERTIONS=1 \
             --bind \
             --preload-file assets/presets@/presets \
+            --preload-file assets/exportedPics@/presets \
             --preload-file assets/exportedPics@/pics
 
 WASM_FLAGS += -s INITIAL_MEMORY=1024MB
