@@ -5,9 +5,9 @@
 #include <dirent.h>
 #include <string>
 
-static const std::string PICS_DIR   = "./pics/";
-static const std::string OUTPUT_DIR = "./tests/test_output/";
-static const std::string JSON_PATH  = "./tests/identity.json";
+static const std::string JSON_PATH  = std::string(PROJECT_ROOT) + "/tests/identity.json";
+static const std::string PICS_DIR   = std::string(PROJECT_ROOT) + "/pics/";
+static const std::string OUTPUT_DIR = std::string(PROJECT_ROOT) + "/tests/test_output/";
 
 TEST_CASE("Identity filter keeps image unchanged (batch)", "[identity]") {
     batchPipelineViaJson(PICS_DIR, OUTPUT_DIR, JSON_PATH);

@@ -1,18 +1,39 @@
+# ---- CMake wrapper (native + tests) ----
+BUILD_DIR ?= build
+BUILD_TYPE ?= Release
+CMAKE := /usr/bin/cmake
 
-CXX = g++
-CXXFLAGS = -Wall -Iinclude -std=c++17 -O3
-TARGET = imgengine
+.PHONY: all configure build test run clean cmake_clean wasm
+
+all: build
+
+configure:
+	$(CMAKE) -S . -B $(BUILD_DIR) -DCMAKE_BUILD_TYPE=$(BUILD_TYPE)
+
+build: configure
+	$(CMAKE) --build $(BUILD_DIR) -j
+
+test: build
+	ctest --test-dir $(BUILD_DIR) --output-on-failure
+
+run: build
+	./$(BUILD_DIR)/imgengine
+
+clean: cmake_clean
+
+cmake_clean:
+	rm -rf $(BUILD_DIR)
 
 
-
-SRCS = $(shell find src -name "*.cpp")
-CLI_MAIN = src/main.cpp
-CORE_SRCS = $(filter-out $(CLI_MAIN), $(SRCS))
-
+# ---- WASM ----
 EMCC = emcc
 WASM_OUT_DIR = out_web
 WASM_OUT = $(WASM_OUT_DIR)/engine.js
 WASM_BRIDGE = web/wasm_bridge.cpp
+
+SRCS = $(shell find src -name "*.cpp")
+CLI_MAIN = src/main.cpp
+CORE_SRCS = $(filter-out $(CLI_MAIN), $(SRCS))
 
 WASM_FLAGS = -std=c++17 -O3 -Iinclude \
             -pthread \
@@ -30,30 +51,6 @@ WASM_FLAGS += -s INITIAL_MEMORY=1024MB
 WASM_FLAGS += -s ALLOW_MEMORY_GROWTH=1
 WASM_FLAGS += -s MAXIMUM_MEMORY=2048MB
 
-
-all: $(TARGET)
-
-$(TARGET): $(SRCS)
-	$(CXX) $(CXXFLAGS) $(SRCS) -o $(TARGET)
-
 wasm:
 	mkdir -p $(WASM_OUT_DIR)
 	$(EMCC) $(WASM_BRIDGE) $(CORE_SRCS) $(WASM_FLAGS) -o $(WASM_OUT)
-
-clean:
-	rm -f $(TARGET) $(TEST_BIN)
-
-
-
-TEST_BIN = run_test
-TEST_SRCS = $(wildcard tests/*.cpp)
-TEST_CXXFLAGS = $(CXXFLAGS) -Iexternal/catch2/src -Itests
-
-
-CATCH2_IMPL = external/catch2/src/catch_all.cpp
-
-test: $(CORE_SRCS) $(TEST_SRCS) $(CATCH2_IMPL)
-	@test -f external/catch2/src/catch_all.hpp -o -f external/catch2/src/catch2/catch.hpp || \
-	( echo "Missing Catch2 submodule. Run: git submodule update --init --recursive" && exit 1 )
-	$(CXX) $(TEST_CXXFLAGS) $^ -o $(TEST_BIN)
-	./$(TEST_BIN)

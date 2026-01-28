@@ -45,7 +45,8 @@ void ensureFolder(const std::string& ruta) {
 void batchPipelineViaJson(std::string PICS_DIR, std::string OUTPUT_DIR, std::string JSON_PATH) {
     
     std::ifstream file(JSON_PATH);
-    assert(file.is_open());
+    if (!file.is_open()) throw std::runtime_error("Could not open JSON: " + JSON_PATH);
+
     json data = json::parse(file);
     
     assert(data.contains("pipeline") && data["pipeline"].is_array());   

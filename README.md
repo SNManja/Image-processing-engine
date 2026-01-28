@@ -68,7 +68,7 @@ C++ image processing engine
 1. Clone the repo.
 2. Compile with `make` command on your terminal
 3. Add your images (png, jpeg, ppm) on `./pics` and edit `./pipeline.json` for configuration
-4. Use `./imgengine` to process your images in batch
+4. Use `./build/imgengine` to process your images in batch
 5. Obtain the resulting images from `./output`
 
 # Documentation
