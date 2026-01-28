@@ -1,4 +1,4 @@
-# Image-processing-engine ![CI/CD Status](https://github.com/SNManja/Image-processing-engine/actions/workflows/CompileChecking.yml/badge.svg)
+# Image-processing-engine ![CI/CD Status](https://github.com/SNManja/Image-processing-engine/actions/workflows/compile-test-deploy.yml/badge.svg)
 
 C++ image processing engine
 
@@ -87,3 +87,4 @@ So i will be explicit in which libraries i use, just to make it clear what is ma
 - CodeMirror 6: Better IDE for json pipeline (web frontend)
 - nlohmann json: Modern JSON parsing (backend).
 - stb_image and stb_image_write: PNG and JPEG decoding and encoding (backend).
+- Catch2: For building a robust and scalable test suite for the C++ main engine.
