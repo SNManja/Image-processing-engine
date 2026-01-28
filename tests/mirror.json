@@ -1,0 +1,17 @@
+{
+	"name": "example_pipeline",
+	"pipeline": [
+		{
+			"filter": "mirror"
+		},
+		{
+			"filter": "mirror"
+		}
+	],
+	"statistics": {
+		"histograms": {
+			"greyscale": false
+		}
+	},
+	"output_suffix": "_mirror"
+}

@@ -1,0 +1,272 @@
+[
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-c",
+      "-Wall",
+      "-Iinclude",
+      "-std=c++17",
+      "-O3",
+      "-Iexternal/catch2/src",
+      "-Itests",
+      "-o",
+      "run_test",
+      "src/histograms/histogramGraph.cpp"
+    ],
+    "directory": "/home/snmanja/Documents/Image-processing-engine",
+    "file": "/home/snmanja/Documents/Image-processing-engine/src/histograms/histogramGraph.cpp",
+    "output": "/home/snmanja/Documents/Image-processing-engine/run_test"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-c",
+      "-Wall",
+      "-Iinclude",
+      "-std=c++17",
+      "-O3",
+      "-Iexternal/catch2/src",
+      "-Itests",
+      "-o",
+      "run_test",
+      "src/histograms/histogram.cpp"
+    ],
+    "directory": "/home/snmanja/Documents/Image-processing-engine",
+    "file": "/home/snmanja/Documents/Image-processing-engine/src/histograms/histogram.cpp",
+    "output": "/home/snmanja/Documents/Image-processing-engine/run_test"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-c",
+      "-Wall",
+      "-Iinclude",
+      "-std=c++17",
+      "-O3",
+      "-Iexternal/catch2/src",
+      "-Itests",
+      "-o",
+      "run_test",
+      "src/histograms/histogramRegistry.cpp"
+    ],
+    "directory": "/home/snmanja/Documents/Image-processing-engine",
+    "file": "/home/snmanja/Documents/Image-processing-engine/src/histograms/histogramRegistry.cpp",
+    "output": "/home/snmanja/Documents/Image-processing-engine/run_test"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-c",
+      "-Wall",
+      "-Iinclude",
+      "-std=c++17",
+      "-O3",
+      "-Iexternal/catch2/src",
+      "-Itests",
+      "-o",
+      "run_test",
+      "src/cli/args_parser.cpp"
+    ],
+    "directory": "/home/snmanja/Documents/Image-processing-engine",
+    "file": "/home/snmanja/Documents/Image-processing-engine/src/cli/args_parser.cpp",
+    "output": "/home/snmanja/Documents/Image-processing-engine/run_test"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-c",
+      "-Wall",
+      "-Iinclude",
+      "-std=c++17",
+      "-O3",
+      "-Iexternal/catch2/src",
+      "-Itests",
+      "-o",
+      "run_test",
+      "src/cli/filterRegistry.cpp"
+    ],
+    "directory": "/home/snmanja/Documents/Image-processing-engine",
+    "file": "/home/snmanja/Documents/Image-processing-engine/src/cli/filterRegistry.cpp",
+    "output": "/home/snmanja/Documents/Image-processing-engine/run_test"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-c",
+      "-Wall",
+      "-Iinclude",
+      "-std=c++17",
+      "-O3",
+      "-Iexternal/catch2/src",
+      "-Itests",
+      "-o",
+      "run_test",
+      "src/cli/cli_helpers.cpp"
+    ],
+    "directory": "/home/snmanja/Documents/Image-processing-engine",
+    "file": "/home/snmanja/Documents/Image-processing-engine/src/cli/cli_helpers.cpp",
+    "output": "/home/snmanja/Documents/Image-processing-engine/run_test"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-c",
+      "-Wall",
+      "-Iinclude",
+      "-std=c++17",
+      "-O3",
+      "-Iexternal/catch2/src",
+      "-Itests",
+      "-o",
+      "run_test",
+      "src/cli/pipeline_via_JSON.cpp"
+    ],
+    "directory": "/home/snmanja/Documents/Image-processing-engine",
+    "file": "/home/snmanja/Documents/Image-processing-engine/src/cli/pipeline_via_JSON.cpp",
+    "output": "/home/snmanja/Documents/Image-processing-engine/run_test"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-c",
+      "-Wall",
+      "-Iinclude",
+      "-std=c++17",
+      "-O3",
+      "-Iexternal/catch2/src",
+      "-Itests",
+      "-o",
+      "run_test",
+      "src/image/image.cpp"
+    ],
+    "directory": "/home/snmanja/Documents/Image-processing-engine",
+    "file": "/home/snmanja/Documents/Image-processing-engine/src/image/image.cpp",
+    "output": "/home/snmanja/Documents/Image-processing-engine/run_test"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-c",
+      "-Wall",
+      "-Iinclude",
+      "-std=c++17",
+      "-O3",
+      "-Iexternal/catch2/src",
+      "-Itests",
+      "-o",
+      "run_test",
+      "src/filters/sobel_operator.cpp"
+    ],
+    "directory": "/home/snmanja/Documents/Image-processing-engine",
+    "file": "/home/snmanja/Documents/Image-processing-engine/src/filters/sobel_operator.cpp",
+    "output": "/home/snmanja/Documents/Image-processing-engine/run_test"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-c",
+      "-Wall",
+      "-Iinclude",
+      "-std=c++17",
+      "-O3",
+      "-Iexternal/catch2/src",
+      "-Itests",
+      "-o",
+      "run_test",
+      "src/filters/convolutional_filters.cpp"
+    ],
+    "directory": "/home/snmanja/Documents/Image-processing-engine",
+    "file": "/home/snmanja/Documents/Image-processing-engine/src/filters/convolutional_filters.cpp",
+    "output": "/home/snmanja/Documents/Image-processing-engine/run_test"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-c",
+      "-Wall",
+      "-Iinclude",
+      "-std=c++17",
+      "-O3",
+      "-Iexternal/catch2/src",
+      "-Itests",
+      "-o",
+      "run_test",
+      "src/filters/dithering.cpp"
+    ],
+    "directory": "/home/snmanja/Documents/Image-processing-engine",
+    "file": "/home/snmanja/Documents/Image-processing-engine/src/filters/dithering.cpp",
+    "output": "/home/snmanja/Documents/Image-processing-engine/run_test"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-c",
+      "-Wall",
+      "-Iinclude",
+      "-std=c++17",
+      "-O3",
+      "-Iexternal/catch2/src",
+      "-Itests",
+      "-o",
+      "run_test",
+      "src/filters/point_filters.cpp"
+    ],
+    "directory": "/home/snmanja/Documents/Image-processing-engine",
+    "file": "/home/snmanja/Documents/Image-processing-engine/src/filters/point_filters.cpp",
+    "output": "/home/snmanja/Documents/Image-processing-engine/run_test"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-c",
+      "-Wall",
+      "-Iinclude",
+      "-std=c++17",
+      "-O3",
+      "-Iexternal/catch2/src",
+      "-Itests",
+      "-o",
+      "run_test",
+      "tests/identity_test.cpp"
+    ],
+    "directory": "/home/snmanja/Documents/Image-processing-engine",
+    "file": "/home/snmanja/Documents/Image-processing-engine/tests/identity_test.cpp",
+    "output": "/home/snmanja/Documents/Image-processing-engine/run_test"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-c",
+      "-Wall",
+      "-Iinclude",
+      "-std=c++17",
+      "-O3",
+      "-Iexternal/catch2/src",
+      "-Itests",
+      "-o",
+      "run_test",
+      "tests/mirror_test.cpp"
+    ],
+    "directory": "/home/snmanja/Documents/Image-processing-engine",
+    "file": "/home/snmanja/Documents/Image-processing-engine/tests/mirror_test.cpp",
+    "output": "/home/snmanja/Documents/Image-processing-engine/run_test"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-c",
+      "-Wall",
+      "-Iinclude",
+      "-std=c++17",
+      "-O3",
+      "-Iexternal/catch2/src",
+      "-Itests",
+      "-o",
+      "run_test",
+      "tests/test_main.cpp"
+    ],
+    "directory": "/home/snmanja/Documents/Image-processing-engine",
+    "file": "/home/snmanja/Documents/Image-processing-engine/tests/test_main.cpp",
+    "output": "/home/snmanja/Documents/Image-processing-engine/run_test"
+  }
+]

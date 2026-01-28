@@ -44,10 +44,12 @@ jobs:
                   path: out_web/
 
     run-test:
-        name: "Identity tests"
+        name: "Test suite"
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v4
+              with:
+                  submodules: recursive
             - name: Run Tests
               run: |
                   mkdir -p tests/test_output

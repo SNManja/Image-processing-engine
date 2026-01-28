@@ -107,11 +107,11 @@ std::vector<std::vector<float>> calcBayerMatrix(int levels){
 	}
 
 	std::vector<std::vector<float>> D_n = calcBayerMatrix(levels-1);
-	for (int i = 0; i < 2; i++){
-		for (int j = 0; j < 2; j++){
-			for (int y = 0; y < D_n.size(); y++){
+	for (size_t i = 0; i < 2; i++){
+		for (size_t j = 0; j < 2; j++){
+			for (size_t y = 0; y < D_n.size(); y++){
 				
-				for (int x = 0; x < D_n.size(); x++){
+				for (size_t x = 0; x < D_n.size(); x++){
 					const float val = 4 * D_n[y][x] + off[i][j];
 					matrix[i * D_n.size() + y][j * D_n.size() + x] = val;
 				}
@@ -140,9 +140,6 @@ std::vector<std::vector<float>> getBayerMatrix(int levels){
 void bayerDitheringFilter(const image<float>& src, image<float>& dst, const filterContext& ctx) {
 	resizeToMatchSrc(src, dst);
 	image<float> original = src; // Not efficient. But this is not a filter i'll improve memory usage for the time being
-
-	int h = src.height;
-	int w = src.width;
 
 	const int depth = lookingForParamInCtx(ctx, "depth", 2);
 	const int levels = lookingForParamInCtx(ctx, "levels", 2);

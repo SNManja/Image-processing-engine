@@ -3,6 +3,8 @@ CXX = g++
 CXXFLAGS = -Wall -Iinclude -std=c++17 -O3
 TARGET = imgengine
 
+
+
 SRCS = $(shell find src -name "*.cpp")
 CLI_MAIN = src/main.cpp
 CORE_SRCS = $(filter-out $(CLI_MAIN), $(SRCS))
@@ -42,8 +44,16 @@ clean:
 	rm -f $(TARGET) $(TEST_BIN)
 
 
-TEST_BIN = run_test
 
-test: $(CORE_SRCS) tests/identity_test.cpp
-	$(CXX) $(CXXFLAGS) $^ -o $(TEST_BIN)
+TEST_BIN = run_test
+TEST_SRCS = $(wildcard tests/*.cpp)
+TEST_CXXFLAGS = $(CXXFLAGS) -Iexternal/catch2/src -Itests
+
+
+CATCH2_IMPL = external/catch2/src/catch_all.cpp
+
+test: $(CORE_SRCS) $(TEST_SRCS) $(CATCH2_IMPL)
+	@test -f external/catch2/src/catch_all.hpp -o -f external/catch2/src/catch2/catch.hpp || \
+	( echo "Missing Catch2 submodule. Run: git submodule update --init --recursive" && exit 1 )
+	$(CXX) $(TEST_CXXFLAGS) $^ -o $(TEST_BIN)
 	./$(TEST_BIN)
