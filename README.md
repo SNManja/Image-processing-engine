@@ -11,7 +11,7 @@ Batch C++ image processing engine focused on highly configurable, multithreaded 
 
 ## Capabilities
 
-- **Multiformat:** Support for PPM, JPEG, and PNG files
+- **Multiformat:** Support for PPM, JPEG, and PNG files with automatic or user-defined output format conversion.
 - **Full Linear Pipeline**: Processes images using a Linear Space [0,1] float representation. This ensures physically-accurate filter mathematics and maximum precision between stages, preventing the common "darkening" or color shifting issues of standard 8-bit pipelines.
 - **Broad spectrum of filters**: Convolutional, Point, Geometric, Gradients and Dithering filters with a broad range of parameters to maximize user's control over the pipeline.
 - Supports "Same" padding strategy to maintain spatial correspondence, with configurable stride.
@@ -64,12 +64,9 @@ External libraries are used only for I/O and auxiliary tooling:
 
 ## Engine - To do
 
-- Update documentation
 - Add 16 bit color compatibility for PNG
-- Fix statistics so it takes [0,1] float range
 - Adding thread pool to improve efficiency (creating and joining threads hits hard on the performance of web implementation)
 - Lower cache misses in filter threads by applying a tiling strategy
-- Improve github actions testing and CI
 - Check common sobel parameters and implement them
 - Split rank 1 kernels so convolutions are O(2k) per pixel rather than O(k^2)
 - Improve histogram (provide some kind of guide on values). And document them better

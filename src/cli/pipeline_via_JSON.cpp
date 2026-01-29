@@ -51,18 +51,8 @@ void batchPipelineViaJson(std::string PICS_DIR, std::string OUTPUT_DIR, std::str
     
     assert(data.contains("pipeline") && data["pipeline"].is_array());   
 
-    json statsConfig = json::object();
-    if (data.contains("statistics")) {
-        statsConfig = data["statistics"];
-    }
-
     DIR* directory = opendir(PICS_DIR.c_str());
     assert(directory); // Directory opened successfully
-
-
-    std::string histogramPath = OUTPUT_DIR + "/stats/";
-    ensureFolder(histogramPath);
-    clearFolder(histogramPath);
     
     std::vector<std::string> imgQueue;
     
@@ -124,12 +114,29 @@ void processSingleImage(std::string fileName, std::string PICS_DIR, std::string 
             std::string outputSuffix = data["output_suffix"];
             fileName = fileName.substr(0, fileName.find_last_of(".")) + outputSuffix;
             fileName += ".";
+        }
+        if(data.contains("output_extension") && data["output_extension"].is_string()) {
+            std::string outputExtJSONValue = data["output_extension"];
+            if(outputExtJSONValue == "jpg" || outputExtJSONValue == "jpeg" || outputExtJSONValue == "png" || outputExtJSONValue == "ppm") {
+                    fileName += outputExtJSONValue;
+            } else {
+                fileName += ext;
+            }
+        } else {
             fileName += ext;
         }
+
+        json statsConfig = json::object();
+        if (data.contains("statistics")) {
+            statsConfig = data["statistics"];
+            std::string histogramPath = OUTPUT_DIR + "/stats/";
+            ensureFolder(histogramPath);
+            calcStatistics((image<unsigned char>)src, statsConfig, histogramPath, fileName);
+        }
+
+        
         std::string outPath = OUTPUT_DIR + "/" + fileName;
-        // calcStatistics(ucharRes, statsConfig, histogramPath, fileName);
         write_image(src, outPath.c_str());
-                
     }
 }
 

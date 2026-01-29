@@ -8,7 +8,7 @@
 	],
 	"statistics": {
 		"histograms": {
-			"greyscale": false
+			"greyscale": true
 		}
 	},
 	"output_suffix": "_identity"

@@ -7,8 +7,8 @@ histogram computeHistogram(const image<unsigned char>& img, histogramPerPixelFun
     histogram h((255 + 1), 0); // 255 is max pixel value. Includes 0
     for (const pixel<unsigned char>& p : img.data){
         int pValue = calc(&p);
-        assert(pValue >= 0 && pValue <= 255);
-        h[pValue] += 1;
+        pValue = std::clamp(pValue, 0, 255);
+        h[pValue] ++;
     }
     return h;
 }   
@@ -16,14 +16,16 @@ histogram computeHistogram(const image<unsigned char>& img, histogramPerPixelFun
 
 histogram greyscaleHistogram(const image<unsigned char>& img){ // also called luminance
     return computeHistogram(img, [](const pixel<unsigned char>* p){
-        return (int)((0.2126 * p->r)+(0.7152 * p->g)+(0.0722 * p->b));
+        int v = int(std::lround(0.2126*p->r + 0.7152*p->g + 0.0722*p->b));
+        return std::clamp(v, 0, 255);
     });
 }
 
 
 histogram intensityHistogram(const image<unsigned char>& img){
     return computeHistogram(img, [](const pixel<unsigned char>* p){
-        return (unsigned char)((p->r+p->g+p->b)/3);
+        int v = (int(p->r) + int(p->g) + int(p->b)) / 3;
+        return (unsigned char)v;
     });
 }
 
@@ -60,17 +62,14 @@ histogram blueChannelHistogram(const image<unsigned char>& img){
 
 
 double histogramMean(const histogram& h){
-    assert(h.size() > 0);
-    int totalPixels = 0;
-    int sum = 0;
+    assert(!h.empty());
+    uint64_t totalPixels = 0;
+    uint64_t sum = 0;
     for (size_t i = 0; i < h.size(); i++){
-        sum += h[i] * i;
-        totalPixels += h[i];
+        sum += (uint64_t)h[i] * (uint64_t)i;
+        totalPixels += (uint64_t)h[i];
     }
     return (((double)sum)/((double)totalPixels));
 }
 
-double averageOpticalDensity(const histogram& h){
-    return histogramMean(h);
-}   
 

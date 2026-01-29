@@ -76,7 +76,8 @@ JSON pipeline format:
             .
     }
   },
-  "output_suffix": (string)
+  "output_suffix": (string),
+  "output_extension": (string) <= "auto" | "jpg" | "jpeg" | "png" | "ppm"
 }
 
 Notes:

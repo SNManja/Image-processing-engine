@@ -8,48 +8,49 @@ HistogramRegistry getHistogramRegistry() {
         {
             "greyscale",
             {
-                "Generates a greyscale histogram from the input image.",
+                "Greyscale histogram. Useful for analyzing global luminance distribution and contrast.",
                 greyscaleHistogram 
             }
         },
         {
-            "chroma",{
-                "Generates a chroma histogram from the input image.",
+            "chroma",
+            {
+                "Chroma histogram. Measures color saturation distribution, useful for detecting color richness or washout.",
                 chromaHistogram
             }
         },
         {
             "intensity",
             {
-                "Generates an intensity histogram from the input image.",
+                "Intensity histogram. Represents average RGB brightness per pixel, commonly used for exposure analysis.",
                 intensityHistogram
             }
         },
         {
             "value",
             {
-                "Generates a value histogram from the input image.",
+                "Value histogram (HSV V channel). Reflects perceived brightness, useful for tone mapping and dynamic range.",
                 valueHistogram
             }
         },
         {
             "redChannel",
             {
-                "Generates a red channel histogram from the input image.",
+                "Red channel histogram. Useful for detecting red clipping or color imbalance.",
                 redChannelHistogram
             }   
         },
         {
             "greenChannel",
             {
-                "Generates a green channel histogram from the input image.",
+                "Green channel histogram. Often used for exposure analysis due to human eye sensitivity.",
                 greenChannelHistogram
             }
         },
         {
             "blueChannel",
             {
-                "Generates a blue channel histogram from the input image.",
+                "Blue channel histogram. Useful for detecting blue noise and color cast.",
                 blueChannelHistogram
             }
         },
