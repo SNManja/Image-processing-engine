@@ -7,6 +7,8 @@
 #include "histogram.h"
 #include <iostream>
 #include <filesystem>
+#include <chrono>
+
 
 
 
@@ -43,7 +45,10 @@ void ensureFolder(const std::string& ruta) {
 }
 
 void batchPipelineViaJson(std::string PICS_DIR, std::string OUTPUT_DIR, std::string JSON_PATH) {
-    
+
+    auto time_init = std::chrono::high_resolution_clock::now();
+
+
     std::ifstream file(JSON_PATH);
     if (!file.is_open()) throw std::runtime_error("Could not open JSON: " + JSON_PATH);
 
@@ -75,9 +80,14 @@ void batchPipelineViaJson(std::string PICS_DIR, std::string OUTPUT_DIR, std::str
     }
     printf("\n");
     std::string fileName;  
+
     while (true) {
         {
             if (imgQueue.empty()) { 
+                auto time_end = std::chrono::high_resolution_clock::now();
+                std::chrono::duration<double> elapsed = time_end - time_init;
+
+                printf("Pipeline finished in %.3f seconds\n", elapsed.count());
                 return;
             }
             printf("Processing image %s\n", imgQueue.back().c_str());
@@ -87,9 +97,8 @@ void batchPipelineViaJson(std::string PICS_DIR, std::string OUTPUT_DIR, std::str
         processSingleImage(fileName, PICS_DIR, OUTPUT_DIR, data);
         printf("Finished image %s\n", fileName.c_str());
     }
-            
-   
 
+   
 }
 
 void processSingleImage(std::string fileName, std::string PICS_DIR, std::string OUTPUT_DIR,const json& data){

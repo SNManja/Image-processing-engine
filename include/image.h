@@ -6,7 +6,7 @@
 #include <type_traits>
 #include <cmath>
 #include <string>
-
+#include <thread>
 
 constexpr float MAX_PIXEL_VALUE = 1.0f;
 constexpr float MIN_PIXEL_VALUE = 0.0f;
@@ -158,6 +158,33 @@ template <typename T> void setPixel(image<T>& img, int x, int y, pixel<T> p);
 
 void write_image(image<float>& img, std::string output_path);
 image<float> read_image(std::string input_path);
+
+
+
+template <class Fn>
+inline void parallelForRows(int height, int threadCount, Fn&& fn) {
+    if (threadCount <= 0) threadCount = (int)std::thread::hardware_concurrency();
+    if (threadCount <= 0) threadCount = 2;
+
+    int chunk = (height + threadCount - 1) / threadCount;
+
+    std::vector<std::thread> threads;
+    threads.reserve(threadCount);
+
+    for (int t = 0; t < threadCount; ++t) {
+        int y0 = t * chunk;
+        int y1 = std::min(height, y0 + chunk);
+        if (y0 >= y1) break;
+
+        threads.emplace_back([&, y0, y1] {
+            fn(y0, y1);
+        });
+    }
+
+    for (auto& th : threads) th.join();
+}
+
+
 #include "pixel_operations.tpp"
 
 #endif

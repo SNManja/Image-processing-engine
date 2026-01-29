@@ -3,7 +3,6 @@
 #include "args_parser.h"
 #include "json.hpp"
 #include <cassert>
-#include <thread>
 
 /*
     Convolution processing functions
@@ -60,40 +59,23 @@ void genericConvolution(const image<float>& src, image<float>& dst, const Kernel
     int stride = config.stride;
     GetPixelFunc getPixStrat = getPixelFunction(config.borderStrategy);
 
-    int inW = src.width;
-    int inH = src.height;
     int k = kernel.size;
   
     const int kernelCenter = k / 2;
-    int padding = kernelCenter; 
-    int outW = ((int)((inW-k+2*padding))/stride)+1;
-    int outH = ((int)((inH-k+2*padding))/stride)+1;
+    int padding = kernelCenter;
+    int outW = ((int)((src.width-k+2*padding))/stride)+1;
+    int outH = ((int)((src.height-k+2*padding))/stride)+1;
     dst.width = outW; 
     dst.height = outH;
     dst.data.resize(outW * outH);
 
-    
-     // Instance threads
-    int threadCount = std::thread::hardware_concurrency();
-    std::vector<std::thread> threads;
-    if (threadCount == 0) threadCount = 2; // Fallback
-
-    int chunkSize = dst.height / threadCount;
-
-    for (int t = 0; t < threadCount; ++t){
-        int ty = t * chunkSize;
-        int tx = 0;
-        int topChunkY = ty+chunkSize;
-        int topChunkX = outW;
-        if (t == threadCount - 1) {
-            topChunkY = outH;
-        }
-        threads.emplace_back([=, &src, &dst, &kernel, &config](){
-           for(int y = ty; y < topChunkY; y++){
-                for(int x = tx; x < topChunkX; x++){
-                    int inX = (x * stride);
-                    int inY = (y * stride);
-                    float newValueR = 0, newValueB = 0, newValueG = 0;
+    // Instance threads
+    parallelForRows(dst.height, 0, [&](int y0, int y1) {
+        for (int y = y0; y < y1; y++) {
+            for (int x = 0; x < dst.width; x++) {
+                int inX = (x * stride);
+                int inY = (y * stride);
+                float newValueR = 0, newValueB = 0, newValueG = 0;
                     for (int i=0; i < k; i++){
                         for (int j=0; j < k; j++){
                             // !This function call without inlining may have performance loss
@@ -104,18 +86,11 @@ void genericConvolution(const image<float>& src, image<float>& dst, const Kernel
                         }
                     }
                     pixel<float> newPix = {(newValueR*scale+offset), (newValueG*scale+offset), (newValueB*scale+offset)};
-                    setPixel<float>(dst,x,y,newPix);
+                    setPixel<float>(
+                        dst,x,y,newPix);
                 }
-        
             } 
-        });
-        
-    }
-    for (auto& t : threads) {
-        if (t.joinable()) {
-            t.join();
-        }
-    } 
+    });
 }
 
 void applyConvolution(const image<float>& src, image<float>& dst, const Kernel& kernel, const convolutionConfig& config){
