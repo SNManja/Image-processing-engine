@@ -170,7 +170,7 @@ void boxblurFilter(const image<float>& src, image<float>& dst, const filterConte
 void sharpenFilter(const image<float>& src, image<float>& dst, const filterContext& ctx) {
     convolutionConfig config = readConvolutionConfig(ctx.data);
 
-    float amountValue = 1.0;
+    float amountValue = 1.0f;
     if(ctx.data.contains("params") && ctx.data["params"].contains("amount")) {
         amountValue = ctx.data["params"]["amount"];
     }
@@ -178,7 +178,7 @@ void sharpenFilter(const image<float>& src, image<float>& dst, const filterConte
 
     Kernel k = kernel(3, {
         {0, -amountValue, 0},
-        {-amountValue, amountValue * 5, -amountValue},
+        {-amountValue, amountValue * 4.0f + 1.0f, -amountValue},
         {0, -amountValue, 0}
     });
     applyConvolution(src, dst, k, config);

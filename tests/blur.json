@@ -1,0 +1,15 @@
+{
+	"name": "example_pipeline",
+	"pipeline": [
+		{
+			"filter": "blur",
+			"params": { "size": 1 }
+		}
+	],
+	"statistics": {
+		"histograms": {
+			"greyscale": false
+		}
+	},
+	"output_suffix": "_identity"
+}
