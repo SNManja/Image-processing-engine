@@ -30,5 +30,6 @@
 		}
 	},
 	"output_suffix": "_processed",
+	"output_extension": "auto",
 	"tags": ["art"]
 }

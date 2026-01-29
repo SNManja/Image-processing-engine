@@ -27,5 +27,6 @@
 		}
 	],
 	"output_suffix": "_processed",
+	"output_extension": "auto",
 	"Recommendations for this filter": "As any other dithering preset, config stride and size in odd numbers to adjust to image size. Bigger images wont look retro without a bigger stride."
 }

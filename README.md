@@ -57,6 +57,7 @@ External libraries are used only for I/O and auxiliary tooling:
 
 ## WEB - To do
 
+- Heavy refactor. Out_web should be the main folder and the front is kinda messy.
 - Improve Status flag
 - Display graphs in some way
 - Clean spanglish (some comments and console logs are in spanish)

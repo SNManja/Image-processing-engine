@@ -22,5 +22,6 @@
 		}
 	],
 	"output_suffix": "_processed",
+	"output_extension": "auto",
 	"Recommendations for this filter": "Optimal retro look highly depends on an stride and size blur config. For bigger images more size and more stride, for tinier images less size and less stride. Works great if both params have the same values, but experiment for yourself"
 }

@@ -44,5 +44,6 @@
 	],
 	"statistics": { "histograms": { "greyscale": false } },
 	"output_suffix": "_processed",
+	"output_extension": "auto",
 	"Recommendations for this filter": "Modify stride and scale of the blur for a more retro vibe"
 }
