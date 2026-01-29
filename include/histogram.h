@@ -4,6 +4,7 @@
 #include <cassert>
 #include <map>
 #include <string>
+#include <cstdint>
 
 using histogramPerPixelFunction = std::function<int(const pixel<unsigned char>*)>; // These functions must return a number between 0 and 255.
 

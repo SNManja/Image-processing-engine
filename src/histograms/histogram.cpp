@@ -1,4 +1,4 @@
-
+#include <cstdint>
 #include "histogram.h"
 
 histogram computeHistogram(const image<unsigned char>& img, histogramPerPixelFunction calc){
