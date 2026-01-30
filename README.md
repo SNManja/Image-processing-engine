@@ -20,6 +20,7 @@ Batch C++ image processing engine focused on highly configurable, multithreaded 
 - **WebAssembly Integration**: C++ engine compiled via Emscripten for high-performance, client-side image processing without server-side dependencies
 - **Interactive Web Interface**: A user-friendly interface built with JavaScript and Tailwind CSS to facilitate real-time filter tuning and pipeline experimentation.
 - **Multithreading**: Convolution and point filters are parallelized across multiple threads within a single image for improved performance (up to +50% speedup in convolution-heavy pipelines).
+- **Automatic Separable Convolution** (Rank-1 Detection): The engine detects rank-1 convolution kernels at runtime and factorizes them into the outer product of two vectors. Reducing complexity from O(k²) to O(2k) with identical mathematical output. This allows extremely large kernels (e.g. 100×100 Gaussian blur) to run in seconds instead of minutes.
 
 ## Potential goals for the future
 
@@ -69,7 +70,6 @@ External libraries are used only for I/O and auxiliary tooling:
 - Adding thread pool to improve efficiency (creating and joining threads hits hard on the performance of web implementation)
 - Lower cache misses in filter threads by applying a tiling strategy
 - Check common sobel parameters and implement them
-- Split rank 1 kernels so convolutions are O(2k) per pixel rather than O(k^2)
 - Improve histogram (provide some kind of guide on values). And document them better
 - Add dilation parameter to convolution.
 - Add common postprocessing parameters (white balance, gain, gamma, normalization, clamping, etc)

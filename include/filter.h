@@ -52,12 +52,19 @@ struct Kernel {
     std::vector<std::vector<float>> values;
 };
 
+struct SplitKernel { 
+    int size;
+    std::vector<std::vector<float>> rowValues;
+    std::vector<std::vector<float>> colValues;
+};
+
 struct convolutionConfig 
 {
     float scale = 1.0f;
     float offset = 0.0f;
     int stride = 1;
     std::string borderStrategy = "clamp";
+    bool splitKernelEnabled = true; // Mainly for comparison and testing
 };
 
 Kernel kernel(int n, std::vector<std::vector<float>> values);

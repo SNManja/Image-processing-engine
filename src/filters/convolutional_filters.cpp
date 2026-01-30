@@ -3,12 +3,14 @@
 #include "args_parser.h"
 #include "json.hpp"
 #include <cassert>
+#include "linear_algebra_operations.h"
 
 /*
     Convolution processing functions
 */
 
 using json = nlohmann::json;
+
 
 Kernel kernel(int n, std::vector<std::vector<float>> values) {
     Kernel k;
@@ -17,18 +19,51 @@ Kernel kernel(int n, std::vector<std::vector<float>> values) {
     return k;
 }
 
-struct SplitKernel { // TODO implement split kernel optimization in convolutions
-    int size;
-    std::vector<float> rowValues;
-    std::vector<float> colValues;
-};
 
-SplitKernel splitKernel(int n, std::vector<float> rowValues, std::vector<float> colValues) {
-    SplitKernel k;
-    k.size = n;
-    k.rowValues = rowValues;
-    k.colValues = colValues;
-    return k;
+SplitKernel splitKernel(const Kernel& k) {
+    SplitKernel sk;
+    sk.size = k.size;
+
+    sk.rowValues.assign(1, std::vector<float>(k.size));   // 1×k
+    sk.colValues.assign(k.size, std::vector<float>(1));   // k×1
+
+    float pivot = k.values[0][0];
+    int pivotRow = 0;
+    int pivotCol = 0;
+    for(int i = 0; i < k.size; i++){
+        for(int j = 0; j < k.size; j++) {
+            if (abs(k.values[i][j]) > abs(pivot)) {
+                pivot = k.values[i][j];
+                pivotRow = i;
+                pivotCol = j;
+            }
+        }
+    }
+    if (floatCmp(pivot, 0) == 0) {
+        throw std::runtime_error("Max kernel absolute value is 0");
+    }
+
+    for (int j = 0; j < k.size; j++) sk.rowValues[0][j] = k.values[pivotRow][j] / pivot;
+
+    for (int i = 0; i < k.size; i++) sk.colValues[i][0] = k.values[i][pivotCol];
+
+    // sanity check
+    std::vector<std::pair<int,int>> probes = {
+        {0, 0},
+        {0, k.size-1},
+        {k.size-1, 0},
+        {k.size-1, k.size-1},
+        {k.size/2, k.size/2}
+    };
+
+    for (auto [i, j] : probes) {
+        float reconstructed = sk.colValues[i][0] * sk.rowValues[0][j];
+        float original = k.values[i][j];
+        if (!(floatCmp(reconstructed, original) == 0)) {
+            throw std::runtime_error("Sanity check failed: kernel is not truly rank-1");
+        }
+    }
+    return sk;
 }
 
 using GetPixelFunc = pixel<float> (*)(const image<float>&, int, int);
@@ -57,6 +92,7 @@ void genericConvolution(const image<float>& src, image<float>& dst, const Kernel
     float scale = config.scale;
     float offset = config.offset;
     int stride = config.stride;
+    bool splitKernelEnabled = config.splitKernelEnabled;
     GetPixelFunc getPixStrat = getPixelFunction(config.borderStrategy);
 
     int k = kernel.size;
@@ -69,28 +105,48 @@ void genericConvolution(const image<float>& src, image<float>& dst, const Kernel
     dst.height = outH;
     dst.data.resize(outW * outH);
 
-    // Instance threads
-    parallelForRows(dst.height, 0, [&](int y0, int y1) {
-        for (int y = y0; y < y1; y++) {
-            for (int x = 0; x < dst.width; x++) {
-                int inX = (x * stride);
-                int inY = (y * stride);
-                float newValueR = 0, newValueB = 0, newValueG = 0;
-                    for (int i=0; i < k; i++){
-                        for (int j=0; j < k; j++){
-                            // !This function call without inlining may have performance loss
-                            pixel<float> neigh = getPixStrat(src,inX+i-kernelCenter,inY+j-kernelCenter);
-                            newValueR += (neigh.r) * kernel.values[i][j];
-                            newValueG += (neigh.g) * kernel.values[i][j];
-                            newValueB += (neigh.b) * kernel.values[i][j];
+    auto convolutionOperation = [&](const image<float>& src, image<float>& dst,const std::vector<std::vector<float>>& kernelVector, const float opScale, const float opOffset, const int opStride) {
+        int kernelWidth = kernelVector[0].size();
+        int kernelHeight = kernelVector.size();
+        int cy = kernelHeight/2; // Kernel center y
+        int cx = kernelWidth/2; // Kernel center x
+
+        return [&, opScale, opOffset, opStride, kernelWidth, kernelHeight, cy,cx](int y0, int y1) {
+            for (int y = y0; y < y1; y++) {
+                for (int x = 0; x < dst.width; x++) {
+                    int inX = (x * opStride);
+                    int inY = (y * opStride);
+                    float newValueR = 0, newValueB = 0, newValueG = 0;
+                        for (int i=0; i < kernelHeight; i++){
+                            for (int j=0; j < kernelWidth; j++){
+                                // !This function call without inlining may have performance loss
+                                pixel<float> neigh = getPixStrat(src,inX+j-cx,inY+i-cy);
+                                newValueR += (neigh.r) * kernelVector[i][j];
+                                newValueG += (neigh.g) * kernelVector[i][j];
+                                newValueB += (neigh.b) * kernelVector[i][j];
+                            }
                         }
+                        pixel<float> newPix = {(newValueR*opScale+opOffset), (newValueG*opScale+opOffset), (newValueB*opScale+opOffset)};
+                        setPixel<float>(dst,x,y,newPix);
                     }
-                    pixel<float> newPix = {(newValueR*scale+offset), (newValueG*scale+offset), (newValueB*scale+offset)};
-                    setPixel<float>(
-                        dst,x,y,newPix);
-                }
-            } 
-    });
+                } 
+            };
+    };
+
+
+
+    if(!splitKernelEnabled || k <= 5 || !isRank1(kernel.values)){ // General case
+        parallelForRows(dst.height, 0, convolutionOperation(src, dst, kernel.values, scale, offset,stride));
+    } else{ // Split kernel
+        SplitKernel split_kernel = splitKernel(kernel);
+        image<float> temp;
+        temp.width = src.width;
+        temp.height = src.height;
+        temp.data.resize(temp.width * temp.height);
+
+        parallelForRows(temp.height, 0, convolutionOperation(src, temp, split_kernel.rowValues, 1.0f, 0.0f, 1));
+        parallelForRows(dst.height, 0, convolutionOperation(temp, dst, split_kernel.colValues, scale, offset, stride));
+    }
 }
 
 void applyConvolution(const image<float>& src, image<float>& dst, const Kernel& kernel, const convolutionConfig& config){
@@ -119,6 +175,7 @@ convolutionConfig readConvolutionConfig(const json& data) {
         config.offset = params.value("offset", config.offset);
         config.scale  = params.value("scale", config.scale);
         config.borderStrategy = params.value("border", config.borderStrategy);
+        config.splitKernelEnabled = params.value("splitKernelEnabled", config.splitKernelEnabled); // For debugging and testing
     }
     return config;
 }

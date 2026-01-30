@@ -5,6 +5,8 @@ out_web/engine.data
 out_web/engine.js.mem
 out_web/engine.js
 
+
+tests/test_output
 # --- System & Misc ---
 .DS_Store
 *.o
