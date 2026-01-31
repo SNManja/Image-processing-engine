@@ -88,13 +88,13 @@ jobs:
 
             - uses: mymindstorm/setup-emsdk@v14
 
-            - run: make wasm
+            - run: make dist
 
             - name: Upload WASM artifact
               uses: actions/upload-artifact@v4
               with:
                   name: wasm-binaries
-                  path: out_web/
+                  path: dist/
 
     deploy:
         name: "Deploy to Pages"
@@ -111,7 +111,7 @@ jobs:
               uses: actions/download-artifact@v4
               with:
                   name: wasm-binaries
-                  path: out_web/
+                  path: dist/
 
             - name: Setup Pages
               uses: actions/configure-pages@v4
@@ -119,7 +119,7 @@ jobs:
             - name: Upload artifact to Pages
               uses: actions/upload-pages-artifact@v3
               with:
-                  path: "./out_web"
+                  path: "./dist"
 
             - name: Deploy to GitHub Pages
               id: deployment

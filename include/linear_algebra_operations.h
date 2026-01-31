@@ -16,7 +16,7 @@ bool linearlyIndependentColumns(const std::vector<std::vector<float>>& m, int co
     float baseQuotient;
 	bool isColAZero = true;
 	bool isColBZero = true;
-    for (int i = 0; i < m.size(); i++) {
+    for (size_t i = 0; i < m.size(); i++) {
 		isColAZero = isColAZero && (floatCmp(m[i][col_a], 0.0f) == 0);
 		isColBZero = isColBZero && (floatCmp(m[i][col_b], 0.0f) == 0);
         if (floatCmp(m[i][col_b], 0.0f) != 0) {
@@ -26,9 +26,9 @@ bool linearlyIndependentColumns(const std::vector<std::vector<float>>& m, int co
     }
 
 	if(isColAZero && isColBZero) return false;
-	if(!isColAZero && isColBZero || isColAZero && !isColBZero) return true;
+	if((!isColAZero && isColBZero) || (isColAZero && !isColBZero)) return true;
 
-    for (int i = 1; i < m.size(); i++) {
+    for (size_t i = 1; i < m.size(); i++) {
         if (floatCmp(m[i][col_b], 0.0f) != 0) {
             float currentQuotient = m[i][col_a] / m[i][col_b];
             if (floatCmp(currentQuotient, baseQuotient) != 0) return true;
@@ -41,8 +41,8 @@ bool linearlyIndependentColumns(const std::vector<std::vector<float>>& m, int co
 
 inline bool isRank1(const std::vector<std::vector<float>>& k) {
 
-    for(int col_a = 0; col_a < k[0].size(); col_a++) {
-        for (int col_b = col_a+1; col_b < k[0].size(); col_b++) {
+    for(size_t col_a = 0; col_a < k[0].size(); col_a++) {
+        for (size_t col_b = col_a+1; col_b < k[0].size(); col_b++) {
             if (col_a == col_b) continue;
             if (linearlyIndependentColumns(k, col_a, col_b)) {
                 return false;

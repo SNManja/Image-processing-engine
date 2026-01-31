@@ -1,10 +1,6 @@
 output/
 # --- Specific Wasm artifacts (Don't ignore the whole folder!) ---
-out_web/engine.wasm
-out_web/engine.data
-out_web/engine.js.mem
-out_web/engine.js
-
+dist/
 
 tests/test_output
 # --- System & Misc ---

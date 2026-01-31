@@ -31,7 +31,7 @@ cmake_clean:
 
 # ---- WASM ----
 EMCC = emcc
-WASM_OUT_DIR = out_web
+WASM_OUT_DIR = build/web
 WASM_OUT = $(WASM_OUT_DIR)/engine.js
 WASM_BRIDGE = web/wasm_bridge.cpp
 
@@ -41,6 +41,7 @@ CORE_SRCS = $(filter-out $(CLI_MAIN), $(SRCS))
 
 WASM_FLAGS = -std=c++17 -O3 -Iinclude \
             -pthread \
+            -s USE_PTHREADS=1 \
             -s PTHREAD_POOL_SIZE=8 \
             -s MODULARIZE=1 \
             -s EXPORT_NAME='createEngine' \
@@ -49,7 +50,6 @@ WASM_FLAGS = -std=c++17 -O3 -Iinclude \
             -s ASSERTIONS=1 \
             --bind \
             --preload-file assets/presets@/presets \
-            --preload-file assets/exportedPics@/presets \
             --preload-file assets/exportedPics@/pics
 
 WASM_FLAGS += -s INITIAL_MEMORY=1024MB
@@ -59,3 +59,30 @@ WASM_FLAGS += -s MAXIMUM_MEMORY=2048MB
 wasm:
 	mkdir -p $(WASM_OUT_DIR)
 	$(EMCC) $(WASM_BRIDGE) $(CORE_SRCS) $(WASM_FLAGS) -o $(WASM_OUT)
+
+
+DIST_DIR ?= dist
+
+.PHONY: dist dist_clean serve
+
+dist: wasm
+	rm -rf $(DIST_DIR)
+	mkdir -p $(DIST_DIR)
+
+	cp -f $(WASM_OUT_DIR)/engine.js   $(DIST_DIR)/
+	cp -f $(WASM_OUT_DIR)/engine.wasm $(DIST_DIR)/
+	@if [ -f "$(WASM_OUT_DIR)/engine.data" ]; then cp -f $(WASM_OUT_DIR)/engine.data $(DIST_DIR)/; fi
+	@if [ -f "$(WASM_OUT_DIR)/engine.worker.js" ]; then cp -f $(WASM_OUT_DIR)/engine.worker.js $(DIST_DIR)/; fi
+
+	cp -f web/index.html $(DIST_DIR)/
+	cp -f web/main.js    $(DIST_DIR)/
+
+	cp -r web/ui             $(DIST_DIR)/
+	cp -r web/file-processing $(DIST_DIR)/
+	@if [ -d "web/vendor" ]; then cp -r web/vendor $(DIST_DIR)/; fi
+
+	@if [ -f "web/coi-serviceworker.js" ]; then cp -f web/coi-serviceworker.js $(DIST_DIR)/; fi
+
+dist_clean:
+	rm -rf $(DIST_DIR)
+
