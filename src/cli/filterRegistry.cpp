@@ -9,7 +9,8 @@ std::vector<std::string> getConvolutionalParamsList() {
         "stride (int): Takes an integer for the stride, which modifies the step size of the filter. Changes image size when different to 1. Defaults to 1",
         "scale (float): Takes a float for the scaling factor applied to the filter output. Defaults to 1.0",
         "offset (float): Takes a float for the offset added to the filter output. Defaults to 0.0",
-        "border (string): Takes a string for the border strategy (clamp, wrap, mirror, constant). Defaults to 'clamp'"
+        "border (string): Takes a string for the border strategy (clamp, wrap, mirror, constant). Defaults to 'clamp'",
+        "splitKernelEnabled (bool): Enables or disables the use of split kernels for convolution. Defaults to true"
     };
 };
 const std::string convolutionalCategory = "Convolutional";
