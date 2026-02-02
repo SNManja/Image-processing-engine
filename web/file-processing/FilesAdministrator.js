@@ -117,13 +117,11 @@ export class FileAdministrator {
 			const entries = FS.readdir(dirPath);
 
 			for (const name of entries) {
-				// Saltamos las referencias al directorio actual y padre
 				if (name === "." || name === "..") continue;
 
 				const fullPath = `${dirPath}/${name}`;
 				const stats = FS.stat(fullPath);
 
-				// Solo eliminamos si NO es un directorio
 				if (!FS.isDir(stats.mode)) {
 					FS.unlink(fullPath);
 				}
@@ -133,6 +131,33 @@ export class FileAdministrator {
 			);
 		} catch (e) {
 			console.warn("No se pudo limpiar la carpeta /output o no existe.");
+		}
+	}
+	cleanPicsFolder() {
+		const FS = this.engine.FS;
+		const dirPath = `${PATHS.picsDir}`;
+
+		if (!FS.analyzePath(dirPath).exists) {
+			console.warn("La carpeta /pics no existe.");
+			return;
+		}
+
+		try {
+			const entries = FS.readdir(dirPath);
+
+			for (const name of entries) {
+				if (name === "." || name === "..") continue;
+
+				const fullPath = `${dirPath}/${name}`;
+				const stats = FS.stat(fullPath);
+
+				if (!FS.isDir(stats.mode)) {
+					FS.unlink(fullPath);
+				}
+			}
+			console.log("Archivos en /pics eliminados. Carpetas preservadas.");
+		} catch (e) {
+			console.warn("No se pudo limpiar la carpeta /pics o no existe.");
 		}
 	}
 

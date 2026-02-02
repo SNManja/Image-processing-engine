@@ -63,7 +63,6 @@
 								>
 									+
 								</button>
-								<div class="mt-2 h-px w-8 bg-zinc-800"></div>
 								<button
 									id="download-button"
 									class="grid h-10 w-10 place-items-center rounded-xl border border-zinc-800 bg-zinc-950/50 hover:bg-zinc-900 transition-colors"
@@ -93,6 +92,36 @@
 											y1="15"
 											y2="3"
 										></line>
+									</svg>
+								</button>
+								<button
+									id="clear-images-button"
+									class="grid h-10 w-10 place-items-center rounded-xl border border-zinc-800 bg-zinc-950/50 hover:bg-red-950/40 transition-colors"
+									title="Clear all images"
+								>
+									<svg
+										xmlns="http://www.w3.org/2000/svg"
+										width="14"
+										height="14"
+										viewBox="0 0 24 24"
+										fill="none"
+										stroke="currentColor"
+										stroke-width="2.5"
+										stroke-linecap="round"
+										stroke-linejoin="round"
+										class="text-red-400"
+									>
+										<polyline
+											points="3 6 5 6 21 6"
+										></polyline>
+										<path
+											d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"
+										></path>
+										<path d="M10 11v6"></path>
+										<path d="M14 11v6"></path>
+										<path
+											d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"
+										></path>
 									</svg>
 								</button>
 							</div>
@@ -366,6 +395,63 @@
 					style="scrollbar-gutter: stable"
 					id="preset-container"
 				></div>
+			</div>
+		</div>
+		<div
+			id="clear-images-modal"
+			class="hidden fixed inset-0 z-50 flex items-center justify-center bg-zinc-950/80 backdrop-blur-sm p-4 transition-opacity duration-200"
+			aria-hidden="true"
+		>
+			<div
+				class="w-full max-w-md rounded-2xl border border-zinc-800 bg-zinc-950 shadow-2xl overflow-hidden transform transition-transform duration-200 scale-95"
+				role="dialog"
+				aria-modal="true"
+				aria-labelledby="clear-images-title"
+				aria-describedby="clear-images-desc"
+			>
+				<div
+					class="flex items-center justify-between border-b border-zinc-800 bg-zinc-900/30 p-4"
+				>
+					<h3
+						id="clear-images-title"
+						class="text-sm font-semibold text-zinc-100"
+					>
+						Clear all images?
+					</h3>
+					<button
+						id="close-clear-images"
+						class="text-zinc-500 hover:text-zinc-100 transition-colors"
+						aria-label="Close"
+					>
+						✕
+					</button>
+				</div>
+
+				<div class="p-5">
+					<p
+						id="clear-images-desc"
+						class="text-sm text-zinc-400 leading-relaxed"
+					>
+						This will permanently remove all loaded images from the
+						workspace.
+					</p>
+
+					<div class="mt-5 flex items-center justify-end gap-2">
+						<button
+							id="cancel-clear-images"
+							class="rounded-xl border border-zinc-800 px-4 py-2 text-sm text-zinc-200 hover:bg-zinc-900 transition-colors"
+						>
+							Cancel
+						</button>
+
+						<button
+							id="confirm-clear-images"
+							class="rounded-xl bg-red-500/90 px-4 py-2 text-sm font-semibold text-zinc-950 hover:bg-red-400 transition-colors"
+						>
+							Clear images
+						</button>
+					</div>
+				</div>
 			</div>
 		</div>
 	</body>
