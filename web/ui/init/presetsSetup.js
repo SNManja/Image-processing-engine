@@ -43,7 +43,6 @@ export function presetsSetup(engine) {
       </div>
     `;
 
-		// Set text safely
 		card.querySelector("span").textContent =
 			preset.name ?? "Unnamed preset";
 		card.querySelector("p").textContent =

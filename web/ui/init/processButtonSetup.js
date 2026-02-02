@@ -14,7 +14,7 @@ export function processButtonUIOff() {
 	processBtn.disabled = false;
 }
 
-export function initProcessBtn() {
+export function processButtonSetup() {
 	const processBtn = document.querySelector("#process-btn");
 	const statusEl = document.querySelector("#status-flag"); // El "idle" del HTML
 	processBtn.addEventListener("click", () => {

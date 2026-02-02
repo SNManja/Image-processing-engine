@@ -1,16 +1,16 @@
 import { history, redo, undo } from "https://esm.sh/@codemirror/commands@6"; // Manejo de historial profesional
 import { json } from "https://esm.sh/@codemirror/lang-json@6";
 import {
-  HighlightStyle,
-  syntaxHighlighting,
+	HighlightStyle,
+	syntaxHighlighting,
 } from "https://esm.sh/@codemirror/language@6";
 import { EditorState } from "https://esm.sh/@codemirror/state@6";
 import {
-  drawSelection,
-  EditorView,
-  keymap,
-  lineNumbers,
-  placeholder,
+	drawSelection,
+	EditorView,
+	keymap,
+	lineNumbers,
+	placeholder,
 } from "https://esm.sh/@codemirror/view@6";
 import { tags as t } from "https://esm.sh/@lezer/highlight@1";
 
@@ -56,6 +56,8 @@ const myHighlightStyle = HighlightStyle.define([
 
 const myTheme = EditorView.theme({
 	"&": { height: "100%", backgroundColor: "#111113", color: "#f4f4f5" },
+	".cm-editor": { height: "100%" },
+	".cm-scroller": { overflow: "auto" },
 	".cm-cursor": { borderLeft: "2px solid #22d3ee !important" }, // Cursor Cyan visible
 	".cm-content": { fontFamily: "monospace", padding: "10px 0" },
 	".cm-gutters": {
@@ -81,6 +83,7 @@ const plainTab = {
 
 export function setupJSONPipelineEditor() {
 	const container = document.getElementById("json-editor-container");
+
 	if (!container) return;
 
 	editorView = new EditorView({

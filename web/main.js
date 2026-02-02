@@ -1,7 +1,7 @@
 import { FileAdministrator } from "./file-processing/FilesAdministrator.js";
 import { ALL_DIRS } from "./file-processing/paths.js";
 import { initUI } from "./ui/init/initUI.js";
-import { processButtonUIOff } from "./ui/init/processButton.js";
+import { processButtonUIOff } from "./ui/init/processButtonSetup.js";
 import { setupJSONPipelineEditor } from "./ui/setupJSONPipelineEditor.js";
 
 if (crossOriginIsolated) {
