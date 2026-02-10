@@ -369,34 +369,89 @@
 		/>
 		<div
 			id="presets-modal"
-			class="hidden fixed inset-0 bg-zinc-950/90 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+			class="fixed inset-0 z-50 flex items-center justify-center bg-zinc-950/80 backdrop-blur-sm p-4 hidden"
 		>
 			<div
-				class="bg-zinc-950 border border-zinc-800 w-[650px] h-[550px] rounded-2xl flex flex-col shadow-2xl overflow-hidden"
+				class="w-full max-w-3xl rounded-2xl border border-zinc-800 bg-zinc-950 shadow-2xl overflow-hidden"
 			>
+				<!-- HEADER -->
 				<div
-					class="flex items-center justify-between border-b border-zinc-800 p-4 bg-zinc-900/30"
+					class="flex items-center justify-between border-b border-zinc-800 bg-zinc-900/30 p-4"
 				>
-					<h3
-						class="text-xs font-bold text-zinc-100 uppercase tracking-widest"
-					>
-						Pipeline Presets
-					</h3>
-					<button
-						id="close-presets"
-						class="text-zinc-500 hover:text-zinc-100 transition-colors"
-					>
-						✕
-					</button>
+					<h3 class="text-sm font-semibold text-zinc-100">Presets</h3>
+
+					<div class="flex items-center gap-3">
+						<!-- Tabs -->
+						<div class="flex items-center gap-2">
+							<button
+								data-scope="builtin"
+								class="px-3 py-1.5 text-xs rounded-md border border-zinc-700 text-zinc-400 hover:text-zinc-100 hover:border-zinc-500 hover:bg-zinc-800/40 transition preset-tabs-buttons"
+								id="presets-builtin-button"
+							>
+								Built-in
+							</button>
+
+							<button
+								data-scope="mine"
+								class="px-3 py-1.5 text-xs rounded-md border border-zinc-700 text-zinc-400 hover:text-zinc-100 hover:border-zinc-500 hover:bg-zinc-800/40 transition preset-tabs-buttons"
+								id="presets-mine-button"
+							>
+								My presets
+							</button>
+
+							<button
+								data-scope="community"
+								class="px-3 py-1.5 text-xs rounded-md border border-zinc-700 text-zinc-400 hover:text-zinc-100 hover:border-zinc-500 hover:bg-zinc-800/40 transition preset-tabs-buttons"
+								id="presets-community-button"
+							>
+								Community
+							</button>
+						</div>
+
+						<!-- Close -->
+						<button
+							id="close-presets"
+							class="text-zinc-500 hover:text-zinc-100"
+						>
+							✕
+						</button>
+					</div>
 				</div>
 
+				<!-- FILTER BAR -->
 				<div
-					class="flex-1 overflow-y-auto p-4 space-y-2 custom-scrollbar"
-					style="scrollbar-gutter: stable"
+					class="flex items-center gap-3 border-b border-zinc-800 bg-zinc-900/20 p-3 hidden"
+					id="preset-filter-bar"
+				>
+					<!-- Search -->
+					<input
+						id="preset-search"
+						type="text"
+						placeholder="Search presets..."
+						class="flex-1 rounded-lg bg-zinc-900 border border-zinc-700 px-3 py-2 text-sm text-zinc-100"
+					/>
+
+					<!-- Sort -->
+					<select
+						id="preset-sort"
+						class="rounded-lg bg-zinc-900 border border-zinc-700 px-3 py-2 text-sm text-zinc-100"
+					>
+						<option value="newest">Newest</option>
+						<option value="top">Most voted</option>
+						<option value="az">A–Z</option>
+					</select>
+				</div>
+
+				<!-- CONTENT -->
+				<div
 					id="preset-container"
-				></div>
+					class="max-h-[60vh] overflow-y-auto p-4 grid grid-cols-1 gap-3"
+				>
+					<!-- cards -->
+				</div>
 			</div>
 		</div>
+
 		<div
 			id="clear-images-modal"
 			class="hidden fixed inset-0 z-50 flex items-center justify-center bg-zinc-950/80 backdrop-blur-sm p-4 transition-opacity duration-200"

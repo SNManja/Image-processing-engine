@@ -58,6 +58,7 @@ External libraries are used only for I/O and auxiliary tooling:
 
 ## WEB - To do
 
+- Add users and user presets with ranking system and search
 - Improve Status flag
 - Display graphs in some way
 - Clean spanglish (some comments and console logs are in spanish)
