@@ -1,23 +1,15 @@
 import "dotenv/config";
 import fastify from "fastify";
-import { pool } from "./db/pool.js";
+import dbPlugin from "./plugins/db.js";
+import healthRoutes from "./routes/health-routes.js";
+import presetRoutes from "./routes/preset-routes.js";
 
 const app = fastify({ logger: true });
 console.log("PORT env =", process.env.PORT, "HOST =", process.env.HOST_URL);
 
-app.get("/health", async () => {
-  return true;
-});
-
-app.get("/db-health", async () => {
-  try {
-    await pool.query("SELECT 1");
-    return true;
-  } catch (error) {
-    console.error("Database health check failed:", error);
-    return false;
-  }
-});
+app.register(dbPlugin);
+app.register(healthRoutes);
+app.register(presetRoutes);
 
 app.listen(
   { port: process.env.PORT, host: process.env.HOST_URL },
