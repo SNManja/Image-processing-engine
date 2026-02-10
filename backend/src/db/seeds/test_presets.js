@@ -1,10 +1,32 @@
+import { randomUUID } from "crypto";
+
 /**
  * @param { import("knex").Knex } knex
  */
 export async function seed(knex) {
-  // Limpiamos la tabla
+  // Orden importa por FK
   await knex("presets").del();
+  await knex("users").del();
 
+  // ---- USERS ----
+  const users = [
+    {
+      id: randomUUID(),
+      email: "demo1@test.com",
+      username: "demo1",
+      created_at: new Date(),
+    },
+    {
+      id: randomUUID(),
+      email: "demo2@test.com",
+      username: "demo2",
+      created_at: new Date(),
+    },
+  ];
+
+  await knex("users").insert(users);
+
+  // ---- PRESETS RAW ----
   const rawPresets = [
     {
       name: "Obra Dinn-ish",
@@ -18,84 +40,28 @@ export async function seed(knex) {
         },
         { filter: "linearAdjustment", params: { offset: 0.02, scale: 1.04 } },
       ],
-      output_suffix: "_processed",
-      output_extension: "auto",
-      "Recommendations for this filter":
-        "As any other dithering preset, config stride and size in odd numbers to adjust to image size. Bigger images wont look retro without a bigger stride.",
+      description:
+        "As any other dithering preset, config stride and size in odd numbers to adjust to image size.",
     },
+
     {
       name: "Cool green-ish look",
       pipeline: [
         { filter: "bnw", params: { offset: 0, scale: 1 } },
         { filter: "alphaBlending", params: { alpha: [0.5, 0.5, 1] } },
       ],
-      statistics: { histograms: { greyscale: false } },
-      output_suffix: "_processed",
-      output_extension: "auto",
-      tags: ["art"],
-    },
-    {
-      name: "Old school computer",
-      pipeline: [
-        { filter: "bnw" },
-        { filter: "blur", params: { size: 10, stride: 10 } },
-        {
-          filter: "FSDithering",
-          params: { depth: 8, amount: 1, perceptual: true, noise: 0.2 },
-        },
-      ],
-      output_suffix: "_processed",
-      output_extension: "auto",
-      "Recommendations for this filter":
-        "Optimal retro look highly depends on an stride and size blur config. For bigger images more size and more stride, for tinier images less size and less stride. Works great if both params have the same values, but experiment for yourself",
-    },
-    {
-      name: "Pencil sketch",
-      pipeline: [
-        { filter: "sobel", params: { greyscale: true } },
-        { filter: "linearAdjustment", params: { scale: 2, offset: -0.155 } },
-        { filter: "invert" },
-        { filter: "blur", params: { size: 5 } },
-      ],
-      statistics: { histograms: { greyscale: false } },
-      output_suffix: "_processed",
-      output_extension: "auto",
-      tags: ["art"],
-    },
-    {
-      name: "Sobel Edge Detection (Pre-smoothed)",
-      pipeline: [
-        {
-          filter: "blur",
-          params: { size: 3, stride: 1, scale: 1, offset: 0, border: "clamp" },
-        },
-        {
-          filter: "sobel",
-          params: {
-            greyscale: true,
-            scharr: false,
-            stride: 1,
-            scale: 1,
-            offset: 0,
-            border: "clamp",
-          },
-        },
-      ],
-      statistics: { histograms: { greyscale: true } },
-      output_suffix: "_processed",
-      output_extension: "auto",
-      tags: ["cv", "utility"],
+      description: "Green artistic grayscale blend.",
     },
   ];
 
-  const presetsToInsert = rawPresets.map((p) => ({
+  // ---- PRESETS ----
+  const presetsToInsert = rawPresets.map((p, i) => ({
+    id: randomUUID(),
+    creator_id: users[i % users.length].id, // distribuye presets entre users
     name: p.name,
-    description:
-      p["Recommendations for this filter"] ||
-      `A preset focused on ${p.tags?.join(", ") || "image processing"}.`,
-    // El objeto completo va al JSONB del pipeline
-    pipeline: JSON.stringify(p),
-    votes: Math.floor(Math.random() * 100), // Relleno aleatorio para testing de ordenamiento
+    description: p.description,
+    pipeline: JSON.stringify(p.pipeline),
+    votes: Math.floor(Math.random() * 100),
     created_at: new Date(),
   }));
 
