@@ -1,5 +1,6 @@
 {
 	"name": "Obra Dinn-ish",
+	"description": "Inspired by the art style of Return of the Obra Dinn. As any other dithering preset, config stride and size in odd numbers to adjust to image size. Bigger images wont look retro without a bigger stride.",
 	"pipeline": [
 		{ "filter": "bnw" },
 		{
@@ -27,6 +28,5 @@
 		}
 	],
 	"output_suffix": "_processed",
-	"output_extension": "auto",
-	"Recommendations for this filter": "As any other dithering preset, config stride and size in odd numbers to adjust to image size. Bigger images wont look retro without a bigger stride."
+	"output_extension": "auto"
 }

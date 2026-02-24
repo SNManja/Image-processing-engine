@@ -1,5 +1,6 @@
 {
 	"name": "Cool green-ish look",
+	"description": "Green-ish look for your images",
 	"pipeline": [
 		{
 			"filter": "bnw",
@@ -21,6 +22,5 @@
 		}
 	},
 	"output_suffix": "_processed",
-	"output_extension": "auto",
-	"tags": ["art"]
+	"output_extension": "auto"
 }

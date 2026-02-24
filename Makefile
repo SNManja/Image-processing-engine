@@ -33,7 +33,7 @@ cmake_clean:
 EMCC = emcc
 WASM_OUT_DIR = build/web
 WASM_OUT = $(WASM_OUT_DIR)/engine.js
-WASM_BRIDGE = web/wasm_bridge.cpp
+WASM_BRIDGE = frontend/wasm_bridge.cpp
 
 SRCS = $(shell find src -name "*.cpp")
 CLI_MAIN = src/main.cpp
@@ -61,28 +61,36 @@ wasm:
 	$(EMCC) $(WASM_BRIDGE) $(CORE_SRCS) $(WASM_FLAGS) -o $(WASM_OUT)
 
 
-DIST_DIR ?= dist
+DIST_DIR ?= ./backend/dist
 
 .PHONY: dist dist_clean serve
+
+
+# ---- Tailwind (CLI build) ----
+TAILWIND_CLI ?= npx @tailwindcss/cli
+TAILWIND_INPUT ?= frontend/tailwind.css
+TAILWIND_OUTPUT ?= $(DIST_DIR)/tailwind.css
+
 
 dist: wasm
 	rm -rf $(DIST_DIR)
 	mkdir -p $(DIST_DIR)
+
+	# ---- Tailwind build ----
+	$(TAILWIND_CLI) -i $(TAILWIND_INPUT) -o $(TAILWIND_OUTPUT) --minify
 
 	cp -f $(WASM_OUT_DIR)/engine.js   $(DIST_DIR)/
 	cp -f $(WASM_OUT_DIR)/engine.wasm $(DIST_DIR)/
 	@if [ -f "$(WASM_OUT_DIR)/engine.data" ]; then cp -f $(WASM_OUT_DIR)/engine.data $(DIST_DIR)/; fi
 	@if [ -f "$(WASM_OUT_DIR)/engine.worker.js" ]; then cp -f $(WASM_OUT_DIR)/engine.worker.js $(DIST_DIR)/; fi
 
-	cp -f web/index.html $(DIST_DIR)/
-	cp -f web/main.js    $(DIST_DIR)/
+	cp -f frontend/index.html $(DIST_DIR)/
+	cp -f frontend/main.js    $(DIST_DIR)/
 
-	cp -r web/ui             $(DIST_DIR)/
-	cp -r web/file-processing $(DIST_DIR)/
-	@if [ -d "web/vendor" ]; then cp -r web/vendor $(DIST_DIR)/; fi
-
-	@if [ -f "web/coi-serviceworker.js" ]; then cp -f web/coi-serviceworker.js $(DIST_DIR)/; fi
-
+	cp -r frontend/ui              $(DIST_DIR)/
+	cp -r frontend/file-processing $(DIST_DIR)/
+	@if [ -d "frontend/vendor" ]; then cp -r frontend/vendor $(DIST_DIR)/; fi
+	
 dist_clean:
 	rm -rf $(DIST_DIR)
 

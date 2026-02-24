@@ -1,0 +1,19 @@
+{
+  "name": "image-processing-engine",
+  "version": "1.0.0",
+  "description": "Batch C++ image processing engine focused on highly configurable, multithreaded float pipelines for technical and artistic workflows, operable in any web browser.",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.2.0",
+    "tailwindcss": "^4.2.0"
+  }
+}

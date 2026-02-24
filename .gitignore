@@ -1,6 +1,6 @@
 output/
 # --- Specific Wasm artifacts (Don't ignore the whole folder!) ---
-dist/
+backend/dist/
 
 tests/test_output
 # --- System & Misc ---

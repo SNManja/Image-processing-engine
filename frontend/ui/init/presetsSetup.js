@@ -63,50 +63,76 @@ export function presetsSetup(engine) {
 		setActiveTab(builtInBtn);
 	};
 
-	mineBtn.onclick = () => {
+	mineBtn.onclick = async () => {
 		clearPresets(container);
 		presetFilterBar.classList.remove("hidden");
 		console.log("Mine");
-		//fillWithPresets(getUserPresets(), container);
+		const fetchPipeline = true;
+		const userPresets = await getUserPresets();
+		if (userPresets) {
+			fillWithPresets(userPresets, container, fetchPipeline);
+		} else {
+			showLoginToSeeYourFilters(container);
+		}
 		setActiveTab(mineBtn);
-		showNotImplemented(container);
+		//showNotImplemented(container);
 	};
 
-	communityBtn.onclick = () => {
+	communityBtn.onclick = async () => {
 		clearPresets(container);
 		presetFilterBar.classList.remove("hidden");
 		console.log("Community");
-		//fillWithPresets(getCommunityPresets(), container);
+		const fetchPipeline = true;
+		fillWithPresets(await getCommunityPresets(), container, fetchPipeline);
 		setActiveTab(communityBtn);
-		showNotImplemented(container);
 	};
+}
+function clearPresets(container) {
+	while (container.firstChild) {
+		container.removeChild(container.firstChild);
+	}
+}
+
+async function getCommunityPresets() {
+	return await fetch("/api/preset-list").then((res) => res.json());
 }
 
 // Json list, container where to append each preset.
-function fillWithPresets(presets, container) {
+function fillWithPresets(presets, container, fetchPipeline = false) {
 	presets.forEach((preset) => {
 		try {
-			const presetString = JSON.stringify(preset, null, 2);
-
 			const card = document.createElement("div");
 			card.className = cardHTMLClasses;
 			card.innerHTML = cardHTMLPreset;
 
 			card.querySelector("span").textContent =
 				preset.name ?? "Unnamed preset";
-			card.querySelector("p").textContent =
-				`${preset.pipeline?.length ?? 0} filters pipeline length`;
+			card.querySelector("p").textContent = preset.description ?? "";
 
 			const applyBtn = card.querySelector(".apply-btn");
 			const copyBtn = card.querySelector(".copy-btn");
 
-			applyBtn.onclick = () => {
-				setJSONPipelineContent(presetString);
-				close();
+			applyBtn.onclick = async () => {
+				try {
+					const presetString = await getPresetJson(
+						preset,
+						fetchPipeline,
+					);
+					setJSONPipelineContent(presetString);
+				} catch (err) {
+					console.error(
+						"Error fetching and applying pipeline: ",
+						err.message,
+					);
+				}
 			};
 
 			copyBtn.onclick = async () => {
 				try {
+					let presetString = await getPresetJson(
+						preset,
+						fetchPipeline,
+					);
 					await navigator.clipboard.writeText(presetString);
 					const originalText = copyBtn.textContent;
 					copyBtn.textContent = "Copied!";
@@ -126,10 +152,34 @@ function fillWithPresets(presets, container) {
 	});
 }
 
-function clearPresets(container) {
-	while (container.firstChild) {
-		container.removeChild(container.firstChild);
+async function getPresetJson(preset, fetchPipeline = false) {
+	let pipeline = preset.pipeline;
+	if (fetchPipeline) {
+		const res = await fetch(`/api/pipeline/${preset.id}`);
+		if (!res.ok) {
+			const text = await res.text().catch(() => "");
+			throw new Error(
+				`Pipeline fetch failed (${res.status}): ${text.slice(0, 120)}`,
+			);
+		}
+		const data = await res.json();
+		if (!data || !("pipeline" in data)) {
+			throw new Error(
+				`Unexpected pipeline payload: ${JSON.stringify(data).slice(0, 200)}`,
+			);
+		}
+		pipeline = data.pipeline;
 	}
+
+	const outputPreset = {
+		name: preset.name,
+		description: preset.description,
+		pipeline,
+		output_suffix: "_processed",
+		output_extension: "auto",
+	};
+
+	return JSON.stringify(outputPreset, null, 2);
 }
 
 /**
@@ -156,6 +206,16 @@ function getBuiltInPresets(engine) {
 	}
 }
 
+async function getUserPresets() {
+	try {
+		const res = await fetch("/api/userPresets");
+		if (!res.ok) return null;
+		return await res.json();
+	} catch {
+		return null;
+	}
+}
+
 function setActiveTab(tab) {
 	const presetTabs = document.querySelectorAll(".preset-tabs-buttons");
 	presetTabs.forEach((t) => {
@@ -172,6 +232,16 @@ function showNotImplemented(container) {
     <div class="flex flex-col items-center justify-center py-16 text-center">
       <div class="text-zinc-500 text-sm animate-pulse font-mono">
         Sorry — not implemented yet
+      </div>
+    </div>
+  `;
+}
+
+function showLoginToSeeYourFilters(container) {
+	container.innerHTML = `
+    <div class="flex flex-col items-center justify-center py-16 text-center">
+      <div class="text-zinc-500 text-sm animate-pulse font-mono">
+        Login to see your filters
       </div>
     </div>
   `;

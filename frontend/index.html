@@ -1,10 +1,9 @@
 <!doctype html>
 <html lang="es">
 	<head>
-		<script src="./coi-serviceworker.js"></script>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<script src="https://cdn.tailwindcss.com"></script>
+		<link rel="stylesheet" href="/tailwind.css" />
 		<title>Image processing engine</title>
 	</head>
 
@@ -17,6 +16,23 @@
 			>
 				<div class="text-sm font-semibold">Image Processing Engine</div>
 				<div class="flex items-center gap-2">
+					<div class="text-xs text-zinc-500 italic">
+						<span>User: </span>
+						<span id="current-user">Guest</span>
+					</div>
+					<button
+						id="login-button"
+						class="rounded-xl border border-zinc-800 px-3 py-2 text-sm hover:bg-zinc-900"
+					>
+						login
+					</button>
+					<button
+						id="logout-button"
+						class="rounded-xl border border-zinc-800 px-3 py-2 text-sm hover:bg-zinc-900 hidden"
+					>
+						Logout
+					</button>
+
 					<button
 						id="presets-button"
 						class="rounded-xl border border-zinc-800 px-3 py-2 text-sm hover:bg-zinc-900"
@@ -161,6 +177,12 @@
 								Pipeline
 							</div>
 							<div class="flex items-center gap-2">
+								<button
+									class="rounded-xl border border-zinc-800 px-3 py-2 text-sm hover:bg-zinc-900 hidden"
+									id="publish-preset-button"
+								>
+									Publish preset
+								</button>
 								<button
 									class="grid h-10 w-10 place-items-center rounded-xl border border-zinc-800 hover:bg-zinc-900"
 									id="json-help-button"
@@ -367,6 +389,118 @@
 			multiple
 			class="hidden"
 		/>
+		<!-- Set username modal -->
+		<div
+			id="set-username-modal"
+			class="fixed inset-0 z-50 hidden flex items-center justify-center bg-zinc-950/80 backdrop-blur-sm p-4"
+			aria-hidden="true"
+		>
+			<div
+				class="w-full max-w-md rounded-2xl border border-zinc-800 bg-zinc-950 shadow-2xl overflow-hidden"
+				role="dialog"
+				aria-modal="true"
+				aria-labelledby="set-username-title"
+				aria-describedby="set-username-desc"
+			>
+				<!-- HEADER -->
+				<div class="border-b border-zinc-800 bg-zinc-900/30 p-4">
+					<h3
+						id="set-username-title"
+						class="text-sm font-semibold text-zinc-100"
+					>
+						Set your username
+					</h3>
+				</div>
+
+				<!-- BODY -->
+				<form id="set-username-form" class="p-5">
+					<div
+						id="set-username-desc"
+						class="rounded-2xl border border-zinc-800 bg-zinc-900/20 p-4"
+					>
+						<div class="text-xs font-semibold text-zinc-200">
+							Username requirements
+						</div>
+
+						<ul
+							class="mt-2 space-y-1 text-xs text-zinc-400 leading-relaxed"
+						>
+							<li>
+								<span class="text-zinc-500">•</span>
+								Between
+								<span class="text-zinc-200 font-medium">3</span>
+								and
+								<span class="text-zinc-200 font-medium"
+									>30</span
+								>
+								characters
+							</li>
+							<li>
+								<span class="text-zinc-500">•</span>
+								Only letters (<span
+									class="font-mono text-zinc-300"
+									>a–z</span
+								>), numbers (<span
+									class="font-mono text-zinc-300"
+									>0–9</span
+								>) and underscores (<span
+									class="font-mono text-zinc-300"
+									>_</span
+								>)
+							</li>
+							<li>
+								<span class="text-zinc-500">•</span>
+								Must be unique
+							</li>
+							<li>
+								<span class="text-zinc-500">•</span>
+								Case-insensitive (saved in lowercase)
+							</li>
+							<li>
+								<span class="text-zinc-500">•</span>
+								Can only be set once
+							</li>
+						</ul>
+					</div>
+
+					<div class="mt-4">
+						<label
+							for="set-username-input"
+							class="block text-xs font-medium text-zinc-300"
+						>
+							Username
+						</label>
+						<input
+							id="set-username-input"
+							type="text"
+							autocomplete="username"
+							minlength="3"
+							maxlength="20"
+							placeholder="Enter a username here ..."
+							class="mt-2 w-full rounded-xl border border-zinc-800 bg-zinc-900/40 px-3 py-2 text-sm text-zinc-100 placeholder:text-zinc-500 outline-none focus:border-zinc-600 focus:ring-2 focus:ring-white/10"
+							required
+						/>
+
+						<!-- error -->
+						<p
+							id="set-username-error"
+							class="mt-2 hidden text-xs text-red-400"
+						></p>
+					</div>
+
+					<div class="mt-5 flex justify-end">
+						<button
+							id="set-username-button"
+							type="submit"
+							class="rounded-xl bg-zinc-100 px-4 py-2 text-sm font-semibold text-zinc-950 hover:bg-white transition-colors disabled:bg-zinc-800 disabled:text-zinc-300 disabled:cursor-not-allowed"
+						>
+							Save
+						</button>
+					</div>
+				</form>
+			</div>
+		</div>
+
 		<div
 			id="presets-modal"
 			class="fixed inset-0 z-50 flex items-center justify-center bg-zinc-950/80 backdrop-blur-sm p-4 hidden"
@@ -507,6 +641,143 @@
 						</button>
 					</div>
 				</div>
+			</div>
+		</div>
+		<div
+			id="publish-preset-modal"
+			class="fixed inset-0 z-50 hidden flex items-center justify-center bg-zinc-950/80 backdrop-blur-sm p-4"
+			aria-hidden="true"
+		>
+			<div
+				class="w-full max-w-lg rounded-2xl border border-zinc-800 bg-zinc-950 shadow-2xl overflow-hidden"
+				role="dialog"
+				aria-modal="true"
+				aria-labelledby="publish-preset-title"
+			>
+				<!-- HEADER -->
+				<div
+					class="flex items-center justify-between border-b border-zinc-800 bg-zinc-900/30 p-4"
+				>
+					<div>
+						<h3
+							id="publish-preset-title"
+							class="text-sm font-semibold text-zinc-100"
+						>
+							Publish preset
+						</h3>
+						<p class="text-xs text-zinc-500 mt-0.5">
+							This preset will be public and visible to the
+							community
+						</p>
+					</div>
+					<button
+						id="close-publish-preset"
+						class="text-zinc-500 hover:text-zinc-100"
+						aria-label="Close"
+					>
+						✕
+					</button>
+				</div>
+
+				<!-- BODY -->
+				<form id="publish-preset-form" class="p-5 space-y-4">
+					<!-- NAME -->
+					<div>
+						<label
+							for="preset-name-input"
+							class="block text-xs font-medium text-zinc-300"
+						>
+							Name
+						</label>
+						<input
+							id="preset-name-input"
+							type="text"
+							required
+							maxlength="100"
+							placeholder="Preset name (Required)"
+							class="mt-2 w-full rounded-xl border border-zinc-800 bg-zinc-900/40 px-3 py-2 text-sm text-zinc-100 placeholder:text-zinc-500 outline-none focus:border-zinc-600 focus:ring-2 focus:ring-white/10"
+						/>
+						<p
+							id="preset-name-error"
+							class="mt-1 hidden text-xs text-red-400"
+						></p>
+					</div>
+
+					<!-- DESCRIPTION -->
+					<div>
+						<label
+							for="preset-description-input"
+							class="block text-xs font-medium text-zinc-300"
+						>
+							Description
+						</label>
+						<textarea
+							id="preset-description-input"
+							rows="3"
+							maxlength="500"
+							placeholder="Description is not required, but highly recommended so users know what this preset does"
+							class="mt-2 w-full resize-none rounded-xl border border-zinc-800 bg-zinc-900/40 px-3 py-2 text-sm text-zinc-100 placeholder:text-zinc-500 outline-none focus:border-zinc-600 focus:ring-2 focus:ring-white/10"
+						></textarea>
+						<p
+							id="preset-description-error"
+							class="mt-1 hidden text-xs text-red-400"
+						></p>
+					</div>
+
+					<!-- PIPELINE PREVIEW -->
+					<div>
+						<div class="text-xs font-medium text-zinc-300 mb-2">
+							Pipeline (read-only)
+						</div>
+						<pre
+							id="preset-pipeline-preview"
+							class="max-h-40 overflow-y-auto rounded-xl border border-zinc-800 bg-zinc-900/30 p-3 text-xs text-zinc-400 font-mono leading-relaxed"
+						></pre>
+					</div>
+
+					<!-- VALIDATION STATUS -->
+					<div
+						id="preset-validation-status"
+						class="rounded-xl border border-zinc-800 bg-zinc-900/20 p-3 text-xs text-zinc-400 space-y-1"
+					>
+						<div>• Name: <span id="status-name">pending</span></div>
+						<div>
+							• Description:
+							<span id="status-description">pending</span>
+						</div>
+						<div>
+							• Pipeline size:
+							<span id="status-pipeline">pending</span>
+						</div>
+					</div>
+
+					<!-- Footer -->
+					<div class="pt-2 flex items-center gap-2">
+						<p
+							id="publish-error"
+							class="text-sm text-red-400 hidden"
+						></p>
+
+						<div class="ml-auto flex items-center gap-2">
+							<button
+								type="button"
+								id="cancel-publish-preset"
+								class="rounded-xl border border-zinc-800 px-4 py-2 text-sm text-zinc-200 hover:bg-zinc-900 transition-colors"
+							>
+								Cancel
+							</button>
+
+							<button
+								type="submit"
+								id="confirm-publish-preset"
+								disabled
+								class="rounded-xl bg-zinc-100 px-4 py-2 text-sm font-semibold text-zinc-950 hover:bg-white transition-colors disabled:bg-zinc-800 disabled:text-zinc-300 disabled:cursor-not-allowed"
+							>
+								Publish preset
+							</button>
+						</div>
+					</div>
+				</form>
 			</div>
 		</div>
 	</body>

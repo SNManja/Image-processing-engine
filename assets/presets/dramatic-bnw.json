@@ -1,5 +1,6 @@
 {
 	"name": "Dramatic black and white",
+	"description": "A cinematic black and white look",
 	"pipeline": [
 		{
 			"filter": "motionblur",

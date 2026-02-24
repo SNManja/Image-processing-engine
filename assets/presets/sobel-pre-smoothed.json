@@ -1,5 +1,6 @@
 {
 	"name": "Sobel Edge Detection (Pre-smoothed)",
+	"description": "A preset for applying Sobel edge detection after pre-smoothing the image.",
 	"pipeline": [
 		{
 			"filter": "blur",
@@ -29,6 +30,5 @@
 		}
 	},
 	"output_suffix": "_processed",
-	"output_extension": "auto",
-	"tags": ["cv", "utility"]
+	"output_extension": "auto"
 }

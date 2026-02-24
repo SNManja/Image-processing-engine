@@ -1,5 +1,6 @@
 {
 	"name": "Old school computer",
+	"description": "A retro look inspired by old school computer graphics. Optimal retro look highly depends on an stride and size blur config. For bigger images more size and more stride, for tinier images less size and less stride. Works great if both params have the same values, but experiment for yourself",
 	"pipeline": [
 		{
 			"filter": "bnw"
@@ -22,6 +23,5 @@
 		}
 	],
 	"output_suffix": "_processed",
-	"output_extension": "auto",
-	"Recommendations for this filter": "Optimal retro look highly depends on an stride and size blur config. For bigger images more size and more stride, for tinier images less size and less stride. Works great if both params have the same values, but experiment for yourself"
+	"output_extension": "auto"
 }

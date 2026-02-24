@@ -1,5 +1,6 @@
 {
 	"name": "Motion blur and sharpen",
+	"description": "Combines motion blur with sharpening effects.",
 	"pipeline": [
 		{
 			"filter": "motionblur",
