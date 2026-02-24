@@ -5,8 +5,7 @@ CREATE TABLE IF NOT EXISTS user_identities (
 
   provider text NOT NULL CHECK (provider IN ('google', 'github')),
   provider_user_id text NOT NULL,
-
-  email varchar(255) NOT NULL,             
+      
   created_at timestamptz NOT NULL DEFAULT now(),
 
   CONSTRAINT user_identities_provider_uid_unique
