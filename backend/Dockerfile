@@ -1,21 +1,23 @@
-FROM node:20-alpine
+# syntax=docker/dockerfile:1
 
+FROM node:20-alpine AS base
 WORKDIR /app
-
-# Instalar deps (prod por defecto)
 COPY package*.json ./
-RUN npm ci --omit=dev
 
-# Copiar backend + estáticos compilados
+# -------- DEV --------
+FROM base AS dev
+RUN npm ci
+COPY . .
+ENV NODE_ENV=development
+EXPOSE 5500
+CMD ["npm", "run", "dev"]
+
+# -------- PROD --------
+FROM base AS prod
+RUN npm ci --omit=dev
 COPY src ./src
 COPY dist ./dist
-COPY config ./config
 COPY knexfile.js ./knexfile.js
-
 ENV NODE_ENV=production
-ENV HOST_URL=0.0.0.0
-ENV PORT=5500
-
 EXPOSE 5500
-
-CMD ["node", "src/server.js"]
+CMD ["npm", "run", "prod"]

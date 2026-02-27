@@ -15,7 +15,6 @@ const app = fastify({
 	bodyLimit: 100 * 1024, // 100 KB
 	requestTimeout: 10_000, // 10s,
 });
-
 app.register(rateLimit, {
 	max: 100,
 	timeWindow: "1 minute",

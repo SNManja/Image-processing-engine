@@ -86,6 +86,7 @@ export function authStart(request, reply) {
 }
 
 export async function authCallback(request, reply) {
+	console.log("Auth callback started");
 	const { provider } = request.params;
 
 	const p = PROVIDERS[provider];
@@ -121,9 +122,9 @@ export async function authCallback(request, reply) {
 
 	const userIdentity = await getIdentityFromService(provider, tokenJson);
 
-	console.log("\n\nUser Identity:");
+	console.log("\nUser Identity:");
 	console.log(userIdentity);
-	console.log("\n\n");
+	console.log("\n");
 
 	const { db } = request.server;
 
@@ -140,15 +141,15 @@ export async function authCallback(request, reply) {
 		userIdentity.provider_user_id,
 	);
 	const sessionId = await createLoginSession(db, userId, request);
-	console.log("\n\n sessionId: ", sessionId, "\n\n");
+	console.log("\n sessionId: ", sessionId, "\n");
 
 	reply.setCookie("session_id", sessionId, sessionCookieOpts);
-
 	reply.clearCookie("oauth_state", oauthCookieOpts);
 	reply.clearCookie("oauth_verifier", oauthCookieOpts);
 	reply.clearCookie("oauth_provider", oauthCookieOpts);
-
-	return reply.redirect(process.env.FRONT_URL);
+	console.log(" !!! Env var public base url: ");
+	console.log(process.env.PUBLIC_BASE_URL);
+	return reply.redirect(process.env.PUBLIC_BASE_URL);
 }
 
 export async function logout(request, reply) {

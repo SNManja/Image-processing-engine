@@ -3,13 +3,10 @@ services:
         image: postgres:16
         container_name: image-processing-engine-db
         restart: unless-stopped
-        env_file:
-            - .env
         environment:
             POSTGRES_USER: app
             POSTGRES_PASSWORD: app
             POSTGRES_DB: presets
-            PORT: 5432
         ports:
             - "5432:5432"
         volumes:
@@ -22,15 +19,15 @@ services:
             retries: 10
 
     web:
-        build: .
-        restart: unless-stopped
-        depends_on:
-            postgres:
-                condition: service_healthy
+        build:
+            context: .
+            target: dev
         env_file:
-            - .env
+            - .env.development
         ports:
-            - "${PORT}:${PORT}"
+            - "5500:5500"
+        volumes:
+            - ./src:/app/src # hot reload
 
 volumes:
     postgres-data:

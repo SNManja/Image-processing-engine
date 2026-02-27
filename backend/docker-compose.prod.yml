@@ -1,0 +1,12 @@
+services:
+    web:
+        build:
+            context: .
+            target: prod
+        environment:
+            - NODE_OPTIONS=--dns-result-order=ipv4first
+        env_file:
+            - .env.production
+        ports:
+            - "5500:5500"
+        command: npm run prod
