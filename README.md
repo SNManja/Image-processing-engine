@@ -8,6 +8,7 @@ Batch C++ image processing engine focused on highly configurable, multithreaded 
 
 > [!TIP]
 > **Live Demo:** Explore the engine in your browser clicking [here](https://snmanja.github.io/Image-processing-engine/)
+> This is not the current version. The one with login and backend is currently being developed and not wired to github actions yet
 
 ## Capabilities
 
@@ -55,16 +56,14 @@ External libraries are used only for I/O and auxiliary tooling:
 - nlohmann json: Modern JSON parsing (backend).
 - stb_image and stb_image_write: PNG and JPEG decoding and encoding (backend).
 - Catch2: For building a robust and scalable test suite for the C++ main engine.
+- express.js + knex for the postgres backend.
 
 ## WEB - To do
 
-- Add users and user presets with ranking system and search. This needs a backend.
-- Improve Status flag
 - Display graphs in some way
-- Clean spanglish (some comments and console logs are in spanish)
 - Add maximum upload capacity (memory size pre-defined so user do not exceed browsers limits)
 
-## Engine - To do
+## Engine - To do (Paused until backedn is hosted and working)
 
 - Add 16 bit color compatibility for PNG
 - Adding thread pool to improve efficiency (creating and joining threads hits hard on the performance of web implementation)

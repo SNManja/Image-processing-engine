@@ -47,54 +47,103 @@ export function presetsSetup(engine) {
 
 	container.innerHTML = "";
 
-	fillWithPresets(getBuiltInPresets(engine), container);
+	refreshPresets(engine, container, "builtin", "", "");
 
 	const builtInBtn = document.getElementById("presets-builtin-button");
 	const mineBtn = document.getElementById("presets-mine-button");
 	const communityBtn = document.getElementById("presets-community-button");
 	const presetFilterBar = document.getElementById("preset-filter-bar");
 
+	const searchInput = document.getElementById("preset-search");
+	const sortSelect = document.getElementById("preset-sort");
+
+	let currentScope = "builtin";
+	let q = "";
+	let sort = "created_at";
+	let order = "DESC";
+
 	setActiveTab(builtInBtn);
 	builtInBtn.onclick = () => {
-		clearPresets(container);
 		presetFilterBar.classList.add("hidden");
-		console.log("Built-in");
-		fillWithPresets(getBuiltInPresets(engine), container);
+		currentScope = "builtin";
+		refreshPresets(engine, container, "builtin", "", "", "");
 		setActiveTab(builtInBtn);
 	};
 
 	mineBtn.onclick = async () => {
-		clearPresets(container);
 		presetFilterBar.classList.remove("hidden");
-		console.log("Mine");
-		const fetchPipeline = true;
-		const userPresets = await getUserPresets();
-		if (userPresets) {
-			fillWithPresets(userPresets, container, fetchPipeline);
-		} else {
-			showLoginToSeeYourFilters(container);
-		}
+		currentScope = "user";
+		refreshPresets(engine, container, "user", q, sort, order);
 		setActiveTab(mineBtn);
-		//showNotImplemented(container);
 	};
 
 	communityBtn.onclick = async () => {
-		clearPresets(container);
 		presetFilterBar.classList.remove("hidden");
-		console.log("Community");
-		const fetchPipeline = true;
-		fillWithPresets(await getCommunityPresets(), container, fetchPipeline);
+		currentScope = "community";
+		refreshPresets(engine, container, "community", q, sort, order);
 		setActiveTab(communityBtn);
 	};
+
+	// Enter en buscador
+	searchInput?.addEventListener("keydown", (e) => {
+		if (e.key !== "Enter") return;
+		e.preventDefault();
+
+		q = searchInput.value.trim();
+		console.log("Se busco ", currentScope, q, sort, order);
+		// si estás en builtin y apretás enter, podés ignorar o cambiar a community
+		if (currentScope === "builtin") return;
+
+		refreshPresets(engine, container, currentScope, q, sort, order);
+	});
+
+	// Cambio de sort
+	sortSelect?.addEventListener("change", () => {
+		const mapped = mapSortUI(sortSelect.value);
+		if (!mapped) {
+			// "top" no implementado
+			showNotImplemented(container);
+			// opcional: volver a newest automáticamente
+			sortSelect.value = "newest";
+			({ sort, order } = mapSortUI("newest"));
+			return;
+		}
+
+		({ sort, order } = mapped);
+
+		if (currentScope === "builtin") return;
+		refreshPresets(engine, container, currentScope, q, sort, order);
+	});
 }
+
+async function refreshPresets(engine, container, scope, q, sort, order) {
+	clearPresets(container);
+
+	const fetchPipeline = scope === "community" || scope === "user";
+
+	let presets = null;
+
+	if (scope === "community") {
+		presets = await getCommunityPresets({ q, sort, order });
+	} else if (scope === "user") {
+		presets = await getUserPresets({ q, sort, order });
+	} else {
+		presets = await getBuiltInPresets(engine);
+	}
+
+	if (presets) {
+		console.log("This will be filled with", presets.length, " presets ");
+		fillWithPresets(presets, container, fetchPipeline);
+	} else {
+		if (scope === "user") showLoginToSeeYourFilters(container);
+		else showNotImplemented(container); // opcional
+	}
+}
+
 function clearPresets(container) {
 	while (container.firstChild) {
 		container.removeChild(container.firstChild);
 	}
-}
-
-async function getCommunityPresets() {
-	return await fetch("/api/preset-list").then((res) => res.json());
 }
 
 // Json list, container where to append each preset.
@@ -182,11 +231,6 @@ async function getPresetJson(preset, fetchPipeline = false) {
 	return JSON.stringify(outputPreset, null, 2);
 }
 
-/**
- *
- * Retrieves presets from memfs
- * @returns {Array} List of JSON pipelines
- */
 function getBuiltInPresets(engine) {
 	if (!engine?.FS) return [];
 	try {
@@ -206,16 +250,71 @@ function getBuiltInPresets(engine) {
 	}
 }
 
-async function getUserPresets() {
+function buildQueryParams({
+	q = "",
+	sort = "created_at",
+	order = "DESC",
+	limit = 20,
+} = {}) {
+	const params = new URLSearchParams();
+
+	const qTrim = (q ?? "").trim();
+	if (qTrim) params.set("q", qTrim);
+
+	// backend contract: sort=name|created_at ; order=ASC|DESC ; limit 1..50
+	if (sort) params.set("sort", sort);
+	if (order) params.set("order", String(order).toUpperCase());
+	if (limit != null) params.set("limit", String(limit));
+
+	return params.toString();
+}
+
+function mapSortUI(value) {
+	// backend: sort=name|created_at, order=ASC|DESC
+	if (value === "az") return { sort: "name", order: "ASC" };
+	if (value === "newest") return { sort: "created_at", order: "DESC" };
+
+	// "top" todavía no existe en tu backend
+	return null;
+}
+
+async function getUserPresets({
+	q = "",
+	sort = "created_at",
+	order = "DESC",
+	limit = 20,
+} = {}) {
 	try {
-		const res = await fetch("/api/userPresets");
+		const qs = buildQueryParams({ q, sort, order, limit });
+		const url = `/api/userPresets${qs ? `?${qs}` : ""}`;
+
+		const res = await fetch(url, { credentials: "include" });
 		if (!res.ok) return null;
+
 		return await res.json();
 	} catch {
 		return null;
 	}
 }
 
+async function getCommunityPresets({
+	q = "",
+	sort = "created_at",
+	order = "DESC",
+	limit = 20,
+} = {}) {
+	try {
+		const qs = buildQueryParams({ q, sort, order, limit });
+		const url = `/api/preset-list${qs ? `?${qs}` : ""}`;
+
+		const res = await fetch(url);
+		if (!res.ok) return null;
+
+		return await res.json();
+	} catch {
+		return null;
+	}
+}
 function setActiveTab(tab) {
 	const presetTabs = document.querySelectorAll(".preset-tabs-buttons");
 	presetTabs.forEach((t) => {

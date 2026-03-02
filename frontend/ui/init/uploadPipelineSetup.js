@@ -20,7 +20,7 @@ export function publishPresetSetup() {
 	const statusDesc = document.getElementById("status-description");
 	const statusPipeline = document.getElementById("status-pipeline");
 
-	const errorEl = document.getElementById("publish-error");
+	const logEl = document.getElementById("publish-log");
 
 	// ---------- helpers ----------
 
@@ -92,12 +92,34 @@ export function publishPresetSetup() {
 
 	function setError(msg) {
 		if (!msg) {
-			errorEl.textContent = "";
-			errorEl.classList.add("hidden");
+			logEl.textContent = "";
+			logEl.classList.add("hidden");
+			logEl.classList.remove("text-red-400", "text-green-400");
 			return;
 		}
-		errorEl.textContent = msg;
-		errorEl.classList.remove("hidden");
+
+		logEl.textContent = msg;
+		logEl.classList.remove("hidden");
+
+		// asegurar color rojo
+		logEl.classList.remove("text-green-400");
+		logEl.classList.add("text-red-400");
+	}
+
+	function setSuccess(msg) {
+		if (!msg) {
+			logEl.textContent = "";
+			logEl.classList.add("hidden");
+			logEl.classList.remove("text-red-400", "text-green-400");
+			return;
+		}
+
+		logEl.textContent = msg;
+		logEl.classList.remove("hidden");
+
+		// asegurar color verde
+		logEl.classList.remove("text-red-400");
+		logEl.classList.add("text-green-400");
 	}
 
 	// ---------- events ----------
@@ -143,6 +165,7 @@ export function publishPresetSetup() {
 			// 5) OK
 			const created = await res.json(); // ej: { id, ... }
 			// cerrás modal / refrescás lista / redirigís
+			setSuccess("Created preset successfully!");
 			console.log("Created preset:", created);
 		} catch (err) {
 			setError("No se pudo conectar al servidor.");

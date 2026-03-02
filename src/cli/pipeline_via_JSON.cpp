@@ -45,7 +45,7 @@ void ensureFolder(const std::string& ruta) {
 }
 
 void batchPipelineViaJson(std::string PICS_DIR, std::string OUTPUT_DIR, std::string JSON_PATH) {
-
+    
     auto time_init = std::chrono::high_resolution_clock::now();
 
 

@@ -7,6 +7,7 @@ CREATE TABLE IF NOT EXISTS presets (
   description text,
   pipeline jsonb NOT NULL,
   votes int NOT NULL DEFAULT 0 CHECK (votes >= 0),
+  hash text NOT NULL UNIQUE,
   created_at timestamptz NOT NULL DEFAULT now()
 );
 

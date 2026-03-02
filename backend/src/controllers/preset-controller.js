@@ -6,28 +6,43 @@ import {
 import { getUserIDFromSessionID } from "../repos/sessions.repository.js";
 import { validateAndCreatePreset } from "../services/presets.services.js";
 
+function parsePresetsQuery(request) {
+	const limit = Number.parseInt(request.query.limit, 10);
+	const sort = request.query.sort ?? "created_at";
+	const order = (request.query.order ?? "DESC").toUpperCase();
+	const q = (request.query.q ?? "").trim();
+
+	const safeLimit = Number.isFinite(limit) ? limit : 20;
+	if (safeLimit < 1 || safeLimit > 50)
+		throw new Error(`INVALID_LIMIT:${safeLimit}`);
+
+	const SORT_WHITELIST = new Set(["name", "created_at", "votes"]);
+	if (!SORT_WHITELIST.has(sort)) throw new Error(`INVALID_SORT:${sort}`);
+
+	if (order !== "ASC" && order !== "DESC")
+		throw new Error(`INVALID_ORDER:${order}`);
+
+	return { q, sort, order, limit: safeLimit };
+}
+
 export async function getPresets(request, reply) {
 	const { db } = request.server;
-	const query = {
-		sort: request.query.sort || "created_at",
-		order: request.query.order || "ASC",
-		q: (request.query.q ?? "").trim() || "",
-		limit: parseInt(request.query.limit, 10) || 20,
-	};
 
-	if (query.limit > 50 || query.limit < 1) {
-		return reply.code(400).send({ error: `Invalid limit: ${query.limit}` });
-	}
-	if (query.sort !== "name" && query.sort !== "created_at") {
-		return reply.code(400).send({ error: `Invalid sort: ${query.sort}` });
-	}
-	query.order = query.order.toUpperCase();
-	if (query.order !== "ASC" && query.order !== "DESC") {
-		return reply.code(400).send({ error: `Invalid order: ${query.order}` });
+	let query;
+	try {
+		query = parsePresetsQuery(request);
+	} catch (e) {
+		const [kind, val] = String(e.message).split(":");
+		return reply.code(400).send({ error: `${kind} ${val ?? ""}`.trim() });
 	}
 
-	const result = await fetchPresets(db, query);
-	return reply.send(result);
+	try {
+		const result = await fetchPresets(db, query);
+		console.log("This is the result size", result.length);
+		return reply.send(result);
+	} catch (e) {
+		return reply.code(500).send({ error: "Failed to fetch presets" });
+	}
 }
 
 export async function getUserPresets(request, reply) {
@@ -35,31 +50,20 @@ export async function getUserPresets(request, reply) {
 	const sessionId = request.cookies.session_id;
 
 	const userId = await getUserIDFromSessionID(db, sessionId);
+	if (!userId) return reply.code(401).send({ error: "Unauthorized" });
 
-	if (!userId) {
-		return reply.code(401).send({ error: "Unauthorized" });
+	let query;
+	try {
+		query = parsePresetsQuery(request);
+	} catch (e) {
+		const [kind, val] = String(e.message).split(":");
+		return reply.code(400).send({ error: `${kind} ${val ?? ""}`.trim() });
 	}
 
-	const query = {
-		sort: request.query.sort || "created_at",
-		order: request.query.order || "ASC",
-		limit: parseInt(request.query.limit, 10) || 20,
-	};
-
-	if (query.limit > 50 || query.limit < 1) {
-		return reply.code(400).send({ error: `Invalid limit: ${query.limit}` });
-	}
-	if (query.sort !== "name" && query.sort !== "created_at") {
-		return reply.code(400).send({ error: `Invalid sort: ${query.sort}` });
-	}
-	query.order = query.order.toUpperCase();
-	if (query.order !== "ASC" && query.order !== "DESC") {
-		return reply.code(400).send({ error: `Invalid order: ${query.order}` });
-	}
 	try {
 		const result = await fetchPresetsByCreator(db, userId, query);
 		return reply.send(result);
-	} catch (error) {
+	} catch (e) {
 		return reply.code(500).send({ error: "Failed to fetch presets" });
 	}
 }
@@ -76,9 +80,15 @@ export async function createPreset(request, reply) {
 
 	const { name, description, pipeline } = request.body || {};
 
-	if (!name || !description || !pipeline) {
+	if (!name || !pipeline) {
 		return reply.code(400).send({ error: "Missing required fields" });
 	}
+
+	/* // TODO
+	if (pipelineInvalid(preset)) {
+		return reply.code(400).send({ error: "Invalid filter on pipeline" });
+	}
+	*/
 	try {
 		const presetId = await validateAndCreatePreset(
 			db,
@@ -89,7 +99,14 @@ export async function createPreset(request, reply) {
 		);
 		return reply.code(201).send({ id: presetId });
 	} catch (error) {
-		console.log("\n\n", error);
+		if (error.message === "DUPLICATE_PRESET") {
+			return reply.code(409).send({ error: "Preset already exists" });
+		}
+
+		if (error.message === "INVALID_PIPELINE") {
+			return reply.code(400).send({ error: "Invalid pipeline" });
+		}
+
 		return reply.code(500).send({ error: "Failed to create preset" });
 	}
 }

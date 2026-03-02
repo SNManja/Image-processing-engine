@@ -1,3 +1,5 @@
+import { computePresetHash } from "../utils/presetHash.js";
+
 export async function insertPreset(
 	db,
 	creator_id,
@@ -5,51 +7,80 @@ export async function insertPreset(
 	description,
 	pipeline,
 ) {
-	const rows = await db("presets")
-		.insert({ creator_id, name, description, pipeline })
-		.returning(["id"]);
-	if (!rows?.length) throw new Error("PRESET_NOT_CREATED");
-	return rows[0].id;
+	const hash = computePresetHash({ name, pipeline });
+
+	try {
+		const [row] = await db("presets")
+			.insert({
+				creator_id,
+				name: name.trim(),
+				description: description ?? null,
+				pipeline,
+				hash,
+			})
+			.returning("id");
+
+		return row.id;
+	} catch (err) {
+		// Unique violation en Postgres
+		if (err.code === "23505") {
+			throw new Error("DUPLICATE_PRESET");
+		}
+
+		throw err;
+	}
 }
 
-export async function fetchPresetsByCreator(
+const PRESET_SELECT = [
+	"id",
+	"creator_id",
+	"name",
+	"description",
+	"votes",
+	"created_at",
+];
+const SORT_WHITELIST = new Set(["created_at", "votes", "name"]);
+
+function buildPresetsQuery(
 	db,
-	creator_id,
-	{ limit = 20 } = {},
+	{
+		q = "",
+		sort = "created_at",
+		order = "desc",
+		limit = 20,
+		creator_id,
+	} = {},
 ) {
-	return db("presets")
-		.select([
-			"id",
-			"creator_id",
-			"name",
-			"description",
-			"votes",
-			"created_at",
-		])
-		.where({ creator_id })
+	const qb = db("presets").select(PRESET_SELECT);
+
+	if (creator_id) qb.where({ creator_id });
+
+	const qTrim = typeof q === "string" ? q.trim() : "";
+	if (qTrim) {
+		const pattern = `%${qTrim}%`;
+		qb.where((b) =>
+			b.whereILike("name", pattern).orWhereILike("description", pattern),
+		);
+	}
+
+	const safeSort = SORT_WHITELIST.has(sort) ? sort : "created_at";
+	const safeOrder = String(order).toLowerCase() === "asc" ? "asc" : "desc";
+	const safeLimit = Math.min(Math.max(Number(limit) || 20, 1), 50);
+
+	return qb
 		.orderBy([
-			{ column: "created_at", order: "desc" },
+			{ column: safeSort, order: safeOrder },
 			{ column: "id", order: "desc" },
 		])
-		.limit(Math.max(1, Math.min(50, Number(limit) || 20)));
+		.limit(safeLimit);
 }
 
-export async function fetchPresets(db, queryConfig = { limit: 20 }) {
-	const { limit } = queryConfig;
-	return db("presets")
-		.select([
-			"id",
-			"creator_id",
-			"name",
-			"description",
-			"votes",
-			"created_at",
-		])
-		.orderBy([
-			{ column: "created_at", order: "desc" },
-			{ column: "id", order: "desc" },
-		])
-		.limit(Math.max(1, Math.min(50, Number(limit) || 20)));
+export function fetchPresets(db, query) {
+	return buildPresetsQuery(db, query);
+}
+
+export function fetchPresetsByCreator(db, creator_id, query) {
+	return buildPresetsQuery(db, { ...query, creator_id });
 }
 
 export async function fetchPresetPipelineById(db, id) {

@@ -14,9 +14,9 @@ services:
             - ./db:/docker-entrypoint-initdb.d:ro
         healthcheck:
             test: ["CMD-SHELL", "pg_isready -U app -d presets"]
-            interval: 5s
-            timeout: 3s
-            retries: 10
+            interval: 2s
+            timeout: 2s
+            retries: 30
 
     web:
         build:
@@ -27,7 +27,10 @@ services:
         ports:
             - "5500:5500"
         volumes:
-            - ./src:/app/src # hot reload
+            - ./src:/app/src
+        depends_on:
+            postgres:
+                condition: service_healthy
 
 volumes:
     postgres-data:

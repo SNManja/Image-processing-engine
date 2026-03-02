@@ -42,7 +42,7 @@ CORE_SRCS = $(filter-out $(CLI_MAIN), $(SRCS))
 WASM_FLAGS = -std=c++17 -O3 -Iinclude \
             -pthread \
             -s USE_PTHREADS=1 \
-            -s PTHREAD_POOL_SIZE=8 \
+            -s PTHREAD_POOL_SIZE=5 \
             -s MODULARIZE=1 \
             -s EXPORT_NAME='createEngine' \
             -s EXPORTED_RUNTIME_METHODS='["cwrap", "ccall", "FS"]' \
