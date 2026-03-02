@@ -67,7 +67,7 @@ DIST_DIR ?= ./backend/dist
 
 
 # ---- Tailwind (CLI build) ----
-TAILWIND_CLI ?= npx @tailwindcss/cli
+TAILWIND_CLI ?= npx --no-install @tailwindcss/cli
 TAILWIND_INPUT ?= frontend/tailwind.css
 TAILWIND_OUTPUT ?= $(DIST_DIR)/tailwind.css
 

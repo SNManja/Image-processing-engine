@@ -84,8 +84,21 @@ jobs:
               with:
                   submodules: recursive
 
+            - uses: actions/setup-node@v4
+              with:
+                  node-version: 20
+                  cache: "npm"
+            - run: npm ci
+            - name: Verify npm install
+              run: |
+                  echo "PWD=$(pwd)"
+                  ls -la
+                  test -f package-lock.json && echo "FOUND package-lock.json" || (echo "MISSING package-lock.json" && exit 1)
+                  node -p "require('./package-lock.json').name"
+                  node -p "require('./package-lock.json').packages[''].devDependencies"
+                  ls -la node_modules/tailwindcss node_modules/@tailwindcss/cli
+                  npx --no-install @tailwindcss/cli --help >/dev/null
             - uses: mymindstorm/setup-emsdk@v14
-
             - run: make dist
 
             - name: Upload WASM artifact
