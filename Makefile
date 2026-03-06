@@ -55,6 +55,7 @@ WASM_FLAGS = -std=c++17 -O3 -Iinclude \
 WASM_FLAGS += -s INITIAL_MEMORY=1024MB
 WASM_FLAGS += -s ALLOW_MEMORY_GROWTH=1
 WASM_FLAGS += -s MAXIMUM_MEMORY=2048MB
+WASM_FLAGS += -fwasm-exceptions
 
 wasm:
 	mkdir -p $(WASM_OUT_DIR)

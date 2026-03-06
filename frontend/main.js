@@ -37,6 +37,12 @@ window.onEngineFinished = function () {
 
 	window.fileAdmin.updateCanvasRows(window.currSuffix);
 };
+window.onEngineError = function (msg) {
+	console.log("Engine error on processing batch ");
+	console.log("Error: ", msg);
+	window.engineRunning = false;
+	processButtonUIOff(msg);
+};
 
 async function loadExamplePics() {
 	await window.fileAdmin.addExamplePPM(["paisaje.ppm", "gato.ppm"]);

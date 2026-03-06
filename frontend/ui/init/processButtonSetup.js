@@ -7,10 +7,11 @@ export function processButtonUIOn() {
 	statusEl.textContent = "Running...";
 }
 
-export function processButtonUIOff() {
+export function processButtonUIOff(msg = "") {
 	const processBtn = document.querySelector("#process-btn");
 	const statusEl = document.querySelector("#status-flag");
-	statusEl.textContent = "idle";
+	if (msg == "") statusEl.textContent = "idle";
+	else statusEl.textContent = msg;
 	processBtn.disabled = false;
 }
 
@@ -57,7 +58,7 @@ function getJSONPipeline() {
 	const text = getJSONPipelineContent();
 
 	try {
-		if (!text.trim()) throw new Error("El editor está vacío");
+		if (!text.trim()) throw new Error("Pipeline editor is empty");
 
 		const obj = JSON.parse(text);
 		if (!obj || typeof obj !== "object")

@@ -37,10 +37,10 @@ void ensureFolder(const std::string& ruta) {
         // create_directories no lanza error si la carpeta ya existe, 
         // simplemente devuelve false.
         if (fs::create_directories(ruta)) {
-            std::cout << "Folder made: " << ruta << std::endl;
+            std::cout << "Folder made at: " << ruta << std::endl;
         }
     } catch (const fs::filesystem_error& e) {
-        std::cerr << "Error al crear la carpeta: " << e.what() << std::endl;
+        std::cerr << "Error creating folder: " << e.what() << std::endl;
     }
 }
 
@@ -54,10 +54,12 @@ void batchPipelineViaJson(std::string PICS_DIR, std::string OUTPUT_DIR, std::str
 
     json data = json::parse(file);
     
-    assert(data.contains("pipeline") && data["pipeline"].is_array());   
+    if(!(data.contains("pipeline"))) throw std::invalid_argument("Invalid JSON: pipeline not found");   
+    if(!data["pipeline"].is_array()) throw std::invalid_argument("Invalid JSON: pipeline is not an array");
+    if(data["pipeline"].empty()) throw std::invalid_argument("Invalid JSON: pipeline is empty");
 
     DIR* directory = opendir(PICS_DIR.c_str());
-    assert(directory); // Directory opened successfully
+    if(!directory) throw std::runtime_error("Could not open directory: " + PICS_DIR);  // Directory opened successfully
     
     std::vector<std::string> imgQueue;
     
@@ -112,8 +114,7 @@ void processSingleImage(std::string fileName, std::string PICS_DIR, std::string 
                 std::string filterName = step.at("filter");
                 FilterDescriptor fdesc = getFilterDescriptor(filterName);
                 if (fdesc.func == nullptr) {
-                    printf("Skipping unknown filter %s\n", filterName.c_str());
-                    continue;
+                    throw std ::invalid_argument("Invalid filter in pipeline: " + filterName);
                 }
                 fdesc.func(src, dst, { step, original });
                 std::swap(src, dst);
