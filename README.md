@@ -8,9 +8,30 @@ Batch C++ image processing engine focused on highly configurable, multithreaded 
 
 > [!TIP]
 > **Live Demo:** Explore the engine in your browser clicking [here](https://snmanja.github.io/Image-processing-engine/)
-> This is not the current version. The one with login and backend is currently being developed and not wired to github actions yet
+> This is an early version of the project. The current one (with login and backend) is currently being developed and not wired to github actions yet. The repository itself is fully up to date.
 
-## Capabilities
+## Architecture
+
+The project is structured as a monorepo composed of three main layers:
+
+- **C++ Core Engine**
+    - Multithreaded float pipeline
+    - Filter registry
+    - Histogram computation
+    - JSON pipeline execution
+
+- **WebAssembly Bridge**
+    - Emscripten compiled runtime
+    - JS ↔ C++ bridge
+    - Threaded execution inside the browser
+
+- **Web Application**
+    - Tailwind + Vanilla JS frontend
+    - Pipeline editor (CodeMirror)
+    - Batch image management
+    - Backend (Express + PostgreSQL) for user presets
+
+## Engine Capabilities
 
 - **Multiformat:** Support for PPM, JPEG, and PNG files with automatic or user-defined output format conversion.
 - **Full Linear Pipeline**: Processes images using a Linear Space [0,1] float representation. This ensures physically-accurate filter mathematics and maximum precision between stages, preventing the common "darkening" or color shifting issues of standard 8-bit pipelines.
@@ -60,11 +81,15 @@ External libraries are used only for I/O and auxiliary tooling:
 
 ## WEB - To do
 
-- Display graphs in some way
+- Host current version with backend and logins in some host, so the live demo is updated to the current state of the project
+- Some custom suffix results failing to be fetched on the front.
+- Some jpeg examples just do not work.
 - Add maximum upload capacity (memory size pre-defined so user do not exceed browsers limits)
+- Port entire frontend to react. Main reasons are: Scalability,
 
-## Engine - To do (Paused until backedn is hosted and working)
+## Engine - To do (Paused until backend is hosted and working)
 
+- Improve registry and documentation. Add params info and usual/correct values for each one.
 - Add 16 bit color compatibility for PNG
 - Adding thread pool to improve efficiency (creating and joining threads hits hard on the performance of web implementation)
 - Lower cache misses in filter threads by applying a tiling strategy
