@@ -8,9 +8,10 @@
 #include <iostream>
 #include <filesystem>
 #include <chrono>
+#include "registry/filter_registry.hpp"
 
 
-
+const auto& filterRegistry = getFilterRegistry();
 
 using json = nlohmann::json;
 namespace fs = std::filesystem;
@@ -112,29 +113,32 @@ void processSingleImage(std::string fileName, std::string PICS_DIR, std::string 
             if (step.contains("filter")) {
                 image<float> dst;
                 std::string filterName = step.at("filter");
-                FilterDescriptor fdesc = getFilterDescriptor(filterName);
-                if (fdesc.func == nullptr) {
-                    throw std ::invalid_argument("Invalid filter in pipeline: " + filterName);
+                auto desc = filterRegistry.getDescriptor(filterName);
+                if (!desc) {
+                    throw std::invalid_argument("Invalid filter in pipeline: " + filterName);
                 }
-                fdesc.func(src, dst, { step, original });
+                auto fn = desc->filterFunction();
+                if (!fn) {
+                    throw std::invalid_argument("Invalid filter in pipeline: " + filterName);
+                }
+                // Construir explícitamente el contexto para evitar depender del orden positional
+                filterContext ctx{ step, original };
+                fn(src, dst, ctx);
                 std::swap(src, dst);
             }
         }
-        if(data.contains("output_suffix")) {
-            std::string outputSuffix = data["output_suffix"];
-            fileName = fileName.substr(0, fileName.find_last_of(".")) + outputSuffix;
-            fileName += ".";
+        // Build output filename safely: base + optional suffix + '.' + chosen extension
+        std::string base = fileName.substr(0, fileName.find_last_of("."));
+        std::string chosenExt = ext;
+        if (data.contains("output_extension") && data["output_extension"].is_string()) {
+            std::string v = data["output_extension"];
+            if (v == "jpg" || v == "jpeg" || v == "png" || v == "ppm") chosenExt = v;
         }
-        if(data.contains("output_extension") && data["output_extension"].is_string()) {
-            std::string outputExtJSONValue = data["output_extension"];
-            if(outputExtJSONValue == "jpg" || outputExtJSONValue == "jpeg" || outputExtJSONValue == "png" || outputExtJSONValue == "ppm") {
-                    fileName += outputExtJSONValue;
-            } else {
-                fileName += ext;
-            }
-        } else {
-            fileName += ext;
+        std::string suffix = "";
+        if (data.contains("output_suffix") && data["output_suffix"].is_string()) {
+            suffix = data["output_suffix"];
         }
+        fileName = base + suffix + "." + chosenExt;
 
         json statsConfig = json::object();
         if (data.contains("statistics")) {

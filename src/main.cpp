@@ -6,15 +6,22 @@
 #include "filter.h"
 #include "args_parser.h"
 #include "cli_helpers.h"
-
+#include "registry/filter_registry.hpp"
+#include "json.hpp"
 
 std::string PICS_DIR = "./pics";
 std::string OUTPUT_DIR = "./output";
 std::string JSON_PATH = "./pipeline.json";
 
+void testFilterRegistry() {
+    auto& registry = getFilterRegistry();               // obtener la instancia (por referencia)
+    nlohmann::json JSONReg = registry.toJson();         // llamar al método en la variable
+    printf("%s\n", JSONReg.dump(4).c_str());            // imprimir con newline
+}
+
 int main(const int argc, const char* argv[]) 
 {
-    
+
     if(argc == 1){
         // Defaults to json config
         batchPipelineViaJson(PICS_DIR, OUTPUT_DIR, JSON_PATH);
@@ -23,6 +30,10 @@ int main(const int argc, const char* argv[])
 
     const std::string flag = getStringArg(argv, 1, "");
 
+
+    if(strcmp(flag.c_str(),"--test-registry") == 0){
+        testFilterRegistry();
+    }
     
     if(strcmp(flag.c_str(), "--list") == 0) {
         filterList();
@@ -43,3 +54,4 @@ int main(const int argc, const char* argv[])
     printf("Invalid parameters\n");
     return 1;
 }
+

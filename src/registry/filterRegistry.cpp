@@ -1,8 +1,5 @@
-#include <map>
-#include <string>
-#include <vector>
-#include "filter.h"
-#include "cli_helpers.h"
+/*
+! legacy code
 
 std::vector<std::string> getConvolutionalParamsList() {
     return {
@@ -17,7 +14,6 @@ const std::string convolutionalCategory = "Convolutional";
 const std::string pointCategory = "Point";
 const std::string gradientCategory = "Gradient";
 const std::string errorDiffusionCategory = "Error Diffusion";
-
 
 
 typedef std::map<std::string, FilterDescriptor> FilterRegistry;
@@ -194,3 +190,4 @@ FilterRegistry getRegistry(){
 
     return registry;
 }
+*/

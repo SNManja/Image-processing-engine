@@ -2,37 +2,29 @@
 #include <string>
 #include "filter.h"
 #include "cli_helpers.h"
+#include <iostream>
+#include "registry/filter_registry.hpp"
 #include "histogram.h"
 
-FilterDescriptor getFilterDescriptor(const std::string& filterName) {
-    FilterRegistry registry = getRegistry();
-    if (!filterName.empty()) {
-        if (registry.find(filterName) != registry.end()) {
-            return registry[filterName];
-        }
-    }
-    std::string errorMsg = "Filter not found: " + filterName;
-    fprintf(stderr, "[ENGINE ERROR] %s\n", errorMsg.c_str());
-    return {};
+
+
+// usa el registry global
+std::shared_ptr<FilterDescriptor> getFilterDescriptor(const std::string& filterName) {
+    return getFilterRegistry().getDescriptor(filterName);
 }
 
 void filterList() {
-    FilterRegistry registry = getRegistry();
-    printf("Filter list:\n\n");
-
-    printf("Note: All parameters described in this section must be provided inside the 'params' object of the JSON pipeline, using the exact names shown below.\n");
-    for (const auto& entry : registry) {
-
-        printf("- %s\n", entry.first.c_str());
-        printf("  Description: %s\n", entry.second.description.c_str());
-        printf("  Category: %s\n", entry.second.category.c_str());
-        if (!entry.second.paramsDesc.empty()) {
-            printf("  Parameters:\n");
-            for (const std::string& param : entry.second.paramsDesc) {
-                printf("    %s\n", param.c_str());
-            }
+    auto& reg = getFilterRegistry();
+    auto j = reg.toJson();
+    // j es un objeto mapping name -> descriptorJson
+    for (auto it = j.begin(); it != j.end(); ++it) {
+        const std::string& name = it.key();
+        const auto& desc = it.value();
+        std::string description = "";
+        if (desc.contains("description") && desc["description"].is_string()) {
+            description = desc["description"];
         }
-        printf("\n");
+        std::cout << name << " - " << description << std::endl;
     }
 }
 
