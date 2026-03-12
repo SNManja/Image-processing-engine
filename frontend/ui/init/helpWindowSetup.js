@@ -51,36 +51,108 @@ function fillFilterContent(engine) {
 		container.innerHTML = "";
 
 		Object.entries(registry).forEach(([name, info]) => {
+			// card
 			const card = document.createElement("div");
 			card.className =
 				"group border border-zinc-800 bg-zinc-900/20 p-4 rounded-xl hover:border-zinc-700 transition-all";
 
-			const paramsList =
-				info.params.length > 0
-					? `<div class="mt-3 pt-3 border-t border-zinc-800/50 space-y-1">
-                    ${info.params
-						.map(
-							(p) => `
-                        <div class="flex gap-2 text-[11px] font-mono leading-tight">
-                            <span class="text-cyan-600 shrink-0">→</span>
-                            <span class="text-zinc-500">${p}</span>
-                        </div>
-                    `,
-						)
-						.join("")}
-                   </div>`
-					: "";
+			// header: name (left) and category pill (right)
+			const header = document.createElement("div");
+			header.className = "flex items-center justify-between mb-2";
 
-			card.innerHTML = `
-                <div class="flex items-start justify-between mb-2">
-                    <h4 class="text-sm font-bold text-zinc-100 font-mono tracking-tight">${name}</h4>
-                    <span class="text-[9px] font-bold px-2 py-0.5 rounded-full bg-zinc-800 text-zinc-500 uppercase tracking-widest">
-                        ${info.category}
-                    </span>
-                </div>
-                <p class="text-xs text-zinc-400 leading-relaxed">${info.description}</p>
-                ${paramsList}
-            `;
+			const title = document.createElement("h4");
+			title.className =
+				"text-sm font-bold text-zinc-100 font-mono tracking-tight";
+			title.textContent = name;
+
+			const rightWrapper = document.createElement("div");
+			rightWrapper.className = "flex items-center gap-2";
+			if (info.category) {
+				const pill = document.createElement("span");
+				pill.className =
+					"text-[9px] font-bold px-2 py-0.5 rounded-full bg-zinc-800 text-zinc-500 uppercase tracking-widest";
+				pill.textContent = info.category;
+				rightWrapper.appendChild(pill);
+			}
+
+			header.appendChild(title);
+			header.appendChild(rightWrapper);
+
+			card.appendChild(header);
+
+			// description
+			const descP = document.createElement("p");
+			descP.className = "text-xs text-zinc-400 leading-relaxed";
+			descP.textContent = info.description || "";
+			card.appendChild(descP);
+
+			// params
+			const paramNames =
+				info.params && typeof info.params === "object"
+					? Object.keys(info.params)
+					: [];
+			if (paramNames.length > 0) {
+				const paramsWrap = document.createElement("div");
+				paramsWrap.className =
+					"mt-3 pt-3 border-t border-zinc-800/50 space-y-2";
+
+				paramNames.forEach((p) => {
+					const param =
+						info.params && info.params[p] ? info.params[p] : {};
+					const type = param.type || "?";
+					const pDesc = param.description || "";
+
+					const row = document.createElement("div");
+					row.className = "flex items-start gap-2 text-[12px]";
+
+					const arrow = document.createElement("span");
+					arrow.className = "text-cyan-600 shrink-0";
+					arrow.textContent = "→";
+
+					const nameSpan = document.createElement("span");
+					nameSpan.className =
+						"text-zinc-300 font-mono whitespace-nowrap";
+					nameSpan.textContent = `${p} (${type}):`;
+
+					const descSpan = document.createElement("span");
+					descSpan.className = "text-zinc-400 truncate";
+					descSpan.style.maxWidth = "60%";
+					descSpan.textContent = ` ${pDesc}`;
+
+					row.appendChild(arrow);
+					row.appendChild(nameSpan);
+					row.appendChild(descSpan);
+
+					paramsWrap.appendChild(row);
+
+					// if string restriction has allowedValues, render them
+					const restriction = param.restriction || {};
+					if (
+						restriction.allowedValues &&
+						Array.isArray(restriction.allowedValues) &&
+						restriction.allowedValues.length > 0
+					) {
+						const allowedRow = document.createElement("div");
+						allowedRow.className = "ml-8 text-[11px] text-zinc-500";
+						const prefix = document.createElement("span");
+						prefix.textContent = "Valid values are: ";
+						allowedRow.appendChild(prefix);
+
+						restriction.allowedValues.forEach((v, idx) => {
+							const code = document.createElement("code");
+							code.className =
+								"px-1 py-0.5 bg-zinc-800 rounded text-[11px] text-zinc-300 mr-2";
+							code.textContent = v;
+							allowedRow.appendChild(code);
+						});
+
+						paramsWrap.appendChild(allowedRow);
+					}
+				});
+
+				card.appendChild(paramsWrap);
+			}
+
 			container.appendChild(card);
 		});
 	} catch (e) {

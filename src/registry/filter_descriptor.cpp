@@ -104,5 +104,20 @@ nlohmann::json FilterDescriptor::toJson() const {
     }
     out["params"] = std::move(params);
 
+    // If categories are provided, include the first one as a simple string for the frontend pill.
+    if (!categories_.empty()) {
+        auto cat = categories_.front();
+        std::string catStr;
+        switch (cat) {
+            case FilterCategory::Point: catStr = "Point"; break;
+            case FilterCategory::Convolution: catStr = "Convolution"; break;
+            case FilterCategory::Gradient: catStr = "Gradient"; break;
+            case FilterCategory::ErrorDiffusion: catStr = "ErrorDiffusion"; break;
+            case FilterCategory::Geometric: catStr = "Geometric"; break;
+            default: catStr = "Unknown"; break;
+        }
+        out["category"] = catStr;
+    }
+
     return out;
 }

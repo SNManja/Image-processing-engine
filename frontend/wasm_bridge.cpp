@@ -2,6 +2,7 @@
 #include <emscripten/bind.h> 
 #include <iostream>
 #include "cli_helpers.h"      
+#include "registry/filter_registry.hpp"
 #include <fstream> 
 #include <thread>
 
@@ -56,21 +57,13 @@ extern "C" {
     }
     EMSCRIPTEN_KEEPALIVE
     const char* get_filter_registry_json() {
-        // Obtenemos tu mapa actual
-        FilterRegistry registry = getRegistry();
-        nlohmann::json j = nlohmann::json::object();
+    // Use the new singleton registry and its JSON serializer
+    FilterRegistry& registry = getFilterRegistry();
+    nlohmann::json j = registry.toJson();
 
-        for (auto const& [name, desc] : registry) {
-            j[name] = {
-                {"description", desc.description},
-                {"category", desc.category},
-                {"params", desc.paramsDesc} // Esto mapea el vector<string> a un array JSON
-            };
-        }
-
-        // Variable estática para que el puntero persista al cruzar a JS
-        static std::string json_cache;
-        json_cache = j.dump();
-        return json_cache.c_str();
+    // Static storage so the returned pointer is valid across the JS boundary
+    static std::string json_cache;
+    json_cache = j.dump();
+    return json_cache.c_str();
     }
 }
