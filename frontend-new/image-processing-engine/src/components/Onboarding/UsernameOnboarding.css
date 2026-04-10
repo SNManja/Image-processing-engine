@@ -1,0 +1,109 @@
+.username-onboarding-backdrop {
+	position: fixed;
+	inset: 0;
+	z-index: 1000;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 16px;
+	background: rgba(0, 0, 0, 0.65);
+}
+
+.username-onboarding-modal {
+	width: 100%;
+	max-width: 460px;
+	background: #161616;
+	border: 1px solid rgba(255, 255, 255, 0.08);
+	border-radius: 16px;
+	color: #f3f3f3;
+	overflow: hidden;
+}
+
+.username-onboarding-modal__header {
+	padding: 16px;
+	border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.username-onboarding-modal__title {
+	margin: 0;
+	font-size: 14px;
+	font-weight: 600;
+}
+
+.username-onboarding-modal__form {
+	padding: 16px;
+}
+
+.username-onboarding-modal__requirements {
+	padding: 14px;
+	border-radius: 12px;
+	background: rgba(255, 255, 255, 0.03);
+	border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.username-onboarding-modal__requirements-title {
+	font-size: 12px;
+	font-weight: 600;
+	margin-bottom: 8px;
+}
+
+.username-onboarding-modal__requirements-list {
+	margin: 0;
+	padding-left: 18px;
+	font-size: 12px;
+	line-height: 1.5;
+	color: #b5b5b5;
+}
+
+.username-onboarding-modal__field {
+	margin-top: 16px;
+}
+
+.username-onboarding-modal__label {
+	display: block;
+	margin-bottom: 8px;
+	font-size: 12px;
+	font-weight: 500;
+}
+
+.username-onboarding-modal__input {
+	width: 100%;
+	box-sizing: border-box;
+	padding: 10px 12px;
+	border-radius: 10px;
+	border: 1px solid rgba(255, 255, 255, 0.12);
+	background: rgba(255, 255, 255, 0.04);
+	color: #f3f3f3;
+	outline: none;
+}
+
+.username-onboarding-modal__input::placeholder {
+	color: #8f8f8f;
+}
+
+.username-onboarding-modal__error {
+	margin: 8px 0 0;
+	font-size: 12px;
+	color: #ff7d7d;
+}
+
+.username-onboarding-modal__actions {
+	margin-top: 16px;
+	display: flex;
+	justify-content: flex-end;
+}
+
+.username-onboarding-modal__submit {
+	padding: 10px 14px;
+	border: 0;
+	border-radius: 10px;
+	background: #f3f3f3;
+	color: #111;
+	font-weight: 600;
+	cursor: pointer;
+}
+
+.username-onboarding-modal__submit:disabled {
+	opacity: 0.6;
+	cursor: not-allowed;
+}

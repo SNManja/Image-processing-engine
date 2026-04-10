@@ -1,0 +1,18 @@
+.viewer-stage {
+	display: flex;
+	gap: 8px; /* espacio entre cada viewer-card */
+	align-items: stretch;
+}
+
+.viewer-card {
+	flex: 1 1 0;
+	padding: 6px; /* separación interna opcional */
+}
+
+.image-viewer {
+	display: flex;
+	gap: 8px; /* espacio entre cada viewer-card */
+	align-items: stretch;
+	padding-top: 10px;
+	padding-bottom: 5px;
+}

@@ -1,0 +1,189 @@
+/* Make the panel fill its parent and layout vertically */
+.panel {
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+	min-height: 0; /* allow flex children to shrink */
+}
+
+/* Ensure header/footer don't force fixed height and body can grow */
+.panel-header,
+.panel-footer,
+.panel .panel-footer {
+	flex: 0 0 auto;
+}
+
+/* panel-body already flex: make sure it can shrink */
+.panel-body {
+	display: flex;
+	flex-direction: column;
+	flex: 1 1 auto;
+	min-height: 0;
+	padding: 8px; /* ligero margen interior */
+	box-sizing: border-box;
+}
+
+/* pequeño margen interno y caja para el editor */
+.pipeline-box {
+	padding: 6px;
+	box-sizing: border-box;
+	flex: 1 1 auto;
+	display: flex;
+	flex-direction: column;
+	min-height: 0;
+}
+
+/* editor ocupa todo el espacio disponible con un leve margen visual */
+.pipeline-editor {
+	margin: 4px 0;
+	padding: 6px;
+	box-sizing: border-box;
+	flex: 1 1 auto;
+	display: flex;
+	flex-direction: column;
+	min-height: 0;
+	position: relative;
+}
+
+/* Ensure the immediate React wrapper of CodeMirror stretches */
+.pipeline-editor > .pipeline-codemirror-wrapper,
+.pipeline-editor > div.pipeline-codemirror-wrapper {
+	height: 100% !important;
+	display: flex;
+	flex-direction: column;
+	min-height: 0;
+}
+
+/* Force CodeMirror internals to use full height */
+.pipeline-editor .cm-editor {
+	display: flex !important;
+	flex-direction: column !important;
+	height: 100% !important;
+	min-height: 0 !important;
+	box-sizing: border-box;
+	padding: 0 !important; /* dejamos el padding al contenedor .pipeline-editor */
+}
+
+/* Scroller must expand to fill available space (not auto by content) */
+.pipeline-editor .cm-scroller {
+	flex: 1 1 auto !important;
+	height: 100% !important;
+	min-height: 0 !important;
+	overflow: auto !important;
+}
+
+/* Make the content at least fill the scroller so empty editor shows full height */
+.pipeline-editor .cm-content {
+	min-height: 100% !important;
+	box-sizing: border-box;
+}
+
+/* Ensure CodeMirror editor fills the container */
+.pipeline-editor .cm-editor {
+	height: 100% !important;
+	background: #0b0b0c !important;
+	color: #e6eef6 !important;
+	border-radius: 6px;
+	overflow: hidden;
+	/* allow text selection and pointer events */
+	user-select: text !important;
+	-webkit-user-select: text !important;
+	-moz-user-select: text !important;
+	pointer-events: auto !important;
+}
+
+/* Scroller / content area */
+.pipeline-editor .cm-scroller {
+	flex: 1 1 auto !important;
+	height: auto !important;
+	padding: 8px 0 !important;
+	overflow: auto !important;
+	background: transparent !important;
+	user-select: text !important;
+	pointer-events: auto !important;
+}
+
+/* Text content font + padding */
+.pipeline-editor .cm-content {
+	font-family: ui-monospace, "SFMono-Regular", Menlo, monospace !important;
+	font-size: 13px;
+	padding: 6px 12px !important;
+	user-select: text !important;
+	pointer-events: auto !important;
+}
+
+/* Line numbers gutter */
+.pipeline-editor .cm-gutters {
+	background-color: #0b0b0c !important;
+	color: #5b6168 !important;
+	border: none !important;
+	padding-right: 8px !important;
+	user-select: text !important;
+	pointer-events: auto !important;
+}
+
+/* Cursor */
+.pipeline-editor .cm-cursor {
+	border-left: 2px solid #22d3ee !important;
+}
+
+/* Ensure selection/active-line subtle background */
+.pipeline-editor .cm-activeLine,
+.pipeline-editor .cm-selectionLayer .cm-selectionBackground {
+	background: rgba(255, 255, 255, 0.02) !important;
+}
+
+/* Error message */
+.pipeline-editor + .cm-json-error {
+	color: var(--color-danger, #ff6b6b);
+	margin-top: 8px;
+	font-size: 13px;
+}
+
+/* If something else overlays the editor, make sure the editor remains on top */
+.pipeline-box {
+	position: relative;
+	z-index: 0;
+}
+
+/* Make selection visually obvious and resistant to overrides */
+.panel .pipeline-editor .cm-selectionBackground,
+.pipeline-editor .cm-content ::selection,
+.pipeline-editor .cm-content::selection {
+	background: rgba(34, 211, 238, 0.18) !important; /* visible cyan tint */
+	color: inherit !important;
+}
+
+/* Fallback for selection layer variations */
+.panel .pipeline-editor .cm-selectionLayer .cm-selectionBackground {
+	background: rgba(34, 211, 238, 0.18) !important;
+}
+
+/* Active line highlight stronger */
+.panel .pipeline-editor .cm-activeLine,
+.panel .pipeline-editor .cm-line[role="presentation"].cm-activeLine {
+	background: rgba(255, 255, 255, 0.03) !important;
+}
+
+/* Ensure caret is visible on dark bg */
+.panel .pipeline-editor .cm-cursor {
+	border-left: 2px solid #22d3ee !important;
+}
+
+/* Keep pointer events / selection enabled */
+.panel .pipeline-editor,
+.panel .pipeline-editor .cm-editor,
+.panel .pipeline-editor .cm-scroller,
+.panel .pipeline-editor .cm-content,
+.panel .pipeline-editor .cm-gutters {
+	user-select: text !important;
+	-webkit-user-select: text !important;
+	-moz-user-select: text !important;
+	pointer-events: auto !important;
+	z-index: 1;
+}
+
+/* ajusta margen inferior para que no quede pegado al footer */
+.pipeline-footer {
+	padding-top: 8px;
+}

@@ -1,0 +1,102 @@
+/* Lightroom / Photoshop inspired toggle switch */
+.toggle-switch-wrapper {
+	display: inline-flex;
+	align-items: center;
+	gap: 10px;
+}
+
+.toggle-label {
+	font-size: 13px;
+	color: var(--text, #e6eef6);
+	opacity: 0.88;
+	font-weight: 600;
+	letter-spacing: 0.2px;
+}
+
+.switch {
+	width: 56px;
+	height: 30px;
+	padding: 4px;
+	border-radius: 999px;
+	display: inline-flex;
+	align-items: center;
+	cursor: pointer;
+	box-sizing: border-box;
+	background: linear-gradient(180deg, #141517 0%, #0c0c0d 100%);
+	border: 1px solid rgba(255, 255, 255, 0.04);
+	transition:
+		background 0.18s ease,
+		transform 0.12s ease;
+}
+
+.switch:focus {
+	outline: none;
+}
+
+/* Lightroom / Photoshop inspired toggle - flat (no gradients) */
+.toggle-switch-wrapper {
+	display: inline-flex;
+	align-items: center;
+	gap: 10px;
+}
+
+.toggle-label {
+	font-size: 13px;
+	color: var(--text, #e6eef6);
+	opacity: 0.95;
+	font-weight: 600;
+}
+
+/* Track */
+.switch {
+	width: 52px;
+	height: 28px;
+	padding: 3px;
+	border-radius: 999px;
+	display: inline-flex;
+	align-items: center;
+	cursor: pointer;
+	box-sizing: border-box;
+	background: var(--panel-soft);
+	border: 1px solid var(--border);
+	transition:
+		background 0.14s ease,
+		transform 0.08s ease;
+}
+
+/* Thumb */
+.switch .switch-thumb {
+	width: 22px;
+	height: 22px;
+	border-radius: 50%;
+	background: #ffffff;
+	border: 1px solid rgba(0, 0, 0, 0.12);
+
+	transform: translateX(0);
+	transition: transform 0.16s cubic-bezier(0.2, 0.9, 0.2, 1);
+}
+
+.switch.off .switch-thumb {
+	/* slightly muted when off */
+	filter: contrast(0.98) brightness(0.98);
+}
+
+.switch.on .switch-thumb {
+	transform: translateX(24px);
+}
+
+/* Focus styles (keyboard accessible) */
+.switch:focus-visible {
+	outline: none;
+	/* very soft focus halo to keep low profile */
+}
+
+/* Pressed effect */
+.switch:active .switch-thumb {
+	transform: translateX(calc(var(--pressed-translate, 0))) scale(0.98);
+}
+
+/* Hover/hover-label subtle tweak */
+.toggle-switch-wrapper:hover .toggle-label {
+	opacity: 1;
+}

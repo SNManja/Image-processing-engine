@@ -1,0 +1,32 @@
+.image-slot {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	overflow: hidden;
+	width: 100%;
+	/* ocupar todo el alto que le dé el contenedor padre */
+	height: 100%;
+	background: var(--panel-bg, transparent);
+	border-radius: 4px;
+}
+
+.image-slot-img {
+	/* ocupar todo el área del slot y mantener ratio */
+	width: 100%;
+	height: 100%;
+	object-fit: contain;
+	display: block;
+}
+
+/* placeholder / loading */
+.image-slot-placeholder {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: var(--text-muted);
+	font-size: 0.9rem;
+	padding: 12px;
+	text-align: center;
+	width: 100%;
+	height: 100%;
+}
