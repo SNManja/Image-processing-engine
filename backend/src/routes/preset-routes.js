@@ -6,7 +6,7 @@ import {
 } from "../controllers/preset-controller.js";
 
 export default async function presetRoutes(app) {
-	app.get("/api/preset-list", getPresets);
+	app.get("/api/communityPresets", getPresets);
 	app.get("/api/userPresets", getUserPresets);
 	app.post(
 		"/api/publishPreset",

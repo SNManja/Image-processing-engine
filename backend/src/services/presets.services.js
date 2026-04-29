@@ -2,19 +2,22 @@ import { insertPreset } from "../repos/preset.repository.js";
 import { findUserByID } from "../repos/user.repository.js";
 
 const MAX_DESCRIPTION_LEN = 500;
-const MAX_NAME_LEN = 100;
+const MAX_NAME_LEN = 70;
 const MAX_PIPELINE_BYTES = 50 * 1024;
 
 export async function validateAndCreatePreset(
 	db,
 	userID,
 	name,
-	description,
+	description = "",
 	pipeline,
 ) {
 	// Validate input
-	if (!userID || !name || !description || !pipeline) {
+	if (!userID || !name || !pipeline) {
 		throw new Error("All fields are required");
+	}
+	if (!description) {
+		description = "";
 	}
 
 	if (name.length > MAX_NAME_LEN) {

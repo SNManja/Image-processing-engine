@@ -12,6 +12,16 @@ function parsePresetsQuery(request) {
 	const order = (request.query.order ?? "DESC").toUpperCase();
 	const q = (request.query.q ?? "").trim();
 
+	// <-- added: parse page param (1-based) and validate
+	const rawPage = request.query.page;
+	let page = 1;
+	if (typeof rawPage !== "undefined") {
+		const p = Number.parseInt(rawPage, 10);
+		if (!Number.isFinite(p) || p < 1)
+			throw new Error(`INVALID_PAGE:${String(rawPage)}`);
+		page = p;
+	}
+
 	const safeLimit = Number.isFinite(limit) ? limit : 20;
 	if (safeLimit < 1 || safeLimit > 50)
 		throw new Error(`INVALID_LIMIT:${safeLimit}`);
@@ -22,7 +32,7 @@ function parsePresetsQuery(request) {
 	if (order !== "ASC" && order !== "DESC")
 		throw new Error(`INVALID_ORDER:${order}`);
 
-	return { q, sort, order, limit: safeLimit };
+	return { q, sort, order, limit: safeLimit, page }; // <-- return page
 }
 
 export async function getPresets(request, reply) {
@@ -37,9 +47,9 @@ export async function getPresets(request, reply) {
 	}
 
 	try {
-		const result = await fetchPresets(db, query);
-		console.log("This is the result size", result.length);
-		return reply.send(result);
+		const { items, pagination } = await fetchPresets(db, query);
+		console.log("This is the result size", items.length);
+		return reply.send({ items, pagination });
 	} catch (e) {
 		return reply.code(500).send({ error: "Failed to fetch presets" });
 	}
@@ -61,8 +71,12 @@ export async function getUserPresets(request, reply) {
 	}
 
 	try {
-		const result = await fetchPresetsByCreator(db, userId, query);
-		return reply.send(result);
+		const { items, pagination } = await fetchPresetsByCreator(
+			db,
+			userId,
+			query,
+		);
+		return reply.send({ items, pagination });
 	} catch (e) {
 		return reply.code(500).send({ error: "Failed to fetch presets" });
 	}
@@ -89,6 +103,7 @@ export async function createPreset(request, reply) {
 		return reply.code(400).send({ error: "Invalid filter on pipeline" });
 	}
 	*/
+
 	try {
 		const presetId = await validateAndCreatePreset(
 			db,
@@ -106,8 +121,9 @@ export async function createPreset(request, reply) {
 		if (error.message === "INVALID_PIPELINE") {
 			return reply.code(400).send({ error: "Invalid pipeline" });
 		}
-
-		return reply.code(500).send({ error: "Failed to create preset" });
+		return reply
+			.code(500)
+			.send({ error: "Failed to create preset: " + error.message });
 	}
 }
 
